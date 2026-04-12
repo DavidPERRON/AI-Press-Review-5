@@ -59,6 +59,7 @@ def run_pipeline(
         'rendered_audio': False,
         'uploaded_audio': False,
         'published': False,
+        'grounding_report': draft.grounding_report,
     }
 
     audio_name = f"{run_date}-{safe_slug(draft.episode_title)}.mp3"
@@ -139,6 +140,9 @@ def run_pipeline(
         rendered=result['rendered_audio'],
         uploaded=result['uploaded_audio'],
         published=result['published'],
+        grounding_coverage=draft.grounding_report.get('coverage_ratio'),
+        grounding_acceptable=draft.grounding_report.get('acceptable'),
+        claim_count=draft.grounding_report.get('claim_count'),
         pipeline_seconds=round(total_elapsed, 1),
     )
 
@@ -227,10 +231,22 @@ def generate_draft(
         'source_titles': titles,
         'source_count': manifest['source_count'],
         'script_words': len(draft.script.split()),
+        'key_claims': draft.key_claims,
+        'grounding_report': draft.grounding_report,
         'generated_at': iso_now(),
         'status': 'pending',
     }
     save_pending_draft(draft_data)
+
+    # Surface the grounding report as an observability signal.
+    if draft.grounding_report:
+        record_phase(
+            run_date, 'grounding', 0,
+            claim_count=draft.grounding_report.get('claim_count', 0),
+            supported_count=draft.grounding_report.get('supported_count', 0),
+            coverage_ratio=draft.grounding_report.get('coverage_ratio', 0.0),
+            acceptable=draft.grounding_report.get('acceptable', True),
+        )
 
     total_elapsed = time.monotonic() - pipeline_start
     draft_data['pipeline_seconds'] = round(total_elapsed, 1)

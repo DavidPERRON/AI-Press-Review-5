@@ -43,6 +43,9 @@ def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> 
         "opening_news_title": "string — the most impactful headline of the day",
         "highlights_label": "1-2 words summarizing the day's theme",
         "tomorrow_pedagogical_concept": "one short sentence fragment, no more than 12 words, announcing a concept to explain tomorrow",
+        "key_claims": [
+            "array of 8-15 objects, one per factual claim made in the script that cites a specific number, company, product, or verifiable event. Each object MUST have exactly two keys: 'claim' (short factual statement, 12-25 words, as stated in the script) and 'source_url' (one of the manifest's source URLs that supports this claim — copy verbatim from the manifest). Example: {'claim': 'OpenAI released a new model that outperforms prior systems on reasoning benchmarks', 'source_url': 'https://openai.com/blog/...'}. Only include claims that are directly supported by at least one cited source.",
+        ],
         "sections": {
             "ai_news": [
                 "paragraph 1 (110-150 words): lead story — set the scene, why it matters now",
@@ -346,6 +349,19 @@ def generate_episode_script(manifest: dict, local_preview: bool = False, profile
                 )
 
             logger.info("Script generated successfully: %d words, model=%s", best_wc, model)
+
+            # Claim grounding: verify that each claim the LLM cited is
+            # actually supported by its declared source.
+            from .grounding import verify_claims
+
+            raw_claims = best_payload.get("key_claims") or []
+            report = verify_claims(
+                raw_claims,
+                manifest.get("sources", []),
+                min_overlap_ratio=float(getattr(settings, 'grounding_min_overlap', 0.55)),
+                min_coverage_ratio=float(getattr(settings, 'grounding_min_coverage', 0.7)),
+            )
+
             return EpisodeDraft(
                 episode_title=best_payload.get("episode_title", settings.podcast_title),
                 episode_summary=best_payload.get("episode_summary", settings.podcast_description_short),
@@ -353,6 +369,8 @@ def generate_episode_script(manifest: dict, local_preview: bool = False, profile
                 script=best_script,
                 tomorrow_concept=best_payload.get("tomorrow_pedagogical_concept", ""),
                 highlights_label=best_payload.get("highlights_label", "Highlights"),
+                key_claims=raw_claims if isinstance(raw_claims, list) else [],
+                grounding_report=report.to_dict(),
             )
         except Exception as exc:
             logger.error("Model %s failed: %s", model, exc)
