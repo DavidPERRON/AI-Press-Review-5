@@ -61,9 +61,14 @@ class Settings:
     llm_api_key: str
     llm_editor_model: str
     llm_fallback_model: str
+    llm_ledger_model: str
     llm_timeout_seconds: int
     llm_max_tokens: int
     llm_temperature: float
+    llm_enable_prompt_cache: bool
+    editorial_mode: str  # 'single_pass' | 'multi_pass'
+    grounding_min_overlap: float
+    grounding_min_coverage: float
     tts_chunk_max_chars: int
     cartesia_api_key: str
     cartesia_voice_id: str
@@ -209,9 +214,14 @@ def load_settings(local_preview: bool = False, profile: str | None = None) -> Se
         llm_api_key=_env('LLM_API_KEY', 'unused' if local_preview else ''),
         llm_editor_model=llm_model_default,
         llm_fallback_model=_env('LLM_FALLBACK_MODEL'),
+        llm_ledger_model=_env('LLM_LEDGER_MODEL', _yaml_get(config, 'llm.ledger_model', '')),
         llm_timeout_seconds=int(_env('LLM_TIMEOUT_SECONDS', str(_yaml_get(config, 'llm.timeout_seconds', 180)))),
         llm_max_tokens=int(_yaml_get(config, 'llm.max_tokens', 12000)),
         llm_temperature=float(_yaml_get(config, 'llm.temperature', 0.2)),
+        llm_enable_prompt_cache=_env_bool('LLM_ENABLE_PROMPT_CACHE', bool(_yaml_get(config, 'llm.enable_prompt_cache', True))),
+        editorial_mode=_env('EDITORIAL_MODE', _yaml_get(config, 'editorial.mode', 'single_pass')),
+        grounding_min_overlap=float(_env('GROUNDING_MIN_OVERLAP', str(_yaml_get(config, 'editorial.grounding_min_overlap', 0.55)))),
+        grounding_min_coverage=float(_env('GROUNDING_MIN_COVERAGE', str(_yaml_get(config, 'editorial.grounding_min_coverage', 0.7)))),
         tts_chunk_max_chars=int(_yaml_get(config, 'tts.chunk_max_chars', 1800)),
         cartesia_api_key=_env('CARTESIA_API_KEY'),
         cartesia_voice_id=_env('CARTESIA_VOICE_ID'),

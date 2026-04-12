@@ -34,12 +34,31 @@ editorial:
   min_source_count: 45
   freshness_hours: 48
   exclude_previous_episode: true
+  # single_pass: un seul appel LLM (comportement historique).
+  # multi_pass: pass "ledger" (extraction structuree des stories) suivi
+  # d'un pass "writer" qui recoit la ledger + texte complet des sources
+  # citees uniquement. Meilleur structure, meilleur hit caching, mais
+  # +1 appel LLM par run (typiquement ~1.3x cost avec caching, ~2.5x sans).
+  mode: single_pass
+  # Grounding: seuils pour la verification claim -> source.
+  grounding_min_overlap: 0.55
+  grounding_min_coverage: 0.70
 
 # ── LLM ───────────────────────────────────────────────────────
 llm:
   max_tokens: 12000
   temperature: 0.2
   timeout_seconds: 180
+  # Si ton LLM_BASE_URL pointe vers un backend Anthropic-compatible
+  # (Anthropic direct, OpenRouter, LiteLLM), active le cache pour
+  # reduire de ~90% le cout des tokens stables (system prompt + manifest).
+  # Sur les backends qui ne connaissent pas cache_control, l'option est
+  # silencieusement ignoree.
+  enable_prompt_cache: true
+  # Laisser vide pour utiliser llm_editor_model comme ledger. Specifier
+  # un modele moins cher (ex. Haiku/GPT-4o-mini) pour reduire le cout
+  # du multi-pass.
+  ledger_model: ""
 
 # ── TTS (Cartesia) ───────────────────────────────────────────
 tts:

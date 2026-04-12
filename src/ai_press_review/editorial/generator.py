@@ -133,6 +133,16 @@ def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> 
         ).strip(),
         "source_manifest": compact_sources,
     }
+    # In multi-pass mode, the pre-computed story ledger is prepended so
+    # the writer works from a curated running order rather than raw sources.
+    if manifest.get("story_ledger"):
+        payload["story_ledger"] = manifest["story_ledger"]
+        payload["instructions"] += (
+            " A structured STORY_LEDGER has been produced by a research pass and is "
+            "provided below. Use it as the running order — each story in the ledger "
+            "should become a paragraph (or part of one) in the appropriate pillar. "
+            "Do NOT introduce topics absent from the ledger."
+        )
     return json.dumps(payload, ensure_ascii=False)
 
 
@@ -232,13 +242,34 @@ def _extract_json(content: str) -> dict[str, Any]:
         return json.loads(match.group(0))
 
 
+def _cacheable_text(content: str) -> list[dict[str, Any]]:
+    """Mark a message content block as cache-eligible. OpenAI-compatible
+    gateways with Anthropic underneath (OpenRouter, LiteLLM, Anthropic
+    direct) honor `cache_control: {type: "ephemeral"}`. Gateways that
+    don't understand it simply treat it as plain text."""
+    return [{"type": "text", "text": content, "cache_control": {"type": "ephemeral"}}]
+
+
 def _generate_with_model(model: str, manifest: dict, settings, force_length: bool) -> dict[str, Any]:
     from ..observability import record_llm_call
 
-    messages = [
-        {"role": "system", "content": settings.prompt_path.read_text(encoding="utf-8")},
-        {"role": "user", "content": _build_user_prompt(manifest, settings, force_length=force_length)},
-    ]
+    system_text = settings.prompt_path.read_text(encoding="utf-8")
+    user_text = _build_user_prompt(manifest, settings, force_length=force_length)
+
+    if getattr(settings, 'llm_enable_prompt_cache', False):
+        # Cache system prompt (stable across all runs) and the manifest
+        # block (stable across retries on the same run). The only part
+        # that changes between retries is the "too short" addendum —
+        # which is NOT marked cacheable.
+        messages = [
+            {"role": "system", "content": _cacheable_text(system_text)},
+            {"role": "user", "content": _cacheable_text(user_text)},
+        ]
+    else:
+        messages = [
+            {"role": "system", "content": system_text},
+            {"role": "user", "content": user_text},
+        ]
 
     start = time.monotonic()
     success = False
@@ -289,6 +320,32 @@ def _generate_with_model(model: str, manifest: dict, settings, force_length: boo
         )
 
 
+def _maybe_run_ledger_pass(manifest: dict, settings) -> dict:
+    """If editorial_mode='multi_pass', run the ledger pass and attach its
+    output to the manifest so the writer receives it. Returns the manifest
+    (possibly enriched) — always safe to call.
+    """
+    if getattr(settings, 'editorial_mode', 'single_pass') != 'multi_pass':
+        return manifest
+    try:
+        from .passes import run_ledger_pass
+        ledger = run_ledger_pass(
+            manifest, settings,
+            post_chat_completion=_post_chat_completion,
+            extract_message_content=_extract_message_content,
+            extract_json=_extract_json,
+            enable_cache=getattr(settings, 'llm_enable_prompt_cache', True),
+        )
+        # Enrich the manifest: the user prompt builder appends story_ledger
+        # if present.
+        enriched = dict(manifest)
+        enriched['story_ledger'] = ledger
+        return enriched
+    except Exception as exc:
+        logger.warning("Ledger pass failed, falling back to single-pass: %s", exc)
+        return manifest
+
+
 @retry(wait=wait_fixed(3), stop=stop_after_attempt(2))
 def generate_episode_script(manifest: dict, local_preview: bool = False, profile: str | None = None) -> EpisodeDraft:
     settings = load_settings(local_preview=local_preview, profile=profile)
@@ -298,6 +355,9 @@ def generate_episode_script(manifest: dict, local_preview: bool = False, profile
         raise ValueError(
             f"Not enough relevant sources: {source_count} < {settings.min_source_count}"
         )
+
+    # Optional ledger pass enriches the manifest before the writer runs.
+    manifest = _maybe_run_ledger_pass(manifest, settings)
 
     errors: list[str] = []
 
