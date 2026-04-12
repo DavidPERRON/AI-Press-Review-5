@@ -1,0 +1,17 @@
+google_news_rss:
+  - "https://news.google.com/rss/search?q=artificial+intelligence+when:2d&hl=en-US&gl=US&ceid=US:en"
+  - "https://news.google.com/rss/search?q=generative+AI+when:2d&hl=en-US&gl=US&ceid=US:en"
+  - "https://news.google.com/rss/search?q=LLM+OR+foundation+model+when:2d&hl=en-US&gl=US&ceid=US:en"
+  - "https://news.google.com/rss/search?q=AI+chips+OR+GPU+OR+datacenter+when:2d&hl=en-US&gl=US&ceid=US:en"
+  - "https://news.google.com/rss/search?q=AI+deployment+OR+copilot+OR+agent+when:2d&hl=en-US&gl=US&ceid=US:en"
+
+curated_rss:
+  - "https://openai.com/news/rss.xml"
+  - "https://www.anthropic.com/news/rss.xml"
+  - "https://blog.google/technology/ai/rss/"
+  - "https://www.microsoft.com/en-us/microsoft-cloud/blog/feed/"
+  - "https://aws.amazon.com/blogs/machine-learning/feed/"
+  - "https://blogs.nvidia.com/feed/"
+  - "https://huggingface.co/blog/feed.xml"
+  - "https://venturebeat.com/category/ai/feed/"
+  - "https://techcrunch.com/category/artificial-intelligence/feed/"

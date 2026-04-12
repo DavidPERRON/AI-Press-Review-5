@@ -1,0 +1,297 @@
+from __future__ import annotations
+
+import json
+import logging
+import re
+import time
+from typing import Any
+
+import requests
+from tenacity import retry, stop_after_attempt, wait_fixed
+
+from ..models import EpisodeDraft
+from ..settings import load_settings
+from .validate import assemble_script
+
+logger = logging.getLogger(__name__)
+
+
+def _word_count(text: str) -> int:
+    return len(re.findall(r"\b\w+\b", text or ""))
+
+
+def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> str:
+    compact_sources = []
+    for src in manifest.get("sources", [])[:120]:
+        compact_sources.append(
+            {
+                "title": src.get("title"),
+                "domain": src.get("domain"),
+                "url": src.get("url"),
+                "published_at": src.get("published_at"),
+                "summary": src.get("summary"),
+                "content_text": (src.get("content_text") or "")[:2200],
+                "relevance_score": src.get("relevance_score", 0.0),
+            }
+        )
+
+    target_words = max(settings.min_script_words + 400, 2900)
+
+    schema = {
+        "episode_title": "string — short, factual, no clickbait",
+        "episode_summary": "string — 2-3 sentence summary of the episode",
+        "opening_news_title": "string — the most impactful headline of the day",
+        "highlights_label": "1-2 words summarizing the day's theme",
+        "tomorrow_pedagogical_concept": "one short sentence fragment, no more than 12 words, announcing a concept to explain tomorrow",
+        "sections": {
+            "ai_news": [
+                "paragraph 1 (80-140 words): lead story with full context",
+                "paragraph 2 (80-140 words): second major story",
+                "paragraph 3 (80-140 words): third story or partnership/funding",
+                "paragraph 4 (80-140 words): additional news worth covering",
+            ],
+            "use_cases_and_deployments": [
+                "paragraph 1 (80-140 words): most impactful deployment",
+                "paragraph 2 (80-140 words): second deployment with measurable gains",
+                "paragraph 3 (80-140 words): third use case or industry application",
+            ],
+            "tools_and_practice": [
+                "paragraph 1 (80-140 words): most notable tool update or release",
+                "paragraph 2 (80-140 words): practical workflow or prompting technique",
+                "paragraph 3 (80-140 words): additional tool or developer update",
+            ],
+            "weak_signals_and_trends": [
+                "paragraph 1 (80-140 words): emerging trend grounded in cited facts",
+                "paragraph 2 (80-140 words): forward-looking observation with attribution",
+            ],
+            "research_and_breakthroughs": [
+                "paragraph 1 (80-140 words): most significant paper or benchmark",
+                "paragraph 2 (80-140 words): second research highlight",
+                "paragraph 3 (80-140 words): architecture or methodology advance",
+            ],
+            "education_and_pedagogy": [
+                "paragraph 1 (80-140 words): concept explanation in plain language",
+                "paragraph 2 (80-140 words): deeper detail or practical implication",
+            ],
+        },
+    }
+
+    length_instructions = (
+        f"Your script MUST contain at least {settings.min_script_words} words total. "
+        f"Target {target_words} words. "
+        "Each paragraph must be between 80 and 140 words. "
+        "Write 18 to 22 paragraphs total across all sections. "
+    )
+
+    if force_length:
+        length_instructions += (
+            "CRITICAL: Your previous output was TOO SHORT. You MUST write longer paragraphs "
+            "and add more detail to every section. Include additional concrete facts, specific "
+            "numbers, model names, benchmark scores, company names, deployment scales, and "
+            "explanations accessible to non-experts. Do NOT summarize aggressively. "
+            "Every section must be substantial and dense with information. "
+        )
+
+    payload = {
+        "constraints": {
+            "title": settings.podcast_title,
+            "subtitle": settings.podcast_subtitle,
+            "target_duration_min": settings.target_duration_min,
+            "target_duration_max": settings.target_duration_max,
+            "minimum_script_words": settings.min_script_words,
+            "target_script_words": target_words,
+            "min_source_count": settings.min_source_count,
+            "required_output": schema,
+        },
+        "instructions": (
+            "Return JSON only. Do not include markdown fences or any text outside the JSON. "
+            "Write dense factual paragraphs only. No bullet points. No headings inside paragraphs. "
+            "Keep the tone factual, clear, and business-oriented. "
+            "Prioritize sources with the highest relevance_score. "
+            "Cross-reference multiple sources on the same topic to build richer paragraphs. "
+            + length_instructions
+        ).strip(),
+        "source_manifest": compact_sources,
+    }
+    return json.dumps(payload, ensure_ascii=False)
+
+
+def _response_error_text(response: requests.Response) -> str:
+    try:
+        data = response.json()
+        if isinstance(data, dict):
+            if isinstance(data.get("error"), dict):
+                return str(data["error"].get("message") or data["error"])
+            return str(data)
+    except Exception:
+        pass
+    return response.text.strip()[:500]
+
+
+def _extract_message_content(data: dict[str, Any]) -> str:
+    try:
+        message = data["choices"][0]["message"]["content"]
+    except Exception as exc:
+        raise ValueError(f"Malformed LLM response: {data}") from exc
+
+    if isinstance(message, str):
+        return message
+
+    if isinstance(message, list):
+        parts: list[str] = []
+        for item in message:
+            if isinstance(item, dict) and item.get("type") == "text":
+                parts.append(item.get("text", ""))
+        return "\n".join(parts).strip()
+
+    return str(message).strip()
+
+
+def _post_chat_completion(settings, payload: dict[str, Any]) -> dict[str, Any]:
+    base_url = (settings.llm_base_url or "").strip().rstrip("/")
+    if not base_url.startswith("http"):
+        raise ValueError(f"Invalid LLM_BASE_URL: {base_url!r}")
+
+    url = f"{base_url}/chat/completions"
+    headers = {"Content-Type": "application/json"}
+    if settings.llm_api_key:
+        headers["Authorization"] = f"Bearer {settings.llm_api_key}"
+
+    try:
+        response = requests.post(
+            url,
+            headers=headers,
+            json=payload,
+            timeout=max(settings.llm_timeout_seconds, 180),
+        )
+    except requests.RequestException as exc:
+        raise ValueError(f"Connection error: {exc}") from exc
+
+    if response.status_code >= 400:
+        raise ValueError(f"HTTP {response.status_code}: {_response_error_text(response)}")
+
+    try:
+        return response.json()
+    except Exception as exc:
+        raise ValueError(f"LLM returned non-JSON response: {response.text[:500]}") from exc
+
+
+def _create_completion_data(
+    settings,
+    model: str,
+    messages: list[dict[str, str]],
+    temperature: float,
+    max_tokens: int,
+) -> dict[str, Any]:
+    payload = {
+        "model": model,
+        "temperature": temperature,
+        "messages": messages,
+        "max_tokens": max_tokens,
+        "response_format": {"type": "json_object"},
+    }
+
+    try:
+        return _post_chat_completion(settings, payload)
+    except Exception as exc:
+        message = str(exc).lower()
+        if "json_object" in message or "response format" in message or "405" in message:
+            logger.info("Model does not support response_format, retrying without it")
+            payload.pop("response_format", None)
+            return _post_chat_completion(settings, payload)
+        raise
+
+
+def _extract_json(content: str) -> dict[str, Any]:
+    try:
+        return json.loads(content)
+    except json.JSONDecodeError:
+        match = re.search(r"\{.*\}", content, re.DOTALL)
+        if not match:
+            raise ValueError(f"Model did not return valid JSON. First 500 chars: {content[:500]}")
+        return json.loads(match.group(0))
+
+
+def _generate_with_model(model: str, manifest: dict, settings, force_length: bool) -> dict[str, Any]:
+    messages = [
+        {"role": "system", "content": settings.prompt_path.read_text(encoding="utf-8")},
+        {"role": "user", "content": _build_user_prompt(manifest, settings, force_length=force_length)},
+    ]
+
+    start = time.monotonic()
+    data = _create_completion_data(
+        settings=settings,
+        model=model,
+        messages=messages,
+        temperature=0.2,
+        max_tokens=12000,
+    )
+    elapsed = time.monotonic() - start
+
+    content = _extract_message_content(data)
+    if not content.strip():
+        raise ValueError("Model returned empty content")
+
+    usage = data.get("usage", {})
+    logger.info(
+        "LLM call completed: model=%s elapsed=%.1fs prompt_tokens=%s completion_tokens=%s",
+        model, elapsed,
+        usage.get("prompt_tokens", "?"),
+        usage.get("completion_tokens", "?"),
+    )
+
+    return _extract_json(content)
+
+
+@retry(wait=wait_fixed(3), stop=stop_after_attempt(2))
+def generate_episode_script(manifest: dict, local_preview: bool = False) -> EpisodeDraft:
+    settings = load_settings(local_preview=local_preview)
+
+    source_count = manifest.get("source_count", 0)
+    if source_count < settings.min_source_count:
+        raise ValueError(
+            f"Not enough relevant sources: {source_count} < {settings.min_source_count}"
+        )
+
+    errors: list[str] = []
+
+    models = [settings.llm_editor_model]
+    if settings.llm_fallback_model:
+        models.append(settings.llm_fallback_model)
+
+    for model in models:
+        try:
+            logger.info("Generating script with model: %s", model)
+
+            payload = _generate_with_model(model, manifest, settings, force_length=False)
+            script = assemble_script(manifest["run_date"], payload)
+            wc = _word_count(script)
+
+            if wc < settings.min_script_words:
+                logger.warning(
+                    "Script too short: %d words < %d minimum, retrying with force_length=True",
+                    wc, settings.min_script_words,
+                )
+                payload = _generate_with_model(model, manifest, settings, force_length=True)
+                script = assemble_script(manifest["run_date"], payload)
+                wc = _word_count(script)
+
+            if wc < settings.min_script_words:
+                raise ValueError(
+                    f"Script too short after retry: {wc} words < {settings.min_script_words} minimum"
+                )
+
+            logger.info("Script generated successfully: %d words, model=%s", wc, model)
+            return EpisodeDraft(
+                episode_title=payload.get("episode_title", settings.podcast_title),
+                episode_summary=payload.get("episode_summary", settings.podcast_description_short),
+                opening_news_title=payload.get("opening_news_title", ""),
+                script=script,
+                tomorrow_concept=payload.get("tomorrow_pedagogical_concept", ""),
+                highlights_label=payload.get("highlights_label", "Highlights"),
+            )
+        except Exception as exc:
+            logger.error("Model %s failed: %s", model, exc)
+            errors.append(f"{model}: {exc}")
+
+    raise ValueError("All editorial generation attempts failed: " + " | ".join(errors))

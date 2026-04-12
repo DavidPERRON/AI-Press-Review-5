@@ -1,0 +1,28 @@
+title: "AI Press Review"
+subtitle: "Factual, Clear, Built for Busy Professionals"
+author: "David Perron"
+email: "david.perron@aequitus.net"
+language: "en"
+category_primary: "Business"
+category_secondary: "Artificial Intelligence"
+short_description: "Six pillars: AI News - Research & Breakthroughs - Use Cases - Tools & Practice - Weak Signals - Education."
+long_description: ""
+feed_url: "https://davidperron.github.io/AI-Press-Review/podcast-feed.xml"
+site_url: "https://davidperron.github.io/AI-Press-Review"
+public_audio_base_url: "https://www.ashcroftedition.org"
+cover_image: "assets/podcast-cover.png"
+
+editorial:
+  target_duration_min: 14
+  target_duration_max: 18
+  min_script_words: 2500
+  min_source_count: 45
+  freshness_hours: 48
+  exclude_previous_episode: true
+
+retention_days: 10
+publish_timezone: "Europe/Paris"
+
+schedule:
+  publish_hour_local: 7
+  weekdays_only: true
