@@ -35,7 +35,7 @@ def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> 
             }
         )
 
-    target_words = max(settings.min_script_words + 400, 2900)
+    target_words = max(settings.min_script_words + 800, 3000)
 
     schema = {
         "episode_title": "string — short, factual, no clickbait",
