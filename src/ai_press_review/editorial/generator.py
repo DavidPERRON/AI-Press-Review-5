@@ -45,33 +45,40 @@ def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> 
         "tomorrow_pedagogical_concept": "one short sentence fragment, no more than 12 words, announcing a concept to explain tomorrow",
         "sections": {
             "ai_news": [
-                "paragraph 1 (80-140 words): lead story with full context",
-                "paragraph 2 (80-140 words): second major story",
-                "paragraph 3 (80-140 words): third story or partnership/funding",
-                "paragraph 4 (80-140 words): additional news worth covering",
+                "paragraph 1 (100-150 words): lead story with full context and specific details",
+                "paragraph 2 (100-150 words): second major story with concrete facts",
+                "paragraph 3 (100-150 words): third story or partnership/funding with numbers",
+                "paragraph 4 (100-150 words): additional news worth covering in detail",
+                "paragraph 5 (100-150 words): fifth story or follow-up on a developing trend",
+                "paragraph 6 (100-150 words): sixth story expanding coverage breadth",
             ],
             "use_cases_and_deployments": [
-                "paragraph 1 (80-140 words): most impactful deployment",
-                "paragraph 2 (80-140 words): second deployment with measurable gains",
-                "paragraph 3 (80-140 words): third use case or industry application",
+                "paragraph 1 (100-150 words): most impactful deployment with measurable results",
+                "paragraph 2 (100-150 words): second deployment with concrete gains and scale",
+                "paragraph 3 (100-150 words): third use case or industry application",
+                "paragraph 4 (100-150 words): fourth deployment or adoption milestone",
             ],
             "tools_and_practice": [
-                "paragraph 1 (80-140 words): most notable tool update or release",
-                "paragraph 2 (80-140 words): practical workflow or prompting technique",
-                "paragraph 3 (80-140 words): additional tool or developer update",
+                "paragraph 1 (100-150 words): most notable tool update or release",
+                "paragraph 2 (100-150 words): practical workflow or prompting technique",
+                "paragraph 3 (100-150 words): additional tool or developer update",
+                "paragraph 4 (100-150 words): ecosystem change or integration worth noting",
             ],
             "weak_signals_and_trends": [
-                "paragraph 1 (80-140 words): emerging trend grounded in cited facts",
-                "paragraph 2 (80-140 words): forward-looking observation with attribution",
+                "paragraph 1 (100-150 words): emerging trend grounded in cited facts",
+                "paragraph 2 (100-150 words): forward-looking observation with attribution",
+                "paragraph 3 (100-150 words): second emerging pattern or market shift",
             ],
             "research_and_breakthroughs": [
-                "paragraph 1 (80-140 words): most significant paper or benchmark",
-                "paragraph 2 (80-140 words): second research highlight",
-                "paragraph 3 (80-140 words): architecture or methodology advance",
+                "paragraph 1 (100-150 words): most significant paper or benchmark result",
+                "paragraph 2 (100-150 words): second research highlight with methodology",
+                "paragraph 3 (100-150 words): architecture or methodology advance",
+                "paragraph 4 (100-150 words): additional research finding or dataset release",
             ],
             "education_and_pedagogy": [
-                "paragraph 1 (80-140 words): concept explanation in plain language",
-                "paragraph 2 (80-140 words): deeper detail or practical implication",
+                "paragraph 1 (100-150 words): concept explanation in plain language",
+                "paragraph 2 (100-150 words): deeper detail or practical implication",
+                "paragraph 3 (100-150 words): real-world example or analogy to anchor understanding",
             ],
         },
     }
@@ -79,8 +86,9 @@ def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> 
     length_instructions = (
         f"Your script MUST contain at least {settings.min_script_words} words total. "
         f"Target {target_words} words. "
-        "Each paragraph must be between 80 and 140 words. "
-        "Write 18 to 22 paragraphs total across all sections. "
+        "Each paragraph MUST be between 100 and 150 words — never shorter than 100 words. "
+        "Write ALL 24 paragraphs listed in the schema. Do NOT skip any. "
+        "You MUST produce exactly 24 paragraphs total across all sections. "
     )
 
     if force_length:
