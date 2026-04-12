@@ -4,7 +4,7 @@ import argparse
 import logging
 from datetime import date
 
-from ai_press_review.pipeline import run_pipeline
+from ai_press_review.pipeline import generate_draft
 
 logging.basicConfig(
     level=logging.INFO,
@@ -14,16 +14,12 @@ logging.basicConfig(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description='Cloud dry run: remote LLM + Cartesia, no upload/publish')
+    parser = argparse.ArgumentParser(description='Generate draft episode (collect + LLM + TTS + upload, no RSS publish)')
     parser.add_argument('--date', default=date.today().isoformat())
     parser.add_argument('--profile', default='daily', help='Editorial profile: daily, weekly_recap')
     args = parser.parse_args()
-    result = run_pipeline(
+    result = generate_draft(
         run_date=args.date,
-        local_preview=False,
-        render_audio=True,
-        upload_audio=False,
-        publish_feed=False,
         profile=args.profile,
     )
     print(result)

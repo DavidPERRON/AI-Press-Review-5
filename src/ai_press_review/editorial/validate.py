@@ -14,11 +14,19 @@ CLOSING_SENTENCE = (
     "This podcast has a daily production cost. If you'd like to support me, my latest book, The Last Heaven, is available on Amazon and at ashcroftedition.com — link on the podcast page. Thank you."
 )
 
+INTRO_PATTERNS = {
+    'daily': r"Your Daily AI Press Review — [A-Za-z]+ \d{2}, \d{4}: .+\.",
+    'weekly': r"Your Weekly AI Press Review — Week of [A-Za-z]+ \d{2}, \d{4}: .+\.",
+}
 
-def build_intro_line(run_date: str, highlights_label: str) -> str:
+
+def build_intro_line(run_date: str, highlights_label: str, intro_format: str = 'daily') -> str:
     dt = datetime.fromisoformat(run_date)
-    formatted = dt.strftime("%B %d, %Y")
     label = " ".join((highlights_label or "").split())[:32].strip() or "Highlights"
+    if intro_format == 'weekly':
+        formatted = dt.strftime("Week of %B %d, %Y")
+        return f"Your Weekly AI Press Review — {formatted}: {label}."
+    formatted = dt.strftime("%B %d, %Y")
     return f"Your Daily AI Press Review — {formatted}: {label}."
 
 
@@ -41,10 +49,10 @@ def validate_section_payload(payload: dict) -> None:
         raise ValueError("Tomorrow pedagogical concept is too long")
 
 
-def assemble_script(run_date: str, payload: dict) -> str:
+def assemble_script(run_date: str, payload: dict, intro_format: str = 'daily') -> str:
     validate_section_payload(payload)
 
-    intro = build_intro_line(run_date, payload.get("highlights_label", "Highlights"))
+    intro = build_intro_line(run_date, payload.get("highlights_label", "Highlights"), intro_format)
     sections = payload["sections"]
 
     ordered_paragraphs = [intro]
@@ -55,16 +63,17 @@ def assemble_script(run_date: str, payload: dict) -> str:
     ordered_paragraphs.append(payload["tomorrow_pedagogical_concept"].strip().rstrip(".") + ".")
 
     script = "\n\n".join(ordered_paragraphs)
-    validate_final_script(script)
+    validate_final_script(script, intro_format)
     return script
 
 
-def validate_final_script(script: str) -> None:
+def validate_final_script(script: str, intro_format: str = 'daily') -> None:
     lines = [line.strip() for line in script.splitlines() if line.strip()]
     if not lines:
         raise ValueError("Script is empty")
 
-    if not re.fullmatch(r"Your Daily AI Press Review — [A-Za-z]+ \d{2}, \d{4}: .+\.", lines[0]):
+    pattern = INTRO_PATTERNS.get(intro_format, INTRO_PATTERNS['daily'])
+    if not re.fullmatch(pattern, lines[0]):
         raise ValueError("Opening line does not match the required format")
 
     if len(lines) < 4:

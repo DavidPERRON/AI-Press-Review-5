@@ -1,0 +1,46 @@
+name: Reject Episode
+
+# Declenchement manuel pour rejeter le draft en attente
+# Supprime l'audio de R2 et marque le draft comme rejete
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  reject:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Pull latest state
+        run: git pull --rebase origin main
+
+      - name: Reject pending draft
+        env:
+          PUBLIC_AUDIO_BASE_URL: ${{ vars.PUBLIC_AUDIO_BASE_URL }}
+          R2_BUCKET_NAME: ${{ vars.R2_BUCKET_NAME }}
+          R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: python scripts/reject_draft.py
+
+      - name: Commit rejection state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/state/
+          git diff --cached --quiet || git commit -m "reject: episode rejected [skip ci]"
+          git push

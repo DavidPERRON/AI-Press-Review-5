@@ -14,46 +14,83 @@ category_primary: "Business"
 category_secondary: "Artificial Intelligence"
 short_description: "Six pillars: AI News - Research & Breakthroughs - Use Cases - Tools & Practice - Weak Signals - Education."
 long_description: ""
-feed_url: "https://davidperron.github.io/AI-Press-Review/podcast-feed.xml"
-site_url: "https://davidperron.github.io/AI-Press-Review"
+feed_url: "https://davidperron.github.io/AI-Press-Review-5/podcast-feed.xml"
+site_url: "https://davidperron.github.io/AI-Press-Review-5"
 public_audio_base_url: "https://www.ashcroftedition.org"
 cover_image: "assets/podcast-cover.png"
 
-# ── EDITORIAL ─────────────────────────────────────────────────
+# ── EDITORIAL (defaults — les profils peuvent surcharger) ────
 editorial:
-  target_duration_min: 14          # duree cible minimum (minutes)
-  target_duration_max: 18          # duree cible maximum (minutes)
-  min_script_words: 2500           # nombre minimum de mots dans le script
-  min_source_count: 45             # nombre minimum de sources requises
-  freshness_hours: 48              # anciennete max des articles (heures)
-  exclude_previous_episode: true   # exclure les sources deja utilisees
+  target_duration_min: 14
+  target_duration_max: 18
+  min_script_words: 2500
+  min_source_count: 45
+  freshness_hours: 48
+  exclude_previous_episode: true
 
 # ── LLM ───────────────────────────────────────────────────────
 llm:
-  max_tokens: 12000                # tokens max pour la generation
-  temperature: 0.2                 # creativite (0.0 = factuel, 1.0 = creatif)
-  timeout_seconds: 180             # timeout par appel LLM
+  max_tokens: 12000
+  temperature: 0.2
+  timeout_seconds: 180
 
 # ── TTS (Cartesia) ───────────────────────────────────────────
 tts:
-  chunk_max_chars: 1800            # taille max par chunk TTS (caracteres)
+  chunk_max_chars: 1800
+  speed: 0.9
+  volume: 1.0
+  emotion: "neutral"
 
 # ── PUBLICATION ───────────────────────────────────────────────
-retention_days: 10                 # jours de retention des anciens episodes
+retention_days: 10
 publish_timezone: "Europe/Paris"
 
 schedule:
-  publish_hour_local: 7            # heure de publication (heure locale)
-  weekdays_only: true              # publier uniquement en semaine
+  publish_hour_local: 7
+  weekdays_only: false
+
+# ──────────────────────────────────────────────────────────────
+#  PROFILS EDITORIAUX
+#  Chaque profil surcharge les parametres editorial ci-dessus.
+#  Pour creer un nouveau workflow : ajoutez un profil ici,
+#  creez le prompt correspondant dans config/, et ajoutez
+#  un workflow dans .github/workflows/.
+# ──────────────────────────────────────────────────────────────
+profiles:
+  daily:
+    description: "Episode quotidien Lun-Ven"
+    freshness_hours: 48
+    exclude_previous_episode: true
+    prefer_unused: false
+    min_source_count: 45
+    min_script_words: 2500
+    target_duration_min: 14
+    target_duration_max: 18
+    prompt_file: "prompt_system.txt"
+    intro_format: "daily"
+
+  weekly_recap:
+    description: "Recap hebdomadaire — Samedi"
+    freshness_hours: 168
+    exclude_previous_episode: false
+    prefer_unused: true
+    unused_score_bonus: 2.0
+    reuse_min_score: 8.0
+    min_source_count: 60
+    min_script_words: 3000
+    target_duration_min: 18
+    target_duration_max: 24
+    prompt_file: "prompt_weekly.txt"
+    intro_format: "weekly"
 
 # ── SCORING DES SOURCES ──────────────────────────────────────
 # Le score determine quelles sources sont selectionnees.
 # Plus le score est eleve, plus la source est prioritaire.
 
 scoring:
-  min_relevance: 3.0               # score minimum pour qu'une source soit gardee
-  min_text_length: 180             # longueur minimum du texte (caracteres)
-  similarity_threshold: 0.88       # seuil de similarite pour la deduplication
+  min_relevance: 3.0
+  min_text_length: 180
+  similarity_threshold: 0.88
 
   # Mots-cles interdits — les articles contenant ces termes sont exclus
   banned_terms:

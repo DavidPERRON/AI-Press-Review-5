@@ -82,10 +82,17 @@ class Settings:
     newsapi_query: str
     newsapi_page_size: int
     scoring: ScoringConfig = field(default_factory=ScoringConfig)
+    # Profile fields
+    profile_name: str = 'daily'
+    prefer_unused: bool = False
+    unused_score_bonus: float = 0.0
+    reuse_min_score: float = 0.0
+    intro_format: str = 'daily'
+    prompt_file: str = 'prompt_system.txt'
 
     @property
     def prompt_path(self) -> Path:
-        return CONFIG_DIR / 'prompt_system.txt'
+        return CONFIG_DIR / self.prompt_file
 
 
 def _yaml_config() -> dict[str, Any]:
@@ -132,7 +139,37 @@ def _load_scoring(config: dict[str, Any]) -> ScoringConfig:
     )
 
 
-def load_settings(local_preview: bool = False) -> Settings:
+def _apply_profile(settings: Settings, config: dict[str, Any], profile: str) -> None:
+    profiles = config.get('profiles', {}) or {}
+    prof = profiles.get(profile)
+    if not prof:
+        return
+    settings.profile_name = profile
+    if 'freshness_hours' in prof:
+        settings.freshness_hours = int(prof['freshness_hours'])
+    if 'exclude_previous_episode' in prof:
+        settings.exclude_previous_episode = bool(prof['exclude_previous_episode'])
+    if 'min_source_count' in prof:
+        settings.min_source_count = int(prof['min_source_count'])
+    if 'min_script_words' in prof:
+        settings.min_script_words = int(prof['min_script_words'])
+    if 'target_duration_min' in prof:
+        settings.target_duration_min = int(prof['target_duration_min'])
+    if 'target_duration_max' in prof:
+        settings.target_duration_max = int(prof['target_duration_max'])
+    if 'prompt_file' in prof:
+        settings.prompt_file = str(prof['prompt_file'])
+    if 'intro_format' in prof:
+        settings.intro_format = str(prof['intro_format'])
+    if 'prefer_unused' in prof:
+        settings.prefer_unused = bool(prof['prefer_unused'])
+    if 'unused_score_bonus' in prof:
+        settings.unused_score_bonus = float(prof['unused_score_bonus'])
+    if 'reuse_min_score' in prof:
+        settings.reuse_min_score = float(prof['reuse_min_score'])
+
+
+def load_settings(local_preview: bool = False, profile: str | None = None) -> Settings:
     config = _yaml_config()
 
     local_base = _env('LOCAL_LLM_BASE_URL') if local_preview else ''
@@ -141,7 +178,7 @@ def load_settings(local_preview: bool = False) -> Settings:
     local_model = _env('LOCAL_LLM_EDITOR_MODEL') if local_preview else ''
     llm_model_default = local_model or _env('LLM_EDITOR_MODEL')
 
-    return Settings(
+    settings = Settings(
         podcast_title=_env('PODCAST_TITLE', _yaml_get(config, 'title', 'AI Press Review')),
         podcast_subtitle=_env('PODCAST_SUBTITLE', _yaml_get(config, 'subtitle', '')),
         podcast_author=_env('PODCAST_AUTHOR', _yaml_get(config, 'author', '')),
@@ -179,9 +216,9 @@ def load_settings(local_preview: bool = False) -> Settings:
         cartesia_model_id=_env('CARTESIA_MODEL_ID', 'sonic-3'),
         cartesia_version=_env('CARTESIA_VERSION', '2025-04-16'),
         cartesia_language=_env('CARTESIA_LANGUAGE', 'en'),
-        cartesia_speed=float(_env('CARTESIA_SPEED', '1.0')),
-        cartesia_volume=float(_env('CARTESIA_VOLUME', '1.0')),
-        cartesia_emotion=_env('CARTESIA_EMOTION', 'neutral'),
+        cartesia_speed=float(_env('CARTESIA_SPEED', str(_yaml_get(config, 'tts.speed', 1.0)))),
+        cartesia_volume=float(_env('CARTESIA_VOLUME', str(_yaml_get(config, 'tts.volume', 1.0)))),
+        cartesia_emotion=_env('CARTESIA_EMOTION', str(_yaml_get(config, 'tts.emotion', 'neutral'))),
         r2_bucket_name=_env('R2_BUCKET_NAME', 'pressreview'),
         r2_endpoint=_env('R2_ENDPOINT'),
         r2_access_key_id=_env('R2_ACCESS_KEY_ID'),
@@ -193,6 +230,11 @@ def load_settings(local_preview: bool = False) -> Settings:
         newsapi_page_size=int(_env('NEWSAPI_PAGE_SIZE', '50')),
         scoring=_load_scoring(config),
     )
+
+    if profile:
+        _apply_profile(settings, config, profile)
+
+    return settings
 
 
 def load_sources_config() -> dict:

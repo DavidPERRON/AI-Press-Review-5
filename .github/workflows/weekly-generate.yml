@@ -1,23 +1,27 @@
-name: Cloud Dry Run
+name: Weekly Generate
+
+# Genere le recap hebdomadaire le Samedi a 6h Paris
+# Conserve le buzz de la semaine + ouvre aux infos non utilisees
+# L'audio est uploade sur R2 pour ecoute preview
 
 on:
+  schedule:
+    - cron: '0 4 * * 6'   # Samedi 6h Paris CEST
   workflow_dispatch:
     inputs:
       run_date:
-        description: Run date in YYYY-MM-DD format
+        description: Run date (YYYY-MM-DD)
         required: false
         default: ''
-      profile:
-        description: Editorial profile (daily, weekly_recap)
-        required: false
-        default: 'daily'
 
 jobs:
-  cloud_dry_run:
+  generate:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-python@v5
         with:
@@ -38,7 +42,7 @@ jobs:
       - name: Install Chromium for crawler
         run: python -m playwright install chromium
 
-      - name: Run cloud dry run
+      - name: Generate weekly recap draft
         env:
           PODCAST_DESCRIPTION_LONG: ${{ vars.PODCAST_DESCRIPTION_LONG }}
           PUBLIC_AUDIO_BASE_URL: ${{ vars.PUBLIC_AUDIO_BASE_URL }}
@@ -48,15 +52,27 @@ jobs:
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
           CARTESIA_VOICE_ID: ${{ vars.CARTESIA_VOICE_ID }}
+          R2_BUCKET_NAME: ${{ vars.R2_BUCKET_NAME }}
+          R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           NEWSAPI_API_KEY: ${{ secrets.NEWSAPI_API_KEY }}
         run: |
           RUN_DATE=${{ github.event.inputs.run_date }}
           if [ -z "$RUN_DATE" ]; then RUN_DATE=$(date +%F); fi
-          python scripts/cloud_dry_run.py --date "$RUN_DATE" --profile "${{ github.event.inputs.profile }}"
+          python scripts/generate_draft.py --date "$RUN_DATE" --profile weekly_recap
+
+      - name: Commit draft state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/state/ data/sources/ docs/sources/
+          git diff --cached --quiet || git commit -m "draft: weekly recap ${{ github.event.inputs.run_date || 'auto' }} [skip ci]"
+          git push
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cloud-dry-run-output
+          name: weekly-draft-output
           path: output/
           retention-days: 7

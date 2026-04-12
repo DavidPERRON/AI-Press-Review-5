@@ -1,0 +1,64 @@
+name: Auto Release
+
+# Publie automatiquement le draft en attente a 10h Paris
+# Si aucun draft pending n'existe, le job se termine sans erreur
+# Pour rejeter avant 10h, lancer manuellement le workflow "Reject Episode"
+
+on:
+  schedule:
+    - cron: '0 8 * * 1-6'   # 10h Paris CEST, Lun-Sam
+  workflow_dispatch: {}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Pull latest state
+        run: git pull --rebase origin main
+
+      - name: Release pending draft
+        env:
+          PUBLIC_AUDIO_BASE_URL: ${{ vars.PUBLIC_AUDIO_BASE_URL }}
+          R2_BUCKET_NAME: ${{ vars.R2_BUCKET_NAME }}
+          R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          python -c "
+          import json, sys
+          from pathlib import Path
+          draft_path = Path('data/state/pending_draft.json')
+          if not draft_path.exists():
+              print('No pending draft found — nothing to release')
+              sys.exit(0)
+          data = json.loads(draft_path.read_text())
+          if data.get('status') != 'pending':
+              print(f'Draft status is {data.get(\"status\")!r}, not pending — skipping')
+              sys.exit(0)
+          from ai_press_review.pipeline import release_pending_draft
+          result = release_pending_draft()
+          print(f'Released: {result[\"title\"]} ({result[\"date\"]})')
+          "
+
+      - name: Commit published state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/state/ docs/
+          git diff --cached --quiet || git commit -m "release: publish episode [skip ci]"
+          git push

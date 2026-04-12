@@ -92,6 +92,16 @@ def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> 
             "Every section must be substantial and dense with information. "
         )
 
+    # Weekly recap context
+    if settings.profile_name == 'weekly_recap':
+        length_instructions += (
+            "This is a WEEKLY RECAP covering the entire past week. "
+            "Prioritize the biggest stories that generated buzz. "
+            "Also highlight important news that may have been missed in daily episodes. "
+            "Sources with higher relevance_score are more likely to be unused — prioritize them. "
+            "Use natural time references when covering stories from different days. "
+        )
+
     payload = {
         "constraints": {
             "title": settings.podcast_title,
@@ -244,8 +254,8 @@ def _generate_with_model(model: str, manifest: dict, settings, force_length: boo
 
 
 @retry(wait=wait_fixed(3), stop=stop_after_attempt(2))
-def generate_episode_script(manifest: dict, local_preview: bool = False) -> EpisodeDraft:
-    settings = load_settings(local_preview=local_preview)
+def generate_episode_script(manifest: dict, local_preview: bool = False, profile: str | None = None) -> EpisodeDraft:
+    settings = load_settings(local_preview=local_preview, profile=profile)
 
     source_count = manifest.get("source_count", 0)
     if source_count < settings.min_source_count:
@@ -261,10 +271,10 @@ def generate_episode_script(manifest: dict, local_preview: bool = False) -> Epis
 
     for model in models:
         try:
-            logger.info("Generating script with model: %s", model)
+            logger.info("Generating script with model: %s (profile=%s)", model, settings.profile_name)
 
             payload = _generate_with_model(model, manifest, settings, force_length=False)
-            script = assemble_script(manifest["run_date"], payload)
+            script = assemble_script(manifest["run_date"], payload, intro_format=settings.intro_format)
             wc = _word_count(script)
 
             if wc < settings.min_script_words:
@@ -273,7 +283,7 @@ def generate_episode_script(manifest: dict, local_preview: bool = False) -> Epis
                     wc, settings.min_script_words,
                 )
                 payload = _generate_with_model(model, manifest, settings, force_length=True)
-                script = assemble_script(manifest["run_date"], payload)
+                script = assemble_script(manifest["run_date"], payload, intro_format=settings.intro_format)
                 wc = _word_count(script)
 
             if wc < settings.min_script_words:

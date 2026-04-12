@@ -26,6 +26,19 @@ def _previous_episode_memory() -> tuple[set[str], list[str]]:
     return set(latest.get("source_fingerprints", [])), list(latest.get("source_titles", []))
 
 
+def _all_used_this_week() -> tuple[set[str], list[str]]:
+    """Fingerprints and titles from all recent episodes (for weekly recap)."""
+    history = load_episode_history()
+    fps: set[str] = set()
+    titles: list[str] = []
+    for ep in history.get("episodes", [])[:7]:
+        fps.update(ep.get("source_fingerprints", []))
+        titles.extend(ep.get("source_titles", []))
+    used = load_used_sources()
+    titles.extend(item.get("title", "") for item in used.get("items", []))
+    return fps, titles
+
+
 def _recent_used_titles() -> list[str]:
     payload = load_used_sources()
     return [item.get("title", "") for item in payload.get("items", [])]
@@ -138,6 +151,31 @@ def _is_duplicate_of_previous(
     return False
 
 
+def _apply_weekly_bonus(
+    sources: list[SourceItem],
+    used_fps: set[str],
+    used_titles: list[str],
+    settings,
+) -> list[SourceItem]:
+    """For weekly recap: boost unused sources, penalize reused ones."""
+    threshold = settings.scoring.similarity_threshold
+    kept: list[SourceItem] = []
+    for item in sources:
+        fp = fingerprint(item.title, item.url)
+        is_reused = fp in used_fps or any(
+            title_similarity(item.title, t) >= threshold for t in used_titles
+        )
+        if is_reused:
+            if item.relevance_score < settings.reuse_min_score:
+                continue
+            item.relevance_score = round(item.relevance_score - 1.0, 2)
+        else:
+            item.relevance_score = round(item.relevance_score + settings.unused_score_bonus, 2)
+        kept.append(item)
+    kept.sort(key=lambda s: (s.relevance_score, s.published_at or ""), reverse=True)
+    return kept
+
+
 def _update_used_sources(sources: list[SourceItem]) -> None:
     payload = load_used_sources()
     items = payload.get("items", [])
@@ -147,8 +185,8 @@ def _update_used_sources(sources: list[SourceItem]) -> None:
     save_used_sources(payload)
 
 
-def collect_sources(run_date: str, local_preview: bool = False) -> dict:
-    settings = load_settings(local_preview=local_preview)
+def collect_sources(run_date: str, local_preview: bool = False, profile: str | None = None) -> dict:
+    settings = load_settings(local_preview=local_preview, profile=profile)
     cfg = load_sources_config()
 
     # Phase 1: Collect metadata in parallel (RSS feeds + NewsAPI)
@@ -178,6 +216,12 @@ def collect_sources(run_date: str, local_preview: bool = False) -> dict:
     else:
         previous_fingerprints, previous_titles, recent_titles = set(), [], []
 
+    # For weekly recap: load all used data even though we don't pre-filter
+    weekly_used_fps: set[str] = set()
+    weekly_used_titles: list[str] = []
+    if settings.prefer_unused:
+        weekly_used_fps, weekly_used_titles = _all_used_this_week()
+
     candidates: list[SourceItem] = []
     seen_urls: set[str] = set()
 
@@ -186,7 +230,9 @@ def collect_sources(run_date: str, local_preview: bool = False) -> dict:
             continue
         seen_urls.add(item.url)
 
-        if _is_duplicate_of_previous(item, previous_fingerprints, previous_titles, recent_titles, settings.scoring.similarity_threshold):
+        if settings.exclude_previous_episode and _is_duplicate_of_previous(
+            item, previous_fingerprints, previous_titles, recent_titles, settings.scoring.similarity_threshold
+        ):
             continue
 
         if _contains_banned_topic(" ".join(filter(None, [item.title, item.summary])), settings.scoring):
@@ -223,6 +269,10 @@ def collect_sources(run_date: str, local_preview: bool = False) -> dict:
     sources = list(deduped.values())
     sources.sort(key=lambda s: (s.relevance_score, s.published_at or ""), reverse=True)
 
+    # Phase 4b: Weekly bonus/penalty for unused vs reused sources
+    if settings.prefer_unused and weekly_used_fps:
+        sources = _apply_weekly_bonus(sources, weekly_used_fps, weekly_used_titles, settings)
+
     logger.info(
         "Phase 4: %d sources selected (min required: %d)",
         len(sources), settings.min_source_count,
@@ -234,6 +284,7 @@ def collect_sources(run_date: str, local_preview: bool = False) -> dict:
         "run_date": run_date,
         "generated_at": iso_now(),
         "source_count": len(sources),
+        "profile": settings.profile_name,
         "sources": [s.to_dict() for s in sources],
     }
 
@@ -261,6 +312,7 @@ def _manifest_to_markdown(manifest: dict) -> str:
         f"# Source manifest — {manifest['run_date']}",
         "",
         f"Generated at: {manifest['generated_at']}",
+        f"Profile: {manifest.get('profile', 'daily')}",
         f"Relevant source count: {manifest['source_count']}",
         "",
     ]
@@ -313,7 +365,7 @@ def _manifest_to_html(manifest: dict) -> str:
         "</style>"
         "</head>"
         "<body>"
-        f"<h1>Sources — {escape(manifest['run_date'])}</h1>"
+        f"<h1>Sources — {escape(manifest['run_date'])} ({escape(manifest.get('profile', 'daily'))})</h1>"
         f"<p>Generated at {escape(manifest['generated_at'])}</p>"
         f"{''.join(cards)}"
         "</body>"

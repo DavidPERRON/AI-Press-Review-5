@@ -16,6 +16,7 @@ logging.basicConfig(
 def main() -> None:
     parser = argparse.ArgumentParser(description='Production release pipeline')
     parser.add_argument('--date', default=date.today().isoformat())
+    parser.add_argument('--profile', default='daily', help='Editorial profile: daily, weekly_recap')
     args = parser.parse_args()
     result = run_pipeline(
         run_date=args.date,
@@ -23,6 +24,7 @@ def main() -> None:
         render_audio=True,
         upload_audio=True,
         publish_feed=True,
+        profile=args.profile,
     )
     print(result)
 
