@@ -8,6 +8,12 @@ from xml.sax.saxutils import escape
 
 from .collectors.newsapi import fetch_newsapi_articles
 from .collectors.rss import fetch_rss_entries
+from .editorial.clustering import (
+    cluster_manifest_summary,
+    cluster_sources,
+    rank_clusters,
+    reduce_to_sources,
+)
 from .extractors.web_content import batch_extract
 from .models import SourceItem
 from .settings import DATA_DIR, DOCS_DIR, ScoringConfig, load_settings, load_sources_config
@@ -282,7 +288,21 @@ def collect_sources(run_date: str, local_preview: bool = False, profile: str | N
     if settings.prefer_unused and weekly_used_fps:
         sources = _apply_weekly_bonus(sources, weekly_used_fps, weekly_used_titles, settings)
 
-    # Phase 4c: Cap per domain to ensure source diversity
+    # Phase 4c: Semantic clustering — group sources that report the same
+    # story so the LLM receives deduplicated stories, not raw articles.
+    # Gracefully degrades to singleton clusters if the embedding endpoint
+    # is unavailable.
+    clusters = cluster_sources(sources)
+    clusters_ranked = rank_clusters(clusters)
+    reps_per_cluster = int(getattr(settings.scoring, 'cluster_representatives', 0) or 3)
+    sources = reduce_to_sources(clusters_ranked, k_per_cluster=reps_per_cluster)
+    cluster_summary = cluster_manifest_summary(clusters_ranked)
+    logger.info(
+        "Clustering: %d sources grouped into %d stories; keeping top %d per story",
+        sum(c.size for c in clusters_ranked), len(clusters_ranked), reps_per_cluster,
+    )
+
+    # Phase 4d: Cap per domain to ensure source diversity across stories
     max_per_domain = settings.scoring.max_per_domain
     if max_per_domain > 0:
         domain_counts: dict[str, int] = {}
@@ -311,6 +331,8 @@ def collect_sources(run_date: str, local_preview: bool = False, profile: str | N
         "source_count": len(sources),
         "profile": settings.profile_name,
         "sources": [s.to_dict() for s in sources],
+        "clusters": cluster_summary,
+        "cluster_count": len(cluster_summary),
     }
 
     data_sources_dir = DATA_DIR / "sources"
