@@ -27,6 +27,23 @@ def split_script(text: str, max_chars: int = 1800) -> list[str]:
     return chunks
 
 
+def _trim_silence(segment, silence_thresh_db: float = -45.0, chunk_ms: int = 10):
+    """Trim leading/trailing silence from a pydub AudioSegment.
+
+    Keeps a tiny head (10ms) so we don't clip a starting consonant.
+    """
+    from pydub.silence import detect_leading_silence
+
+    lead = detect_leading_silence(segment, silence_threshold=silence_thresh_db, chunk_size=chunk_ms)
+    trail = detect_leading_silence(segment.reverse(), silence_threshold=silence_thresh_db, chunk_size=chunk_ms)
+    head_keep = 10
+    start = max(0, lead - head_keep)
+    end = len(segment) - max(0, trail - head_keep)
+    if end <= start:
+        return segment
+    return segment[start:end]
+
+
 def synthesize_script(script: str, output_path: Path, local_preview: bool = False) -> dict:
     from pydub import AudioSegment
 
@@ -48,11 +65,20 @@ def synthesize_script(script: str, output_path: Path, local_preview: bool = Fals
     for index, chunk in enumerate(chunks, start=1):
         chunk_path = chunk_dir / f'chunk_{index:03d}.wav'
         chunk_path.write_bytes(_render_chunk(chunk, settings))
-        rendered.append(AudioSegment.from_file(chunk_path, format='wav'))
+        seg = AudioSegment.from_file(chunk_path, format='wav')
+        seg = _trim_silence(seg)
+        rendered.append(seg)
+
+    # Concatenate chunks with a short crossfade + a natural paragraph pause
+    # to hide the seams between Cartesia renders.
+    crossfade_ms = 60
+    pause_ms = 220
+    pause = AudioSegment.silent(duration=pause_ms, frame_rate=rendered[0].frame_rate)
 
     combined = rendered[0]
     for seg in rendered[1:]:
-        combined += seg
+        combined = combined.append(pause, crossfade=0)
+        combined = combined.append(seg, crossfade=crossfade_ms)
 
     combined.export(output_path, format='mp3', bitrate='128k')
     return {
