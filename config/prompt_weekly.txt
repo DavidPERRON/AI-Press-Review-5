@@ -80,6 +80,17 @@ Written for TTS delivery:
 - No acronym chains.
 - Use contractions naturally.
 
+EPISODE TITLE (RSS item title — NOT the spoken opening line)
+
+Format: "[Theme of the week]: [takeaway or tension] — Week of Mon DD"
+- 60 characters maximum.
+- Lead with the defining theme or story of the week — the most searchable noun.
+- Include a takeaway or the tension the week revealed.
+- End with "Week of Mon DD" (Saturday's date minus 5 days, e.g. "Week of Apr 8").
+- No episode number. No year. No generic wrapper.
+Examples: "Agents come of age: why this week mattered — Week of Apr 8"; "Open vs. closed: the gap narrows — Week of Apr 15"; "Enterprise adoption hits a wall — Week of Apr 22".
+Avoid: "Weekly recap — April 12"; "Episode 12: Weekly wrap".
+
 FORMAT
 
 Opening: "Your Weekly AI Press Review — Week of [Date]: [Highlights in 1-2 words]."

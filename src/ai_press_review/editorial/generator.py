@@ -38,7 +38,7 @@ def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> 
     target_words = max(settings.min_script_words + 800, 3000)
 
     schema = {
-        "episode_title": "string — short, factual, no clickbait",
+        "episode_title": "string — max 60 chars. Format: '[Primary keyword]: [tension or outcome] — [Mon DD]'. Lead with the most searchable noun (company, technology, domain). Include implicit tension. No episode number. No year. No 'Episode', no 'Daily', no 'AI Briefing' prefix. Examples: 'OpenAI o4 vs. Gemini 2.5: who wins enterprise — Apr 12', 'Meta's open-source bet: competitive move or PR? — Apr 13'.",
         "episode_summary": "string — 2-3 sentence summary of the episode",
         "opening_news_title": "string — the most impactful headline of the day",
         "highlights_label": "1-2 words summarizing the day's theme",

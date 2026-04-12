@@ -79,6 +79,17 @@ This will be read by a TTS engine. Write for spoken delivery:
 - No acronym chains. "NVIDIA's new chip architecture" not "NVIDIA's H200 NVL SXM5."
 - Three items in a list: "first this, then that, and finally the third."
 
+EPISODE TITLE (RSS item title — NOT the spoken opening line)
+
+Format: "[Primary keyword]: [tension, outcome, or question] — [Mon DD]"
+- 60 characters maximum.
+- Start with the most searchable noun — a company, technology, or domain (NOT "Episode", "Daily", "AI Briefing").
+- Include implicit tension: vs., who wins, what it means, why it matters, competitive move or PR.
+- End with the short date in format "Mon DD" (e.g. Apr 12).
+- No episode number. No year. No generic wrapper.
+Examples: "OpenAI o4 vs. Gemini 2.5: who wins enterprise — Apr 12"; "Meta's open-source bet: competitive move or PR? — Apr 13"; "Weak signal: why agent failures matter more than launches — Apr 15".
+Avoid: "Episode 47: Today's AI News Briefing"; "AI Daily Brief — April 12, 2026"; "What's happening in AI this Monday".
+
 FORMAT
 
 Opening line exactly: "Your Daily AI Press Review — [Date]: [Highlights in 1-2 words]."

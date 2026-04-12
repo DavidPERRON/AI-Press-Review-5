@@ -6,14 +6,21 @@
 
 # ── PODCAST METADATA ──────────────────────────────────────────
 title: "AI Press Review"
-subtitle: "Factual, Clear, Built for Busy Professionals"
+subtitle: "40 sources. 15 minutes. What matters in AI today."
 author: "David Perron"
 email: "david.perron@aequitus.net"
 language: "en"
 category_primary: "Business"
 category_secondary: "Artificial Intelligence"
-short_description: "Six pillars: AI News - Research & Breakthroughs - Use Cases - Tools & Practice - Weak Signals - Education."
-long_description: ""
+short_description: "40 sources. 15 minutes. What matters in AI today."
+long_description: |
+  AI Press Review is a daily AI news briefing — published every morning at 7AM CET, Monday through Sunday. Each episode draws from 40+ weighted global sources, structured across six editorial pillars: AI News, Research & Breakthroughs, Use Cases, Tools & Practice, Weak Signals, and Education.
+
+  Sources are selected by domain authority and editorial standards. Regulatory speculation, unverified rumors, and opinion pieces are excluded.
+
+  Every Saturday: a weekly recap of the five trends that defined the week.
+
+  Hosted by David Perron.
 feed_url: "https://podcast.aequitus.net/podcast-feed.xml"
 site_url: "https://podcast.aequitus.net"
 public_audio_base_url: "https://www.ashcroftedition.org"
