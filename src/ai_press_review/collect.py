@@ -225,16 +225,11 @@ def collect_sources(run_date: str, local_preview: bool = False, profile: str | N
     candidates: list[SourceItem] = []
     seen_urls: set[str] = set()
 
-    google_news_skipped = 0
+    google_news_kept = 0
     for item in rss_items + newsapi_items:
         if item.url in seen_urls:
             continue
         seen_urls.add(item.url)
-
-        # Drop unresolved Google News URLs — content is inaccessible
-        if "news.google.com" in (item.url or ""):
-            google_news_skipped += 1
-            continue
 
         if settings.exclude_previous_episode and _is_duplicate_of_previous(
             item, previous_fingerprints, previous_titles, recent_titles, settings.scoring.similarity_threshold
@@ -244,16 +239,19 @@ def collect_sources(run_date: str, local_preview: bool = False, profile: str | N
         if _contains_banned_topic(" ".join(filter(None, [item.title, item.summary])), settings.scoring):
             continue
 
+        if "news.google.com" in (item.url or ""):
+            google_news_kept += 1
+
         candidates.append(item)
 
-    if google_news_skipped:
-        logger.info("Dropped %d unresolved Google News URLs", google_news_skipped)
+    if google_news_kept:
+        logger.info("Kept %d Google News items (unresolved URLs use RSS summary)", google_news_kept)
 
     logger.info("Phase 2: %d candidates after pre-filtering", len(candidates))
 
     # Phase 3: Batch extract content in parallel for items missing content
     # Skip extraction for arxiv.org — RSS abstract is sufficient for scoring
-    SKIP_EXTRACT_DOMAINS = {"arxiv.org"}
+    SKIP_EXTRACT_DOMAINS = {"arxiv.org", "news.google.com"}
     urls_to_extract = [
         item.url for item in candidates
         if not (item.content_text or "").strip()

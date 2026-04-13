@@ -4,9 +4,13 @@
 #  Les curated RSS sont des flux directs de sites specifiques.
 # ──────────────────────────────────────────────────────────────
 
-# Google News RSS disabled — redirect resolution blocked since 2025.
-# Replaced by GNews.io API (see GNEWS_API_KEY env var) + expanded curated RSS.
-google_news_rss: []
+# Google News RSS — recherches par mots-cles
+google_news_rss:
+  - "https://news.google.com/rss/search?q=artificial+intelligence&hl=en&gl=US&ceid=US:en"
+  - "https://news.google.com/rss/search?q=generative+AI+LLM&hl=en&gl=US&ceid=US:en"
+  - "https://news.google.com/rss/search?q=AI+startup+funding&hl=en&gl=US&ceid=US:en"
+  - "https://news.google.com/rss/search?q=machine+learning+research&hl=en&gl=US&ceid=US:en"
+  - "https://news.google.com/rss/search?q=AI+enterprise+deployment&hl=en&gl=US&ceid=US:en"
 
 # ── AI LABS & BIG TECH ────────────────────────────────────────
 curated_rss:

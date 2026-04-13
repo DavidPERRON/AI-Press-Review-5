@@ -31,7 +31,7 @@ editorial:
   target_duration_min: 14
   target_duration_max: 18
   min_script_words: 2200
-  min_source_count: 20
+  min_source_count: 15
   freshness_hours: 48
   exclude_previous_episode: true
 
@@ -69,7 +69,7 @@ profiles:
     freshness_hours: 48
     exclude_previous_episode: true
     prefer_unused: false
-    min_source_count: 20
+    min_source_count: 15
     min_script_words: 2200
     target_duration_min: 14
     target_duration_max: 18
@@ -98,7 +98,7 @@ scoring:
   min_relevance: 3.0
   min_text_length: 180
   similarity_threshold: 0.88
-  max_per_domain: 5
+  max_per_domain: 7
 
   # Mots-cles interdits — les articles contenant ces termes sont exclus
   banned_terms:
