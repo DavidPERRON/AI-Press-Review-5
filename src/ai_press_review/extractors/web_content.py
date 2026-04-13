@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from concurrent.futures import ThreadPoolExecutor, as_completed
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError as FuturesTimeoutError
 from dataclasses import dataclass
 from functools import lru_cache
 from typing import Optional
@@ -25,6 +26,11 @@ USER_AGENT = (
 MAX_CONTENT_LENGTH = 6000
 MIN_CONTENT_LENGTH = 400
 MAX_EXTRACTION_WORKERS = 8
+
+# Safety budgets to prevent the pipeline from hanging on misbehaving sites.
+CRAWL4AI_TIMEOUT_S = 25         # max time for a single crawl4ai/playwright call
+PER_URL_WALL_TIMEOUT_S = 45      # hard ceiling per URL across all strategies
+BATCH_WALL_BUDGET_S = 600        # hard ceiling for batch_extract (10 min total)
 
 
 @dataclass
@@ -102,12 +108,17 @@ async def _crawl4ai_extract_async(url: str) -> Optional[ExtractedContent]:
     try:
         from crawl4ai import AsyncWebCrawler
         async with AsyncWebCrawler(verbose=False) as crawler:
-            result = await crawler.arun(url=url)
+            result = await asyncio.wait_for(
+                crawler.arun(url=url),
+                timeout=CRAWL4AI_TIMEOUT_S,
+            )
             markdown = clean_text(getattr(result, "markdown", "") or "")
             if len(markdown) >= MIN_CONTENT_LENGTH:
                 return ExtractedContent(url=url, text=markdown[:MAX_CONTENT_LENGTH], method="crawl4ai")
-    except Exception:
-        pass
+    except asyncio.TimeoutError:
+        logger.debug("crawl4ai timed out on %s after %ds", url, CRAWL4AI_TIMEOUT_S)
+    except Exception as exc:
+        logger.debug("crawl4ai failed on %s: %s", url, exc)
     return None
 
 
@@ -126,6 +137,8 @@ def _extract_with_crawl4ai(url: str) -> Optional[ExtractedContent]:
 
 @lru_cache(maxsize=512)
 def extract_article_content(url: str) -> Optional[ExtractedContent]:
+    """Try extraction strategies in order. Each strategy is bounded;
+    this function itself therefore has a bounded max wallclock cost."""
     extracted = _extract_with_crawl4ai(url)
     if extracted:
         return extracted
@@ -144,17 +157,43 @@ def fetch_article_text(url: str) -> str:
 
 
 def batch_extract(urls: list[str], max_workers: int = MAX_EXTRACTION_WORKERS) -> dict[str, Optional[ExtractedContent]]:
-    unique_urls = list(dict.fromkeys(urls))
-    results: dict[str, Optional[ExtractedContent]] = {}
+    """Extract content for a batch of URLs with strict wallclock budgets.
 
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+    - Each individual future is bounded by `PER_URL_WALL_TIMEOUT_S`.
+    - The whole batch is bounded by `BATCH_WALL_BUDGET_S`; any future
+      still running past that budget is cancelled and the URL gets None.
+    This guarantees the pipeline phase cannot hang forever, even if one
+    URL triggers an infinite playwright loop.
+    """
+    unique_urls = list(dict.fromkeys(urls))
+    results: dict[str, Optional[ExtractedContent]] = {u: None for u in unique_urls}
+
+    start = time.monotonic()
+    executor = ThreadPoolExecutor(max_workers=max_workers)
+    try:
         future_to_url = {executor.submit(extract_article_content, url): url for url in unique_urls}
-        for future in as_completed(future_to_url):
+        for future in as_completed(future_to_url, timeout=BATCH_WALL_BUDGET_S):
             url = future_to_url[future]
             try:
-                results[url] = future.result()
-            except Exception:
-                logger.warning("Extraction failed for %s", url)
-                results[url] = None
+                results[url] = future.result(timeout=PER_URL_WALL_TIMEOUT_S)
+            except FuturesTimeoutError:
+                logger.warning("Extraction per-URL timeout (%ds) on %s", PER_URL_WALL_TIMEOUT_S, url)
+                future.cancel()
+            except Exception as exc:
+                logger.warning("Extraction failed for %s: %s", url, exc)
+    except FuturesTimeoutError:
+        pending = [u for f, u in future_to_url.items() if not f.done()]
+        logger.warning(
+            "Batch extraction wallclock budget exceeded (%ds) — %d URL(s) left unresolved: %s",
+            BATCH_WALL_BUDGET_S, len(pending), pending[:5],
+        )
+    finally:
+        executor.shutdown(wait=False, cancel_futures=True)
 
+    elapsed = time.monotonic() - start
+    completed = sum(1 for v in results.values() if v is not None)
+    logger.info(
+        "Batch extraction: %d/%d URLs extracted in %.1fs (budget %ds)",
+        completed, len(unique_urls), elapsed, BATCH_WALL_BUDGET_S,
+    )
     return results
