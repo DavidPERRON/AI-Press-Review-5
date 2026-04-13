@@ -199,10 +199,10 @@ def load_settings(local_preview: bool = False, profile: str | None = None) -> Se
     config = _yaml_config()
 
     local_base = _env('LOCAL_LLM_BASE_URL') if local_preview else ''
-    llm_base_default = local_base or _env('LLM_BASE_URL')
+    llm_base_default = local_base or _env('LLM_BASE_URL', _yaml_get(config, 'llm.base_url', ''))
 
     local_model = _env('LOCAL_LLM_EDITOR_MODEL') if local_preview else ''
-    llm_model_default = local_model or _env('LLM_EDITOR_MODEL')
+    llm_model_default = local_model or _env('LLM_EDITOR_MODEL', _yaml_get(config, 'llm.editor_model', ''))
 
     settings = Settings(
         podcast_title=_env('PODCAST_TITLE', _yaml_get(config, 'title', 'AI Press Review')),
@@ -232,11 +232,11 @@ def load_settings(local_preview: bool = False, profile: str | None = None) -> Se
         llm_base_url=llm_base_default,
         llm_api_key=_env('LLM_API_KEY', 'unused' if local_preview else ''),
         llm_editor_model=llm_model_default,
-        llm_fallback_model=_env('LLM_FALLBACK_MODEL'),
+        llm_fallback_model=_env('LLM_FALLBACK_MODEL', _yaml_get(config, 'llm.fallback_model', '')),
         llm_timeout_seconds=int(_env('LLM_TIMEOUT_SECONDS', str(_yaml_get(config, 'llm.timeout_seconds', 180)))),
         llm_max_tokens=int(_yaml_get(config, 'llm.max_tokens', 12000)),
         llm_temperature=_safe_float(str(_yaml_get(config, 'llm.temperature', 0.2)), 0.2, 'llm.temperature'),
-        tts_chunk_max_chars=int(_yaml_get(config, 'tts.chunk_max_chars', 1800)),
+        tts_chunk_max_chars=int(_yaml_get(config, 'tts.chunk_max_chars', 1500)),
         cartesia_api_key=_env('CARTESIA_API_KEY'),
         cartesia_voice_id=_env('CARTESIA_VOICE_ID'),
         cartesia_model_id=_env('CARTESIA_MODEL_ID', 'sonic-3'),

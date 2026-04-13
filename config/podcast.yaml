@@ -36,7 +36,13 @@ editorial:
   exclude_previous_episode: true
 
 # ── LLM ───────────────────────────────────────────────────────
+# Defaults point to DeepInfra (OpenAI-compatible, cheap inference).
+# Override via GitHub Actions vars: LLM_BASE_URL, LLM_EDITOR_MODEL, LLM_FALLBACK_MODEL
+# and secret LLM_API_KEY (use DEEPINFRA_API_KEY value for DeepInfra).
 llm:
+  base_url: "https://api.deepinfra.com/v1/openai"
+  editor_model: "deepseek-ai/DeepSeek-V3"
+  fallback_model: "meta-llama/Meta-Llama-3.1-70B-Instruct"
   max_tokens: 12000
   temperature: 0.2
   timeout_seconds: 180

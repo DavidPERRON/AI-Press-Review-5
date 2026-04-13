@@ -4,13 +4,12 @@ import logging
 from collections import OrderedDict
 from concurrent.futures import ThreadPoolExecutor
 from typing import Iterable
-from xml.sax.saxutils import escape
 
 from .collectors.newsapi import fetch_newsapi_articles
 from .collectors.rss import fetch_rss_entries
 from .extractors.web_content import batch_extract
 from .models import SourceItem
-from .settings import DATA_DIR, DOCS_DIR, ScoringConfig, load_settings, load_sources_config
+from .settings import DATA_DIR, ScoringConfig, load_settings, load_sources_config
 from .state import load_episode_history, load_used_sources, save_used_sources
 from .utils import fingerprint, iso_now, title_similarity, within_hours, write_json
 
@@ -317,21 +316,17 @@ def collect_sources(run_date: str, local_preview: bool = False, profile: str | N
         "sources": [s.to_dict() for s in sources],
     }
 
+    # Source manifests are kept LOCAL only (gitignored) for CI artifact/debug.
+    # Not written to docs/ nor committed to avoid plagiarism risk (commit 8338ee4).
     data_sources_dir = DATA_DIR / "sources"
-    docs_sources_dir = DOCS_DIR / "sources"
     data_sources_dir.mkdir(parents=True, exist_ok=True)
-    docs_sources_dir.mkdir(parents=True, exist_ok=True)
 
     write_json(data_sources_dir / f"{run_date}.json", manifest)
     write_json(data_sources_dir / "latest.json", manifest)
 
     md = _manifest_to_markdown(manifest)
-    html = _manifest_to_html(manifest)
-
     (data_sources_dir / f"{run_date}.md").write_text(md, encoding="utf-8")
     (data_sources_dir / "latest.md").write_text(md, encoding="utf-8")
-    (docs_sources_dir / f"{run_date}.html").write_text(html, encoding="utf-8")
-    (docs_sources_dir / "latest.html").write_text(html, encoding="utf-8")
 
     return manifest
 
@@ -368,35 +363,3 @@ def _manifest_to_markdown(manifest: dict) -> str:
     return "\n".join(lines)
 
 
-def _manifest_to_html(manifest: dict) -> str:
-    cards = []
-
-    for src in manifest["sources"]:
-        summary = (src.get("summary") or src.get("content_text") or "")[:900]
-        cards.append(
-            "<article class='card'>"
-            f"<h3>{escape(src['title'])}</h3>"
-            f"<p><strong>{escape(src['domain'])}</strong></p>"
-            f"<p>{escape(summary)}</p>"
-            f"<p><a href='{escape(src['url'])}'>Open source</a></p>"
-            "</article>"
-        )
-
-    return (
-        "<!doctype html>"
-        "<html lang='en'>"
-        "<head>"
-        "<meta charset='utf-8'>"
-        f"<title>Sources {escape(manifest['run_date'])}</title>"
-        "<style>"
-        "body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:900px;margin:2rem auto;line-height:1.5}"
-        ".card{border:1px solid #ddd;border-radius:14px;padding:1rem;margin:1rem 0}"
-        "</style>"
-        "</head>"
-        "<body>"
-        f"<h1>Sources — {escape(manifest['run_date'])} ({escape(manifest.get('profile', 'daily'))})</h1>"
-        f"<p>Generated at {escape(manifest['generated_at'])}</p>"
-        f"{''.join(cards)}"
-        "</body>"
-        "</html>"
-    )
