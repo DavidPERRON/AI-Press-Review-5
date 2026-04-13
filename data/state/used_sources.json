@@ -1,3 +1,154 @@
 {
-  "items": []
+  "items": [
+    {
+      "title": "Google's Gemma 4 puts free agentic AI on your phone and no data ever leaves the device",
+      "url": "https://the-decoder.com/googles-gemma-4-puts-free-agentic-ai-on-your-phone-and-no-data-ever-leaves-the-device/",
+      "used_at": "2026-04-13T08:07:04.289313+00:00"
+    },
+    {
+      "title": "Arcee AI spent half its venture capital to build an open reasoning model that rivals Claude Opus in agent tasks",
+      "url": "https://the-decoder.com/arcee-ai-spent-half-its-venture-capital-to-build-an-open-reasoning-model-that-rivals-claude-opus-in-agent-tasks/",
+      "used_at": "2026-04-13T08:07:04.289323+00:00"
+    },
+    {
+      "title": "Researchers define what counts as a world model and text-to-video generators do not",
+      "url": "https://the-decoder.com/researchers-define-what-counts-as-a-world-model-and-text-to-video-generators-do-not/",
+      "used_at": "2026-04-13T08:07:04.289329+00:00"
+    },
+    {
+      "title": "Agent skills look great in benchmarks but fall apart under realistic conditions, researchers find",
+      "url": "https://the-decoder.com/agent-skills-look-great-in-benchmarks-but-fall-apart-under-realistic-conditions-researchers-find/",
+      "used_at": "2026-04-13T08:07:04.289333+00:00"
+    },
+    {
+      "title": "Interactive ASR: Towards Human-Like Interaction and Semantic Coherence Evaluation for Agentic Speech Recognition",
+      "url": "https://arxiv.org/abs/2604.09121",
+      "used_at": "2026-04-13T08:07:04.289337+00:00"
+    },
+    {
+      "title": "Meta AI and KAUST Researchers Propose Neural Computers That Fold Computation, Memory, and I/O Into One Learned Model",
+      "url": "https://www.marktechpost.com/2026/04/12/meta-ai-and-kaust-researchers-propose-neural-computers-that-fold-computation-memory-and-i-o-into-one-learned-model/",
+      "used_at": "2026-04-13T08:07:04.289341+00:00"
+    },
+    {
+      "title": "MiniMax Just Open Sourced MiniMax M2.7: A Self-Evolving Agent Model that Scores 56.22% on SWE-Pro and 57.0% on Terminal Bench 2",
+      "url": "https://www.marktechpost.com/2026/04/12/minimax-just-open-sourced-minimax-m2-7-a-self-evolving-agent-model-that-scores-56-22-on-swe-pro-and-57-0-on-terminal-bench-2/",
+      "used_at": "2026-04-13T08:07:04.289344+00:00"
+    },
+    {
+      "title": "Liquid AI Releases LFM2.5-VL-450M: a 450M-Parameter Vision-Language Model with Bounding Box Prediction, Multilingual Support, and Sub-250ms Edge Inference",
+      "url": "https://www.marktechpost.com/2026/04/11/liquid-ai-releases-lfm2-5-vl-450m-a-450m-parameter-vision-language-model-with-bounding-box-prediction-multilingual-support-and-sub-250ms-edge-inference/",
+      "used_at": "2026-04-13T08:07:04.289349+00:00"
+    },
+    {
+      "title": "Researchers from MIT, NVIDIA, and Zhejiang University Propose TriAttention: A KV Cache Compression Method That Matches Full Attention at 2.5× Higher Throughput",
+      "url": "https://www.marktechpost.com/2026/04/11/researchers-from-mit-nvidia-and-zhejiang-university-propose-triattention-a-kv-cache-compression-method-that-matches-full-attention-at-2-5x-higher-throughput/",
+      "used_at": "2026-04-13T08:07:04.289353+00:00"
+    },
+    {
+      "title": "How to Build a Secure Local-First Agent Runtime with OpenClaw Gateway, Skills, and Controlled Tool Execution",
+      "url": "https://www.marktechpost.com/2026/04/11/how-to-build-a-secure-local-first-agent-runtime-with-openclaw-gateway-skills-and-controlled-tool-execution/",
+      "used_at": "2026-04-13T08:07:04.289357+00:00"
+    },
+    {
+      "title": "EXAONE 4.5 Technical Report",
+      "url": "https://arxiv.org/abs/2604.08644",
+      "used_at": "2026-04-13T08:07:04.289361+00:00"
+    },
+    {
+      "title": "MT-OSC: Path for LLMs that Get Lost in Multi-Turn Conversation",
+      "url": "https://arxiv.org/abs/2604.08782",
+      "used_at": "2026-04-13T08:07:04.289365+00:00"
+    },
+    {
+      "title": "LADR: Locality-Aware Dynamic Rescue for Efficient Text-to-Image Generation with Diffusion Large Language Models",
+      "url": "https://arxiv.org/abs/2603.13450",
+      "used_at": "2026-04-13T08:07:04.289368+00:00"
+    },
+    {
+      "title": "VerifAI: A Verifiable Open-Source Search Engine for Biomedical Question Answering",
+      "url": "https://arxiv.org/abs/2604.08549",
+      "used_at": "2026-04-13T08:07:04.289372+00:00"
+    },
+    {
+      "title": "Gemma 4 audio with MLX",
+      "url": "https://simonwillison.net/2026/Apr/12/mlx-audio/",
+      "used_at": "2026-04-13T08:07:04.289376+00:00"
+    },
+    {
+      "title": "SQLite 3.53.0",
+      "url": "https://simonwillison.net/2026/Apr/11/sqlite/",
+      "used_at": "2026-04-13T08:07:04.289379+00:00"
+    },
+    {
+      "title": "The Climate Issue: The blue marble, then and now",
+      "url": "https://www.economist.com/science-and-technology/2026/04/11/the-climate-issue-the-blue-marble-then-and-now",
+      "used_at": "2026-04-13T08:07:04.289383+00:00"
+    },
+    {
+      "title": "Quoting Bryan Cantrill",
+      "url": "https://simonwillison.net/2026/Apr/13/bryan-cantrill/",
+      "used_at": "2026-04-13T08:07:04.289386+00:00"
+    },
+    {
+      "title": "SQLite Query Result Formatter Demo",
+      "url": "https://simonwillison.net/2026/Apr/11/sqlite-qrf/",
+      "used_at": "2026-04-13T08:07:04.289390+00:00"
+    },
+    {
+      "title": "The Guardian view on AI politics: US datacentre protests are a warning to big tech | Editorial",
+      "url": "https://www.theguardian.com/commentisfree/2026/apr/12/the-guardian-view-on-ai-politics-us-datacentre-protests-are-a-warning-to-big-tech",
+      "used_at": "2026-04-13T08:07:04.289393+00:00"
+    },
+    {
+      "title": "OpenAI employee tries to explain usage limits of the new ChatGPT Pro plans",
+      "url": "https://the-decoder.com/openai-employee-tries-to-explain-usage-limits-of-the-new-chatgpt-pro-plans/",
+      "used_at": "2026-04-13T08:07:04.289397+00:00"
+    },
+    {
+      "title": "Is AI the greatest art heist in history?",
+      "url": "https://www.theguardian.com/books/2026/apr/12/is-ai-the-greatest-art-heist-in-history",
+      "used_at": "2026-04-13T08:07:04.289400+00:00"
+    },
+    {
+      "title": "‘It has your name on it, but I don’t think it’s you’: how AI is impersonating musicians on Spotify",
+      "url": "https://www.theguardian.com/technology/2026/apr/11/ai-impersonating-musicians-spotify",
+      "used_at": "2026-04-13T08:07:04.289404+00:00"
+    },
+    {
+      "title": "OpenClaw, cet agent IA autonome qui agite la Silicon Valley",
+      "url": "https://www.lemonde.fr/pixels/article/2026/04/12/openclaw-cet-agent-ia-autonome-qui-agite-la-silicon-valley_6679530_4408996.html",
+      "used_at": "2026-04-13T08:07:04.289408+00:00"
+    },
+    {
+      "title": "Data centers : « Limiter les impacts spatiaux, énergétiques et environnementaux des grandes fermes de données est fondamental »",
+      "url": "https://www.lemonde.fr/idees/article/2026/04/12/data-centers-limiter-les-impacts-spatiaux-energetiques-et-environnementaux-des-grandes-fermes-de-donnees-est-fondamental_6679547_3232.html",
+      "used_at": "2026-04-13T08:07:04.289411+00:00"
+    },
+    {
+      "title": "‘Too powerful for the public’: Inside Anthropic’s bid to win the AI publicity war",
+      "url": "https://www.theguardian.com/technology/2026/apr/12/too-powerful-for-the-public-inside-anthropics-bid-to-win-the-ai-publicity-war",
+      "used_at": "2026-04-13T08:07:04.289415+00:00"
+    },
+    {
+      "title": "‘It feels as if I’ve made a new best friend’: my experiment with AI journalling",
+      "url": "https://www.theguardian.com/technology/2026/apr/12/experiment-with-ai-journalling",
+      "used_at": "2026-04-13T08:07:04.289418+00:00"
+    },
+    {
+      "title": "La guerre à l’heure de l’IA : comment les algorithmes bousculent l’éthique militaire",
+      "url": "https://www.lemonde.fr/idees/article/2026/04/11/la-guerre-a-l-heure-de-l-ia-comment-les-algorithmes-bousculent-l-ethique-militaire_6679370_3232.html",
+      "used_at": "2026-04-13T08:07:04.289422+00:00"
+    },
+    {
+      "title": "Treasury Secretary Bessent Calls Crypto Leaders 'Nihilists' As Clarity Act Deadline Approaches",
+      "url": "https://finance.yahoo.com/markets/crypto/articles/treasury-secretary-bessent-calls-crypto-220110838.html",
+      "used_at": "2026-04-13T08:07:04.289426+00:00"
+    },
+    {
+      "title": "Over 4,732 Messages, He Fell In Love With an AI Chatbot. Now He’s Dead.",
+      "url": "https://www.wsj.com/tech/ai/google-gemini-jonathan-gavalas-death-07351ab2",
+      "used_at": "2026-04-13T08:07:04.289456+00:00"
+    }
+  ]
 }
