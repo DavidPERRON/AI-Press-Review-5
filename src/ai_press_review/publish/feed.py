@@ -45,7 +45,6 @@ def _build_brief_data(episode: PublishedEpisode, source_titles: list[str], episo
         'next_url': '',
         'next_title': '',
         'key_claims': [],
-        'source_manifest': [],
     }
 
 
@@ -108,11 +107,8 @@ def _write_feed(episodes: list[dict]) -> None:
         pub_date = format_datetime(datetime.fromisoformat(ep['published_at']))
         duration_secs = ep.get('duration_seconds', 0)
         duration_str = f"{duration_secs // 3600}:{(duration_secs % 3600) // 60:02d}:{duration_secs % 60:02d}"
-        brief_url = ep.get('brief_url') or ep.get('source_manifest_url', '')
-        content_encoded = (
-            f"<p>{escape(ep['summary'])}</p>"
-            f'<p><a href="{escape(ep.get("source_manifest_url", ""))}">Source manifest</a></p>'
-        )
+        brief_url = ep.get('brief_url', '')
+        content_encoded = f"<p>{escape(ep['summary'])}</p>"
         items.append(
             f"<item><title>{escape(ep['title'])}</title>"
             f"<description>{escape(ep['summary'])}</description>"

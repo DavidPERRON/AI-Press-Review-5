@@ -42,9 +42,6 @@ def generate_episode_brief(episode_data: dict) -> str:
         claims_html.append(
             f'<div class="claim-item">'
             f'<p class="claim-text">{escape(claim["claim"])}</p>'
-            f'<p class="claim-source">Source: <a href="{escape(claim["source_url"])}" '
-            f'target="_blank" rel="noopener">{escape(claim["source_label"])}</a> '
-            f'({escape(claim["source_domain"])})</p>'
             f'</div>'
         )
     html = html.replace(
@@ -52,48 +49,9 @@ def generate_episode_brief(episode_data: dict) -> str:
         '        <!-- Example item structure (repeat for each claim):\n'
         '        <div class="claim-item">\n'
         '          <p class="claim-text">OpenAI released o4 with a reported 40% improvement on math benchmarks.</p>\n'
-        '          <p class="claim-source">Source: <a href="https://openai.com/..." target="_blank" rel="noopener">OpenAI Blog</a> (openai.com)</p>\n'
         '        </div>\n'
         '        -->',
         '\n'.join(claims_html),
-    )
-
-    # ── Source manifest ──
-    total_articles = sum(s.get('articles', 0) for s in episode_data.get('source_manifest', []))
-    unique_domains = len({s.get('domain', '') for s in episode_data.get('source_manifest', [])})
-    html = html.replace('{{SOURCE_COUNT}}', str(total_articles))
-    html = html.replace('{{DOMAIN_COUNT}}', str(unique_domains))
-
-    source_html = []
-    for src in episode_data.get('source_manifest', []):
-        weight = src.get('weight', 1)
-        if weight >= 3:
-            badge_class = 'w-high'
-        elif weight >= 2:
-            badge_class = 'w-med'
-        else:
-            badge_class = 'w-base'
-        articles = src.get('articles', 0)
-        plural = 's' if articles > 1 else ''
-        source_html.append(
-            f'<div class="source-row">'
-            f'<span class="source-domain">{escape(src["domain"])}</span>'
-            f'<span class="source-label">{escape(src.get("label", src["domain"]))}</span>'
-            f'<span class="source-weight {badge_class}">\u00d7{weight}</span>'
-            f'<span class="source-count">{articles} article{plural}</span>'
-            f'</div>'
-        )
-    html = html.replace(
-        '<!-- Rendered by pipeline from SOURCE_MANIFEST JSON array -->\n'
-        '        <!-- Example row structure:\n'
-        '        <div class="source-row">\n'
-        '          <span class="source-domain">openai.com</span>\n'
-        '          <span class="source-label">OpenAI Blog</span>\n'
-        '          <span class="source-weight w-high">2.0\u00d7</span>\n'
-        '          <span class="source-count">2 articles</span>\n'
-        '        </div>\n'
-        '        -->',
-        '\n'.join(source_html),
     )
 
     # ── Conditional removal of optional buttons ──

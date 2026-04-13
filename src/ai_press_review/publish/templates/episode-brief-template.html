@@ -23,17 +23,7 @@
 
   KEY_CLAIMS JSON structure (array of objects):
   [
-    { "claim": "OpenAI released o4 with a 40% improvement in math benchmarks.",
-      "source_domain": "openai.com",
-      "source_label": "OpenAI Blog",
-      "source_url": "https://openai.com/..." },
-    ...
-  ]
-
-  SOURCE_MANIFEST JSON structure:
-  [
-    { "domain": "openai.com", "label": "OpenAI Blog", "weight": 2.0, "articles": 2 },
-    { "domain": "reuters.com", "label": "Reuters",    "weight": 1.5, "articles": 1 },
+    { "claim": "OpenAI released o4 with a 40% improvement in math benchmarks." },
     ...
   ]
 -->
@@ -194,26 +184,6 @@
     .claims-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
     .claim-item { background: var(--surface); padding: 1.1rem 1.5rem; }
     .claim-text { font-size: 0.9rem; color: var(--text); margin-bottom: 0.4rem; line-height: 1.5; }
-    .claim-source { font-size: 0.75rem; color: var(--text-muted); }
-    .claim-source a { color: var(--text-muted); text-decoration: none; border-bottom: 1px solid var(--border-light); transition: color 0.2s; }
-    .claim-source a:hover { color: var(--accent); }
-
-    /* SOURCE MANIFEST */
-    .source-grid { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-top: 0; }
-    .source-row {
-      background: var(--surface); padding: 0.75rem 1.5rem;
-      display: flex; align-items: center; gap: 1rem; font-size: 0.82rem;
-    }
-    .source-domain { color: var(--text); flex: 1; font-weight: 500; }
-    .source-label { color: var(--text-muted); font-size: 0.75rem; flex: 1; }
-    .source-weight {
-      font-size: 0.68rem; font-weight: 600; padding: 0.15em 0.5em; border-radius: 3px;
-      font-variant-numeric: tabular-nums; white-space: nowrap;
-    }
-    .w-high { background: rgba(200,169,110,0.12); color: var(--accent); }
-    .w-med  { background: rgba(138,138,154,0.1); color: var(--text-secondary); }
-    .w-base { background: rgba(255,255,255,0.04); color: var(--text-muted); }
-    .source-count { color: var(--text-muted); font-size: 0.75rem; white-space: nowrap; }
 
     /* EPISODE NAV */
     .episode-nav {
@@ -291,37 +261,17 @@
 
     <!-- KEY CLAIMS -->
     <section class="section">
-      <p class="section-label">Key claims — with sources</p>
+      <p class="section-label">Key claims</p>
       <div class="claims-list" id="key-claims">
         <!-- Rendered by pipeline from KEY_CLAIMS JSON array -->
         <!-- Example item structure (repeat for each claim):
         <div class="claim-item">
           <p class="claim-text">OpenAI released o4 with a reported 40% improvement on math benchmarks.</p>
-          <p class="claim-source">Source: <a href="https://openai.com/..." target="_blank" rel="noopener">OpenAI Blog</a> (openai.com)</p>
         </div>
         -->
       </div>
     </section>
 
-    <!-- SOURCE MANIFEST -->
-    <section class="section">
-      <p class="section-label">Sources used in this episode — {{SOURCE_COUNT}} articles from {{DOMAIN_COUNT}} domains</p>
-      <div class="source-grid" id="source-manifest">
-        <!-- Rendered by pipeline from SOURCE_MANIFEST JSON array -->
-        <!-- Example row structure:
-        <div class="source-row">
-          <span class="source-domain">openai.com</span>
-          <span class="source-label">OpenAI Blog</span>
-          <span class="source-weight w-high">2.0×</span>
-          <span class="source-count">2 articles</span>
-        </div>
-        -->
-      </div>
-      <p style="font-size:0.72rem; color:var(--text-muted); margin-top:0.85rem; padding: 0 0.25rem;">
-        Sources are weighted by editorial standards and primary-source proximity.
-        <a href="/about.html#sources" style="color:var(--text-muted); border-bottom: 1px solid var(--border-light);">Learn more →</a>
-      </p>
-    </section>
 
     <!-- EPISODE NAV -->
     <nav class="episode-nav" aria-label="Episode navigation">

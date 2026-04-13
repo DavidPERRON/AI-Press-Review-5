@@ -280,27 +280,46 @@
       line-height: 1.5;
     }
 
-    /* ─── EXCLUSION LIST ─── */
-    .exclusion-list {
-      list-style: none;
-      margin-top: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
+    /* ─── EXCLUSION GRID ─── */
+    .exclusion-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 1.5rem;
     }
-    .exclusion-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-      font-size: 0.875rem;
-      color: var(--text-secondary);
+    .exclusion-item {
+      background: var(--surface);
+      padding: 1.25rem 1.5rem;
+      transition: background 0.2s;
     }
-    .exclusion-list li::before {
-      content: '—';
-      color: var(--red);
-      font-weight: 700;
+    .exclusion-item:hover {
+      background: rgba(224, 85, 85, 0.04);
+    }
+    .exclusion-item-title {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .exclusion-item-title::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--red);
       flex-shrink: 0;
-      margin-top: 0.05em;
+    }
+    .exclusion-item-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.5;
     }
 
     /* ─── SCHEDULE ─── */
@@ -510,26 +529,25 @@
             <tr>
               <td>Primary</td>
               <td><span class="weight-badge w-high">×3</span></td>
-              <td>openai.com, deepmind.com, anthropic.com, arxiv.org</td>
+              <td>Lab blogs, official company pages, preprint repositories</td>
               <td>Official announcements, peer-reviewed research — highest source authority</td>
             </tr>
             <tr>
               <td>Press</td>
               <td><span class="weight-badge w-med">×2</span></td>
-              <td>reuters.com, ft.com, mit.edu, nature.com</td>
+              <td>Major wire services, financial press, academic journals</td>
               <td>Editorial standards, original reporting, verified by news desk</td>
             </tr>
             <tr>
               <td>Specialist Press &amp; Tech</td>
               <td><span class="weight-badge w-base">×1</span></td>
-              <td>techcrunch.com, wired.com, venturebeat.com</td>
+              <td>Tech news outlets, industry publications</td>
               <td>Industry coverage — used for context and signal, not primary sourcing</td>
             </tr>
           </tbody>
         </table>
         <p style="margin-top:1.25rem; font-size: 0.8rem; color: var(--text-muted);">
-          Each episode's source manifest — the actual domains and articles used —
-          is published alongside the episode description.
+          Source tiers are applied automatically during episode production.
         </p>
       </div>
     </section>
@@ -546,29 +564,28 @@
           The following categories are systematically excluded from every episode,
           regardless of how widely they circulate on a given day.
         </p>
-        <ul class="exclusion-list">
-          <li>
-            <strong>Regulatory speculation and policy rumors</strong> — unverified regulatory moves
-            produce noise that is almost always revised. We wait for official filings.
-          </li>
-          <li>
-            <strong>Unverified announcements and press releases without independent corroboration</strong>
-            — if only one source carries a claim, it doesn't air.
-          </li>
-          <li>
-            <strong>Opinion and editorial commentary</strong> — AI Press Review reports what happened,
-            not what commentators think about it. Interpretation is yours.
-          </li>
-          <li>
-            <strong>Funding rounds below $50M and pre-seed announcements</strong>
-            — capital events dominate AI coverage and crowd out operational signal.
-          </li>
-          <li>
-            <strong>Content optimized for engagement rather than accuracy</strong>
-            — social media posts, LinkedIn thought leadership, and content farms
-            are excluded regardless of virality.
-          </li>
-        </ul>
+        <div class="exclusion-grid">
+          <div class="exclusion-item">
+            <div class="exclusion-item-title">Regulatory speculation</div>
+            <div class="exclusion-item-desc">Unverified regulatory moves produce noise that is almost always revised. We wait for official filings.</div>
+          </div>
+          <div class="exclusion-item">
+            <div class="exclusion-item-title">Uncorroborated claims</div>
+            <div class="exclusion-item-desc">If only one source carries a claim with no independent corroboration, it doesn't air.</div>
+          </div>
+          <div class="exclusion-item">
+            <div class="exclusion-item-title">Opinion &amp; commentary</div>
+            <div class="exclusion-item-desc">We report what happened, not what commentators think about it. Interpretation is yours.</div>
+          </div>
+          <div class="exclusion-item">
+            <div class="exclusion-item-title">Small funding rounds</div>
+            <div class="exclusion-item-desc">Rounds below $50M and pre-seed announcements crowd out operational signal.</div>
+          </div>
+          <div class="exclusion-item">
+            <div class="exclusion-item-title">Engagement-driven content</div>
+            <div class="exclusion-item-desc">Social media posts, thought leadership, and content farms are excluded regardless of virality.</div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -652,6 +669,7 @@
       </div>
       <div class="section-body">
         <div class="author-card">
+          <img src="/assets/david-perron.jpg" alt="David Perron" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:1px solid var(--border-light); margin-bottom:1.25rem;" />
           <div class="author-name">David Perron</div>
           <div class="author-title">Senior Global Trade Solutions professional · AI practitioner · Paris</div>
           <p class="author-bio">

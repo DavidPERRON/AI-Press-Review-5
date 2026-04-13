@@ -128,7 +128,6 @@ def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> 
             "Cross-reference multiple sources on the same topic to build richer paragraphs. "
             + length_instructions
         ).strip(),
-        "source_manifest": compact_sources,
     }
     return json.dumps(payload, ensure_ascii=False)
 

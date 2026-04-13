@@ -97,7 +97,6 @@ def run_pipeline(
             audio_url=audio_url,
             audio_bytes=audio_meta['bytes'],
             duration_seconds=audio_meta['duration_seconds'],
-            source_manifest_url=f"{settings.site_base_url}/sources/{run_date}.html",
             published_at=iso_now(),
         )
         fingerprints = [fingerprint(s['title'], s['url']) for s in manifest['sources']]
@@ -177,7 +176,6 @@ def generate_draft(
         'audio_name': audio_name,
         'audio_bytes': audio_meta['bytes'],
         'duration_seconds': audio_meta['duration_seconds'],
-        'source_manifest_url': f"{settings.site_base_url}/sources/{run_date}.html",
         'source_fingerprints': fps,
         'source_titles': titles,
         'source_count': manifest['source_count'],
@@ -211,7 +209,6 @@ def release_pending_draft() -> dict:
         audio_url=draft_data['audio_url'],
         audio_bytes=draft_data['audio_bytes'],
         duration_seconds=draft_data['duration_seconds'],
-        source_manifest_url=draft_data['source_manifest_url'],
         published_at=iso_now(),
     )
 
