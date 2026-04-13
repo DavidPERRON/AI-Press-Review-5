@@ -44,7 +44,7 @@ llm:
 # ── TTS (Cartesia) ───────────────────────────────────────────
 tts:
   chunk_max_chars: 1800
-  speed: 1.0
+  speed: 1.1
   volume: 1.0
   emotion: "curiosity:high,confidence:high"
 
