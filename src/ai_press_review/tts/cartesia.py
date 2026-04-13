@@ -53,7 +53,7 @@ def synthesize_script(script: str, output_path: Path, local_preview: bool = Fals
 
     combined = rendered[0]
     for seg in rendered[1:]:
-        combined += seg
+        combined = combined.append(seg, crossfade=150)
 
     combined.export(output_path, format='mp3', bitrate='128k')
     return {
