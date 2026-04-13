@@ -90,6 +90,7 @@
   "source_count": 37,
   "script_words": 2775,
   "generated_at": "2026-04-13T12:11:07.510861+00:00",
-  "status": "pending",
-  "pipeline_seconds": 1430.1
+  "status": "released",
+  "pipeline_seconds": 1430.1,
+  "released_at": "2026-04-13T12:28:55.304900+00:00"
 }
