@@ -18,6 +18,10 @@ on:
         description: 'Cartesia speed'
         required: false
         default: '0.9'
+      emotion:
+        description: 'Cartesia emotion (neutral | confident | curious | friendly | serious | happy)'
+        required: false
+        default: 'serious'
 
 jobs:
   voice_test_fr:
@@ -44,6 +48,7 @@ jobs:
           VOICE_ID: ${{ github.event.inputs.voice_id }}
           VOICE_NAME: ${{ github.event.inputs.voice_name }}
           SPEED: ${{ github.event.inputs.speed }}
+          EMOTION: ${{ github.event.inputs.emotion }}
         run: |
           python - <<'PY'
           import os, re, asyncio, json, base64, uuid, wave
@@ -64,7 +69,8 @@ jobs:
           voice_id = os.environ["VOICE_ID"]
           voice_name = os.environ["VOICE_NAME"]
           speed = float(os.environ["SPEED"])
-          print(f"Voice: {voice_name} ({voice_id})  speed={speed}  language=fr")
+          emotion = os.environ.get("EMOTION", "serious")
+          print(f"Voice: {voice_name} ({voice_id})  speed={speed}  emotion={emotion}  language=fr")
 
           # Same chunking logic as cartesia.py
           paragraphs = [p.strip() for p in SCRIPT.split("\n") if p.strip()]
@@ -106,7 +112,7 @@ jobs:
                               "encoding": "pcm_s16le",
                               "sample_rate": SAMPLE_RATE,
                           },
-                          "generation_config": {"volume": 1.0, "speed": speed, "emotion": "serious"},
+                          "generation_config": {"volume": 1.0, "speed": speed, "emotion": emotion},
                       }
                       await ws.send(json.dumps(req))
 
@@ -141,6 +147,7 @@ jobs:
           print("=" * 60)
           print(f"VOICE (FR): {voice_name} ({voice_id})")
           print(f"  speed:    {speed}")
+          print(f"  emotion:  {emotion}")
           print(f"  language: fr")
           print(f"  words:    {words}")
           print(f"  duration: {dur_s:.2f}s")
