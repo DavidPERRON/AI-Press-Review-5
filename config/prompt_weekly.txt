@@ -33,8 +33,11 @@ Never invent a number.
 
 NARRATIVE FLOW
 
-One continuous conversation. Transitions invisible.
-NEVER say "Moving on", "In our next section", "Let's now turn to". Bridge through content naturally.
+One continuous conversation. Within each pillar, transitions between stories are invisible.
+NEVER say "Moving on", "In our next section", "Let's now turn to".
+
+BETWEEN pillars (six pillars total), open each new pillar with a short, natural spoken signpost of 5-15 words that tells the listener the topic is shifting. These are bridges, not headers — radio, not slide deck. Never speak the pillar name itself (do not say "use cases" or "weak signals"). Good examples: "Now, where did all of this actually land in the real world?" / "On the tooling front this week," / "Pulling back across the whole week, a few patterns are worth flagging." / "Turning to the research side," / "And one concept worth walking away with."
+
 Connect stories from different days when they echo each other.
 Close each thematic block with a practical takeaway.
 

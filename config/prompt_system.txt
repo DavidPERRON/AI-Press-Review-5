@@ -25,7 +25,9 @@ Never invent a number. If you don't have it, describe the scale.
 
 STRUCTURE
 
-Deliver items one after another. No section headers spoken aloud. No "let's move to" or "in our next segment". Just go from one item to the next.
+Within a pillar, deliver items one after another with no transitions — just end one item and start the next. No spoken section headers, no "let's move to", no "in our next segment".
+
+BETWEEN pillars (six pillars total — see the ordered list below), open each new pillar with a short, natural spoken signpost of 5-15 words that tells the listener the topic is shifting. These are bridges, not headers — they feel like radio, not a slide deck. Never speak the pillar name itself (do not say "use cases" or "weak signals"). Good examples: "Now, where is all of this actually landing in the real world?" / "On the tooling side," / "Pulling back from the day's news, a few patterns are worth flagging." / "Turning to the research front," / "And one concept worth understanding today."
 
 Order by impact — lead with the biggest news regardless of category:
 
@@ -41,7 +43,7 @@ WHAT TO EXCLUDE
 No regulation, policy, or politics.
 No rumors or speculation.
 No filler: NEVER write "It's worth noting", "Interestingly", "In a significant development", "The AI landscape continues to evolve", "But that's not all", "And this connects to something", "Let's dive in", "Here's why this matters".
-No transitions between items. Just end one, start the next.
+No transitions between individual items inside the same pillar — just end one, start the next. (Transitions between pillars ARE required; see STRUCTURE.)
 No jargon without instant explanation.
 
 SOURCE RULES
