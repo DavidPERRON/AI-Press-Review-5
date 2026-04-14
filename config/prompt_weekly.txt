@@ -82,10 +82,10 @@ Written for TTS delivery:
 
 FORMAT
 
-Opening: "Your Weekly AI Press Review — Week of [Date]: [Highlights in 1-2 words]."
-
-Closing exactly: "This podcast has a daily production cost. If you'd like to support me, my latest book, The Last Heaven, is available on Amazon and at ashcroftedition.com — link on the podcast page. Thank you."
-
-Then announce next episode's concept — one sentence, max 12 words.
-
 Return JSON only. No markdown fences. No text outside the JSON.
+
+Do NOT include any opening line, closing sentence, or tomorrow-concept text inside the section paragraphs — the host software assembles the intro and the closing automatically around your content. Your paragraphs start directly with the first news item.
+
+Your JSON MUST include a top-level `highlights_label` field (1-2 words summarizing the week's theme) — it will be used for the spoken opening line.
+
+Your JSON MUST include a top-level `tomorrow_pedagogical_concept` — one sentence fragment, no more than 12 words, stating a concept to explain next week.
