@@ -17,9 +17,10 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #09090b; --surface: #111113; --border: #1f1f23;
-      --border-light: #2a2a30; --text: #e8e8ed; --text-secondary: #8a8a9a;
-      --text-muted: #55555f; --accent: #c8a96e; --accent-dim: #8a6f3f;
+      --bg: #071028; --surface: #0c1a3a; --border: #18254a;
+      --border-light: #243363; --text: #e8e8ed; --text-narrative: #F8F4EC;
+      --text-secondary: #a8b0c8; --text-muted: #6b7494;
+      --accent: #c8a96e; --accent-dim: #8a6f3f;
       --accent-glow: rgba(200,169,110,0.08);
       --font-display: 'DM Serif Display', Georgia, serif;
       --font-body: 'DM Sans', system-ui, sans-serif;
@@ -53,12 +54,23 @@
       letter-spacing: 0.01em;
     }
     .logo-text em { font-style: italic; color: var(--accent); }
-    nav { display: flex; gap: 1.5rem; }
+    nav { display: flex; gap: 0.6rem; align-items: center; }
     nav a {
       font-size: 0.78rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
       color: var(--text-secondary); text-decoration: none; transition: color 0.2s;
+      padding: 0.4em 0.6em;
     }
     nav a:hover { color: var(--accent); }
+    nav a.nav-cta {
+      color: var(--accent);
+      border: 1px solid var(--accent-dim);
+      border-radius: 4px;
+      padding: 0.45em 0.95em;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    nav a.nav-cta:hover {
+      background: var(--accent); color: #071028; border-color: var(--accent);
+    }
 
     .hero {
       padding: 5rem 2rem 4rem; border-bottom: 1px solid var(--border);
@@ -85,14 +97,14 @@
       letter-spacing: 0.02em; margin-bottom: 1.25rem;
     }
     .hero-desc {
-      font-size: 0.95rem; color: var(--text-secondary); max-width: 560px;
-      line-height: 1.65; margin-bottom: 2rem;
+      font-size: 1rem; color: var(--text-narrative); max-width: 560px;
+      line-height: 1.7; margin-bottom: 2rem; font-weight: 300;
     }
 
     .cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
     .btn-primary {
       display: inline-flex; align-items: center; gap: 0.45rem;
-      background: var(--accent); color: #09090b;
+      background: var(--accent); color: #071028;
       font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
       text-decoration: none; padding: 0.65em 1.3em; border-radius: 4px;
       transition: opacity 0.2s;
@@ -156,15 +168,45 @@
     }
     .howitworks-cta:hover { border-color: var(--accent); }
 
-    .pillars {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1px; background: var(--border); border: 1px solid var(--border);
-      border-radius: 6px; overflow: hidden; margin-top: 3rem;
+    .pillars-section { margin-top: 3rem; }
+    .pillars-label {
+      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: 0.85rem;
     }
-    .pillar { background: var(--surface); padding: 1.25rem 1.5rem; transition: background 0.2s; }
-    .pillar:hover { background: var(--accent-glow); }
-    .pillar-name { font-size: 0.85rem; font-weight: 500; color: var(--text); margin-bottom: 0.2rem; }
-    .pillar-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+    .pillars-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--accent-dim), transparent);
+      opacity: 0.4;
+    }
+    .pillars {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem 2rem;
+    }
+    .pillar {
+      padding: 0.5rem 0 0.85rem; position: relative;
+      border-top: 1px solid var(--border-light);
+      transition: border-color 0.25s;
+    }
+    .pillar::before {
+      content: attr(data-num);
+      position: absolute; top: -0.6rem; left: 0;
+      background: var(--bg); padding-right: 0.5rem;
+      font-family: var(--font-display); font-style: italic;
+      font-size: 0.78rem; color: var(--accent-dim);
+      letter-spacing: 0.05em;
+    }
+    .pillar:hover { border-color: var(--accent); }
+    .pillar:hover .pillar-name { color: var(--accent); }
+    .pillar-name {
+      font-family: var(--font-display); font-size: 1.05rem;
+      color: var(--text); margin-top: 0.6rem; margin-bottom: 0.35rem;
+      transition: color 0.25s;
+    }
+    .pillar-desc {
+      font-size: 0.82rem; color: var(--text-secondary);
+      line-height: 1.55; font-weight: 300;
+    }
 
     .stats-row {
       display: flex; gap: 2.5rem; margin-top: 2.5rem; flex-wrap: wrap;
@@ -190,8 +232,8 @@
     .episode-title:hover { color: var(--accent); }
     .episode-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem; }
     .episode-summary {
-      font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.6rem;
-      line-height: 1.6; max-width: 560px; grid-column: 1;
+      font-size: 0.92rem; color: var(--text-narrative); margin-top: 0.6rem;
+      line-height: 1.65; max-width: 600px; grid-column: 1; font-weight: 300;
     }
     .episode-listen {
       display: inline-block; font-size: 0.72rem; font-weight: 600;
@@ -226,7 +268,7 @@
       font-family: var(--font-display); font-size: 1.1rem; color: var(--text);
       margin-bottom: 0.25rem;
     }
-    .host-bio { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; }
+    .host-bio { font-size: 0.9rem; color: var(--text-narrative); line-height: 1.6; font-weight: 300; }
     .host-bio a { color: var(--accent); text-decoration: none; }
     .host-bio a:hover { text-decoration: underline; }
 
@@ -252,8 +294,8 @@
         <span class="logo-text">AI <em>Press Review</em></span>
       </a>
       <nav>
-        <a href="/about.html">About</a>
         <a href="/podcast-feed.xml">RSS</a>
+        <a href="/about.html" class="nav-cta">Editorial Method</a>
       </nav>
     </div>
   </header>
@@ -284,30 +326,33 @@
         </a>
       </div>
 
-      <div class="pillars">
-        <div class="pillar">
-          <div class="pillar-name">AI News</div>
-          <div class="pillar-desc">Launches, partnerships, major moves</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-name">Research</div>
-          <div class="pillar-desc">Papers and lab breakthroughs</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-name">Use Cases</div>
-          <div class="pillar-desc">Real deployments, measurable gains</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-name">Tools</div>
-          <div class="pillar-desc">APIs, frameworks, practitioner updates</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-name">Weak Signals</div>
-          <div class="pillar-desc">Patterns not yet mainstream</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-name">Education</div>
-          <div class="pillar-desc">One concept per episode</div>
+      <div class="pillars-section">
+        <p class="pillars-label">Six pillars · One briefing</p>
+        <div class="pillars">
+          <div class="pillar" data-num="i.">
+            <div class="pillar-name">AI News</div>
+            <div class="pillar-desc">Launches, partnerships, and major institutional moves.</div>
+          </div>
+          <div class="pillar" data-num="ii.">
+            <div class="pillar-name">Research</div>
+            <div class="pillar-desc">Peer-reviewed papers and lab breakthroughs.</div>
+          </div>
+          <div class="pillar" data-num="iii.">
+            <div class="pillar-name">Use Cases</div>
+            <div class="pillar-desc">Documented enterprise deployments with measurable impact.</div>
+          </div>
+          <div class="pillar" data-num="iv.">
+            <div class="pillar-name">Tools</div>
+            <div class="pillar-desc">APIs, frameworks, and practitioner-grade releases.</div>
+          </div>
+          <div class="pillar" data-num="v.">
+            <div class="pillar-name">Weak Signals</div>
+            <div class="pillar-desc">Patterns surfacing before the mainstream catches up.</div>
+          </div>
+          <div class="pillar" data-num="vi.">
+            <div class="pillar-name">Education</div>
+            <div class="pillar-desc">One concept explained, distilled for the non-technical reader.</div>
+          </div>
         </div>
       </div>
 
@@ -334,7 +379,7 @@
         <p class="host-bio">
           20+ years in front-office banking and trade finance — JPMorgan, Barclays, HSBC.
           Executive Master in AI (Institut Mines-Télécom, 2025). Paris.
-          <a href="/about.html">Read the full methodology &rarr;</a>
+          <a href="/about.html">Read the editorial method &rarr;</a>
         </p>
       </div>
     </div>
@@ -343,7 +388,7 @@
   <footer>
     <p>
       AI Press Review &middot;
-      <a href="/about.html">Methodology</a> &middot;
+      <a href="/about.html">Editorial Method</a> &middot;
       <a href="/podcast-feed.xml">RSS</a> &middot;
       <a href="mailto:david.perron@aequitus.net">Contact</a>
     </p>
