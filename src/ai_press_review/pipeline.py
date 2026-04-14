@@ -29,18 +29,22 @@ def run_pipeline(
     settings = load_settings(local_preview=local_preview, profile=profile)
     logger.info("Pipeline started: date=%s preview=%s profile=%s", run_date, local_preview, settings.profile_name)
 
+    # Create output dir early so artifacts always have a directory to capture,
+    # even if collection or editorial fail later.
+    outputs_dir = Path('output') / run_date
+    outputs_dir.mkdir(parents=True, exist_ok=True)
+
     # Phase 1: Collect
     t0 = time.monotonic()
     manifest = collect_sources(run_date=run_date, local_preview=local_preview, profile=profile)
     logger.info("Collection completed: %d sources in %.1fs", manifest['source_count'], time.monotonic() - t0)
+    write_json(outputs_dir / 'collection_manifest.json', manifest)
 
     # Phase 2: Generate editorial script
     t0 = time.monotonic()
     draft = generate_episode_script(manifest, local_preview=local_preview, profile=profile)
     logger.info("Editorial completed: %d words in %.1fs", len(draft.script.split()), time.monotonic() - t0)
 
-    outputs_dir = Path('output') / run_date
-    outputs_dir.mkdir(parents=True, exist_ok=True)
     (outputs_dir / 'script.txt').write_text(draft.script, encoding='utf-8')
     (outputs_dir / 'episode_summary.txt').write_text(draft.episode_summary, encoding='utf-8')
 
@@ -128,18 +132,21 @@ def generate_draft(
     settings = load_settings(local_preview=local_preview, profile=profile)
     logger.info("Draft generation started: date=%s profile=%s", run_date, profile)
 
+    # Create output dir early so artifacts are always available for debugging.
+    outputs_dir = Path('output') / run_date
+    outputs_dir.mkdir(parents=True, exist_ok=True)
+
     # Phase 1: Collect
     t0 = time.monotonic()
     manifest = collect_sources(run_date=run_date, local_preview=local_preview, profile=profile)
     logger.info("Collection completed: %d sources in %.1fs", manifest['source_count'], time.monotonic() - t0)
+    write_json(outputs_dir / 'collection_manifest.json', manifest)
 
     # Phase 2: Generate
     t0 = time.monotonic()
     draft = generate_episode_script(manifest, local_preview=local_preview, profile=profile)
     logger.info("Editorial completed: %d words in %.1fs", len(draft.script.split()), time.monotonic() - t0)
 
-    outputs_dir = Path('output') / run_date
-    outputs_dir.mkdir(parents=True, exist_ok=True)
     (outputs_dir / 'script.txt').write_text(draft.script, encoding='utf-8')
     (outputs_dir / 'episode_summary.txt').write_text(draft.episode_summary, encoding='utf-8')
 

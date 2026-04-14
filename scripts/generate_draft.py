@@ -18,9 +18,11 @@ def main() -> None:
     parser.add_argument('--date', default=date.today().isoformat())
     parser.add_argument('--profile', default='daily', help='Editorial profile: daily, weekly_recap')
     args = parser.parse_args()
+    run_date = (args.date or '').strip() or date.today().isoformat()
+    profile = (args.profile or '').strip() or 'daily'
     result = generate_draft(
-        run_date=args.date,
-        profile=args.profile,
+        run_date=run_date,
+        profile=profile,
     )
     print(result)
 

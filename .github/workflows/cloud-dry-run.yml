@@ -11,6 +11,22 @@ on:
         description: Editorial profile (daily, weekly_recap)
         required: false
         default: 'daily'
+      render_audio:
+        description: Render TTS audio (disable to isolate collect/editorial)
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      skip_tests:
+        description: Skip pytest step (useful when debugging a run)
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
 
 jobs:
   cloud_dry_run:
@@ -35,6 +51,7 @@ jobs:
           pip install -e .
 
       - name: Run tests
+        if: ${{ github.event.inputs.skip_tests != 'true' }}
         run: pytest tests/ -v --tb=short
 
       - name: Install Chromium for crawler
@@ -53,13 +70,23 @@ jobs:
           NEWSAPI_API_KEY: ${{ secrets.NEWSAPI_API_KEY }}
         run: |
           set -e
-          RUN_DATE=${{ github.event.inputs.run_date }}
+          RUN_DATE="${{ github.event.inputs.run_date }}"
           if [ -z "$RUN_DATE" ]; then RUN_DATE=$(date +%F); fi
-          python scripts/cloud_dry_run.py --date "$RUN_DATE" --profile "${{ github.event.inputs.profile }}"
+          PROFILE="${{ github.event.inputs.profile }}"
+          if [ -z "$PROFILE" ]; then PROFILE="daily"; fi
+          RENDER_FLAG="--render-audio"
+          if [ "${{ github.event.inputs.render_audio }}" = "false" ]; then
+            RENDER_FLAG="--no-render-audio"
+          fi
+          echo "Run parameters: date=$RUN_DATE profile=$PROFILE render=$RENDER_FLAG"
+          python scripts/cloud_dry_run.py --date "$RUN_DATE" --profile "$PROFILE" $RENDER_FLAG
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: cloud-dry-run-output
-          path: output/
+          path: |
+            output/
+            data/sources/
           retention-days: 7
+          if-no-files-found: warn

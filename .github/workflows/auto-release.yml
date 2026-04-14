@@ -66,6 +66,11 @@ jobs:
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase --autostash origin main
           git add data/state/ docs/
-          git diff --cached --quiet || git commit -m "release: publish episode [skip ci]"
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "release: publish episode [skip ci]"
           git push

@@ -47,6 +47,11 @@ jobs:
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase --autostash origin main
           git add data/state/
-          git diff --cached --quiet || git commit -m "reject: episode rejected [skip ci]"
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "reject: episode rejected [skip ci]"
           git push

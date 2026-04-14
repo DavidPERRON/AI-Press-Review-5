@@ -13,6 +13,10 @@ on:
         description: Run date (YYYY-MM-DD)
         required: false
         default: ''
+      profile:
+        description: Editorial profile override
+        required: false
+        default: 'daily'
 
 permissions:
   contents: write
@@ -64,23 +68,34 @@ jobs:
           NEWSAPI_API_KEY: ${{ secrets.NEWSAPI_API_KEY }}
         run: |
           set -e
-          RUN_DATE=${{ github.event.inputs.run_date }}
+          RUN_DATE="${{ github.event.inputs.run_date }}"
           if [ -z "$RUN_DATE" ]; then RUN_DATE=$(date +%F); fi
-          python scripts/generate_draft.py --date "$RUN_DATE" --profile daily
+          PROFILE="${{ github.event.inputs.profile }}"
+          if [ -z "$PROFILE" ]; then PROFILE="daily"; fi
+          echo "Run parameters: date=$RUN_DATE profile=$PROFILE"
+          python scripts/generate_draft.py --date "$RUN_DATE" --profile "$PROFILE"
 
       - name: Commit draft state
         run: |
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Pull before committing to reduce conflicts with concurrent workflows.
+          git pull --rebase --autostash origin main
           git add -f data/state/ data/sources/ docs/sources/
-          git diff --cached --quiet || git commit -m "draft: daily episode ${{ github.event.inputs.run_date || 'auto' }} [skip ci]"
-          git pull --rebase origin main
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "draft: daily episode ${{ github.event.inputs.run_date || 'auto' }} [skip ci]"
           git push
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: daily-draft-output
-          path: output/
+          path: |
+            output/
+            data/sources/
           retention-days: 7
+          if-no-files-found: warn
