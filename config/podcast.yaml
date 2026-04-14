@@ -42,11 +42,15 @@ llm:
   timeout_seconds: 180
 
 # ── TTS (Cartesia) ───────────────────────────────────────────
+# Voice: Benoit (5def377d-908b-4540-8bd7-3c968fcae351) — set via
+# CARTESIA_VOICE_ID GitHub secret, not here.
+# Speed 0.90 + emotion "serious" = ~176 WPM, timbre validated by user
+# on 471-word ear-test (PHASE8-T5-voice-benoit-090.mp3).
 tts:
   chunk_max_chars: 1500
-  speed: 1.0
+  speed: 0.9
   volume: 1.0
-  emotion: "confident"
+  emotion: "serious"
 
 # ── PUBLICATION ───────────────────────────────────────────────
 retention_days: 10
