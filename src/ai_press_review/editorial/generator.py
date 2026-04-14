@@ -20,8 +20,12 @@ def _word_count(text: str) -> int:
 
 
 def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> str:
+    # Prompt geometry: LLMs consistently deliver ~80-85% of requested word count on
+    # long structured prose. Historical bench data (Gemini 2.5 Flash asked 2400 → got
+    # 1967 = 82%). A 60-source × 1600-char corpus keeps the length instruction within
+    # the effective instruction-following window of every model in the shortlist.
     compact_sources = []
-    for src in manifest.get("sources", [])[:120]:
+    for src in manifest.get("sources", [])[:60]:
         compact_sources.append(
             {
                 "title": src.get("title"),
@@ -29,14 +33,15 @@ def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> 
                 "url": src.get("url"),
                 "published_at": src.get("published_at"),
                 "summary": src.get("summary"),
-                "content_text": (src.get("content_text") or "")[:2200],
+                "content_text": (src.get("content_text") or "")[:1600],
                 "relevance_score": src.get("relevance_score", 0.0),
             }
         )
 
     # Schema ceiling: 18 paragraphs × 150 max words + intro/closing ≈ 2769 words.
-    # Target below ceiling to keep instruction realistic for the LLM.
-    target_words = min(max(settings.min_script_words + 300, 2400), 2700)
+    # Target ABOVE the floor so the LLM's under-delivery (~85%) lands above the floor.
+    # min_script_words=2000 → target=2700 → LLM delivers ~2300 (well above 2000).
+    target_words = min(max(settings.min_script_words + 600, 2700), 2900)
 
     schema = {
         "episode_title": "string — short, factual, no clickbait",
@@ -297,7 +302,10 @@ def generate_episode_script(manifest: dict, local_preview: bool = False, profile
     if settings.llm_fallback_model:
         models.append(settings.llm_fallback_model)
 
-    max_length_retries = 4  # nombre de tentatives par modele si trop court
+    # Retries capped at 2: at temperature=0.2, attempt-to-attempt variance is tiny, so
+    # 4 attempts converge to the same word count as 2. The ceiling is set by the
+    # prompt geometry (target_words × LLM under-delivery factor), not by retries.
+    max_length_retries = 2
 
     for model in models:
         try:
