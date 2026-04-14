@@ -309,10 +309,12 @@ def generate_episode_script(manifest: dict, local_preview: bool = False, profile
     if settings.llm_fallback_model:
         models.append(settings.llm_fallback_model)
 
-    # Retries capped at 2: at temperature=0.2, attempt-to-attempt variance is tiny, so
-    # 4 attempts converge to the same word count as 2. The ceiling is set by the
-    # prompt geometry (target_words × LLM under-delivery factor), not by retries.
-    max_length_retries = 2
+    # Phase 8 / P4: raised retries to 3 — gives primary (Gemini 2.5 Pro) one extra
+    # chance before falling back to Flash, which matters when first attempt lands
+    # between 1800-2050 (retry tends to add +100-200w). Variance at temperature=0.2
+    # is still small, but the extra attempt helps on borderline runs without
+    # meaningfully extending pipeline time (pro averages ~90s per attempt).
+    max_length_retries = 3
 
     for model in models:
         try:
@@ -321,6 +323,13 @@ def generate_episode_script(manifest: dict, local_preview: bool = False, profile
             best_payload = None
             best_script = None
             best_wc = 0
+
+            # Phase 8 / P5: break threshold aligned with duration floor (14 min × 150 wpm = 2100)
+            # so we don't stop retrying on a 2050-word draft that would fail validation.
+            retry_break_threshold = max(
+                settings.min_script_words,
+                settings.target_duration_min * 150,
+            )
 
             for attempt in range(max_length_retries):
                 force = attempt > 0
@@ -346,18 +355,30 @@ def generate_episode_script(manifest: dict, local_preview: bool = False, profile
                     best_script = script
                     best_wc = wc
 
-                if wc >= settings.min_script_words:
+                if wc >= retry_break_threshold:
                     break
 
                 logger.warning(
-                    "Script too short: %d words < %d minimum, retrying...",
-                    wc, settings.min_script_words,
+                    "Script too short: %d words < %d threshold, retrying...",
+                    wc, retry_break_threshold,
                 )
 
-            if best_wc < settings.min_script_words:
+            # Phase 8 / P5: duration-anchored floor. 14-min minimum × ~150 wpm at
+            # Cartesia voice = 2100 words hard floor. This replaces the arbitrary 2000
+            # word floor with one derived from the brand promise ("15 minutes"). Episodes
+            # that land between 2100-2400 words (~14-16 min) now ship without retry
+            # exhaustion; only sub-14-min scripts fail. Prompted minimum stays at
+            # settings.min_script_words (2000) so the LLM aims slightly below the
+            # hard floor — natural safety margin through retries.
+            WORDS_PER_MINUTE = 150
+            min_words_for_duration = settings.target_duration_min * WORDS_PER_MINUTE
+            if best_wc < min_words_for_duration:
+                est_minutes = best_wc / WORDS_PER_MINUTE
                 raise ValueError(
                     f"Script too short after {max_length_retries} attempts: "
-                    f"{best_wc} words < {settings.min_script_words} minimum"
+                    f"{best_wc} words ≈ {est_minutes:.1f} min, "
+                    f"below {settings.target_duration_min}-min minimum "
+                    f"({min_words_for_duration} words)"
                 )
 
             logger.info("Script generated successfully: %d words, model=%s", best_wc, model)

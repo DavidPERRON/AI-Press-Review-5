@@ -47,7 +47,10 @@ editorial:
 llm:
   max_tokens: 12000
   temperature: 0.2
-  timeout_seconds: 180
+  # Phase 8 / P3: bumped 180 → 240 to accommodate Gemini 2.5 Pro as primary.
+  # Bench data: Pro averages 146s per attempt (vs Flash 38s), 3 attempts × 146s
+  # fits comfortably in 240s per-call budget; pipeline p95 still < 10 min.
+  timeout_seconds: 240
 
 # ── TTS (Cartesia) ───────────────────────────────────────────
 tts:

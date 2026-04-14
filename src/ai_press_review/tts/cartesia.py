@@ -52,8 +52,13 @@ def synthesize_script(script: str, output_path: Path, local_preview: bool = Fals
         rendered.append(AudioSegment.from_file(chunk_path, format='wav'))
 
     combined = rendered[0]
+    # Phase 8 / T2 E1: crossfade raised 150ms → 400ms. Cartesia's stateless chunk
+    # rendering produces audible breathing artefacts at chunk seams (sonic-3 resets
+    # prosody context between requests). 400ms crossfade masks the prosody discontinuity
+    # without swallowing a full syllable — tested against 250/400/600ms; 400 was the
+    # sweet spot (250 still audible, 600 clipped words at paragraph boundaries).
     for seg in rendered[1:]:
-        combined = combined.append(seg, crossfade=150)
+        combined = combined.append(seg, crossfade=400)
 
     # Phase 5 / T4: bitrate read from settings (default 96k — voice-only sweet spot).
     combined.export(output_path, format='mp3', bitrate=settings.tts_bitrate)
