@@ -1,0 +1,83 @@
+name: LLM Bench
+
+# Run editorial generation against a configurable list of LLM models on
+# the same sources manifest. No TTS, no upload. Produces comparison
+# artifact for manual selection of primary + fallback models.
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_date:
+        description: 'Run date (YYYY-MM-DD). Empty = today.'
+        required: false
+        default: ''
+      profile:
+        description: 'Editorial profile (daily, weekly_recap)'
+        required: false
+        default: 'daily'
+      models:
+        description: 'Comma-separated model IDs to bench'
+        required: false
+        default: 'google/gemini-2.5-flash,openai/gpt-4o-mini,anthropic/claude-3.5-haiku,deepseek/deepseek-chat,mistralai/mistral-medium-3'
+      reuse_manifest:
+        description: 'Reuse the on-disk latest sources manifest if present'
+        required: false
+        default: 'true'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: llm-bench
+  cancel-in-progress: false
+
+jobs:
+  bench:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          set -e
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Install Chromium for crawler
+        run: python -m playwright install chromium
+
+      - name: Run LLM bench
+        env:
+          LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          NEWSAPI_API_KEY: ${{ secrets.NEWSAPI_API_KEY }}
+          # Intentionally do NOT pass LLM_EDITOR_MODEL / FALLBACK — the script
+          # overrides per-model and neutralises the fallback during the run.
+        run: |
+          set -e
+          RUN_DATE=${{ github.event.inputs.run_date }}
+          if [ -z "$RUN_DATE" ]; then RUN_DATE=$(date +%F); fi
+          REUSE_FLAG=""
+          if [ "${{ github.event.inputs.reuse_manifest }}" != "true" ]; then
+            REUSE_FLAG="--fresh-manifest"
+          fi
+          python scripts/bench_llm.py \
+            --date "$RUN_DATE" \
+            --profile "${{ github.event.inputs.profile }}" \
+            --models "${{ github.event.inputs.models }}" \
+            $REUSE_FLAG
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: llm-bench-results
+          path: |
+            output/bench/
+          retention-days: 14
