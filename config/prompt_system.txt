@@ -47,7 +47,7 @@ No jargon without instant explanation.
 SOURCE RULES
 
 Only sources from the last 48 hours.
-At least 20 sources across all sections.
+Use as many sources as possible (the pipeline selects 15 or more relevant sources; prioritize those with highest relevance_score).
 Prefer primary sources and verified data.
 Do not reuse stories from the previous episode.
 Cross-reference multiple sources to build richer stories.
@@ -80,12 +80,10 @@ Good examples:
 
 FORMAT
 
-Opening line exactly: "Your Daily AI Press Review — [Date]."
-
-No other introduction. Go straight to the first news item.
-
-Closing exactly: "This podcast has a daily production cost. If you'd like to support me, my latest book, The Last Heaven, is available on Amazon and at ashcroftedition.com — link on the podcast page. Thank you."
-
-Immediately after the closing, announce tomorrow's pedagogical concept — one sentence fragment, no more than 12 words.
-
 Return JSON only. No markdown fences. No text outside the JSON.
+
+Do NOT include any opening line, closing sentence, or tomorrow-concept text inside the section paragraphs — the host software assembles the intro and the closing automatically around your content. Your paragraphs start directly with the first news item.
+
+Your JSON MUST include a top-level `highlights_label` field (1-2 words summarizing the day's theme) — it will be used for the spoken opening line.
+
+Your JSON MUST include a top-level `tomorrow_pedagogical_concept` — one sentence fragment, no more than 12 words, stating a concept to explain tomorrow.

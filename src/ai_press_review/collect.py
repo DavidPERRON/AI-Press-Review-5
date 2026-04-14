@@ -322,11 +322,22 @@ def collect_sources(run_date: str, local_preview: bool = False, profile: str | N
     data_sources_dir.mkdir(parents=True, exist_ok=True)
     docs_sources_dir.mkdir(parents=True, exist_ok=True)
 
-    write_json(data_sources_dir / f"{run_date}.json", manifest)
-    write_json(data_sources_dir / "latest.json", manifest)
+    # On-disk persistence: strip content_text and long summaries to avoid committing
+    # paywalled/third-party article text to git history (DMCA / plagiarism risk).
+    # The in-memory `manifest` keeps content_text for the LLM call.
+    public_sources = []
+    for src in manifest["sources"]:
+        public = {k: v for k, v in src.items() if k not in ("content_text",)}
+        if isinstance(public.get("summary"), str):
+            public["summary"] = public["summary"][:280]
+        public_sources.append(public)
+    public_manifest = {**manifest, "sources": public_sources}
 
-    md = _manifest_to_markdown(manifest)
-    html = _manifest_to_html(manifest)
+    write_json(data_sources_dir / f"{run_date}.json", public_manifest)
+    write_json(data_sources_dir / "latest.json", public_manifest)
+
+    md = _manifest_to_markdown(public_manifest)
+    html = _manifest_to_html(public_manifest)
 
     (data_sources_dir / f"{run_date}.md").write_text(md, encoding="utf-8")
     (data_sources_dir / "latest.md").write_text(md, encoding="utf-8")

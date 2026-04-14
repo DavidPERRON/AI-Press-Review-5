@@ -7,7 +7,6 @@ import time
 from typing import Any
 
 import requests
-from tenacity import retry, stop_after_attempt, wait_fixed
 
 from ..models import EpisodeDraft
 from ..settings import load_settings
@@ -35,7 +34,9 @@ def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> 
             }
         )
 
-    target_words = max(settings.min_script_words + 800, 3000)
+    # Schema ceiling: 18 paragraphs × 150 max words + intro/closing ≈ 2769 words.
+    # Target below ceiling to keep instruction realistic for the LLM.
+    target_words = min(max(settings.min_script_words + 300, 2400), 2700)
 
     schema = {
         "episode_title": "string — short, factual, no clickbait",
@@ -281,7 +282,6 @@ def _generate_with_model(model: str, manifest: dict, settings, force_length: boo
     return _extract_json(content)
 
 
-@retry(wait=wait_fixed(3), stop=stop_after_attempt(2))
 def generate_episode_script(manifest: dict, local_preview: bool = False, profile: str | None = None) -> EpisodeDraft:
     settings = load_settings(local_preview=local_preview, profile=profile)
 
