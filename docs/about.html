@@ -21,17 +21,17 @@
 
   <style>
     :root {
-      --bg: #071028;
-      --surface: #0c1a3a;
-      --border: #18254a;
-      --border-light: #243363;
-      --text: #e8e8ed;
+      --bg: #242F66;
+      --surface: #1c2553;
+      --border: #3a4685;
+      --border-light: #4d5a9c;
+      --text: #ffffff;
       --text-narrative: #F8F4EC;
-      --text-secondary: #a8b0c8;
-      --text-muted: #6b7494;
+      --text-secondary: #b8c0e0;
+      --text-muted: #8089b3;
       --accent: #c8a96e;
-      --accent-dim: #8a6f3f;
-      --accent-glow: rgba(200, 169, 110, 0.08);
+      --accent-dim: #a08658;
+      --accent-glow: rgba(200, 169, 110, 0.1);
       --red: #e05555;
       --font-display: 'DM Serif Display', Georgia, serif;
       --font-body: 'DM Sans', system-ui, sans-serif;
@@ -113,7 +113,7 @@
       transition: background 0.2s, color 0.2s, border-color 0.2s;
     }
     nav a.nav-cta:hover {
-      background: var(--accent); color: #071028; border-color: var(--accent);
+      background: var(--accent); color: #1c2553; border-color: var(--accent);
     }
     .text-secondary { color: var(--text-secondary); }
 
@@ -407,6 +407,22 @@
       transition: color 0.2s, border-color 0.2s;
     }
     .author-links a:hover { color: var(--accent); border-color: var(--accent-dim); }
+
+    /* ─── SUPPORT BUTTON ─── */
+    .btn-support {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--accent); color: #1c2553;
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-decoration: none; padding: 0.85em 1.5em; border-radius: 4px;
+      transition: transform 0.15s, box-shadow 0.2s;
+      margin-top: 0.5rem;
+    }
+    .btn-support:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(200,169,110,0.25);
+    }
+    .btn-support svg { width: 16px; height: 16px; }
 
     /* ─── FEEDBACK ─── */
     .feedback-box {
@@ -714,10 +730,36 @@
       </div>
     </section>
 
-    <!-- 6. FEEDBACK -->
-    <section class="section" id="feedback">
+    <!-- 6. SUPPORT -->
+    <section class="section" id="support">
       <div class="section-header">
         <span class="section-num">06</span>
+        <h2 class="section-title">Support the show</h2>
+      </div>
+      <div class="section-body">
+        <p>
+          AI Press Review is independent — <strong>no sponsors, no advertising, no paywall</strong>.
+          The cost of source access, audio production, and editorial time is funded by
+          listeners who find the briefing useful. If you would like to contribute,
+          a one-time or recurring donation goes directly to keeping the show running.
+        </p>
+        <a href="https://buy.stripe.com/REPLACE_WITH_YOUR_LINK"
+           target="_blank" rel="noopener noreferrer"
+           class="btn-support" aria-label="Donate via Stripe">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          Donate via Stripe
+        </a>
+        <p style="margin-top: 1rem; font-size: 0.78rem; color: var(--text-muted);">
+          Payments are processed securely by Stripe. AI Press Review does not store or
+          handle your card information at any point.
+        </p>
+      </div>
+    </section>
+
+    <!-- 7. FEEDBACK -->
+    <section class="section" id="feedback">
+      <div class="section-header">
+        <span class="section-num">07</span>
         <h2 class="section-title">Feedback and corrections</h2>
       </div>
       <div class="section-body">
