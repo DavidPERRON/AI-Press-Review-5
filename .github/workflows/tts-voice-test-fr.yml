@@ -1,0 +1,155 @@
+name: TTS Voice Test (French)
+
+# Render a short French news excerpt with a user-provided Cartesia voice_id.
+# Uses language="fr" in Cartesia — critical for correct French prosody.
+# Use this to A/B a voice's French delivery before committing it to the FR pipeline.
+
+on:
+  workflow_dispatch:
+    inputs:
+      voice_id:
+        description: 'Cartesia voice_id (UUID)'
+        required: true
+      voice_name:
+        description: 'Friendly name for filename (e.g. benoit)'
+        required: false
+        default: 'unknown'
+      speed:
+        description: 'Cartesia speed'
+        required: false
+        default: '0.9'
+
+jobs:
+  voice_test_fr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Install dependencies
+        run: pip install websockets pydub mutagen
+
+      - name: Render French TTS for candidate voice
+        env:
+          CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
+          VOICE_ID: ${{ github.event.inputs.voice_id }}
+          VOICE_NAME: ${{ github.event.inputs.voice_name }}
+          SPEED: ${{ github.event.inputs.speed }}
+        run: |
+          python - <<'PY'
+          import os, re, asyncio, json, base64, uuid, wave
+          import websockets
+          from pydub import AudioSegment
+          from mutagen.mp3 import MP3
+
+          SCRIPT = """Votre Revue de Presse IA du jour — 14 avril. Cloudflare lance Agent Cloud, une nouvelle plateforme destinée aux entreprises qui veulent concevoir et déployer des agents d'intelligence artificielle, et elle le fait avec les modèles les plus avancés d'OpenAI. Le partenariat donne à des millions de clients de Cloudflare un accès direct aux modèles de pointe, y compris le tout récent GPT-5.4 et Codex, spécialisé dans le code. L'objectif : faire sortir les agents IA des portables de développeurs pour les installer dans des environnements de production, sécurisés et à grande échelle. Ça compte, parce que ça intègre des capacités d'IA puissantes directement dans l'infrastructure réseau que beaucoup d'entreprises utilisent déjà pour la sécurité et la performance. L'IA ne devient plus simplement une application — elle devient un service déployé au plus près de l'utilisateur.
+
+          Sur le terrain, les déploiements se multiplient. Une nouvelle société, Primitive, lance son propre système d'exploitation pour agents, mais cette fois conçu spécifiquement pour les institutions financières régulées. Le système est pensé dès le départ pour offrir le contrôle, les intégrations tierces et la mesure détaillée que les banques et les firmes financières exigent pour leur conformité. C'est un développement critique parce qu'il s'attaque aux obstacles de sécurité et de régulation qui freinent l'adoption de l'IA dans la finance. Les plateformes généralistes offrent l'échelle. Les solutions verticales, comme celle de Primitive, offrent les garde-fous spécifiques à un métier. Le marché mûrit. Les outils s'adaptent aux réalités opérationnelles de chaque industrie.
+
+          Pour finir, un concept à retenir. OpenAI acquiert Hiro, une jeune pousse qui avait conçu un directeur financier virtuel à base d'IA. L'équipe rejoint OpenAI, le service ferme — c'est une acquisition de talents ciblée sur la finance. En parallèle, OpenAI ouvre de nouveaux bureaux à Londres, avec de la place pour plus de cinq cents collaborateurs, soit plus du double de son effectif actuel dans la ville. L'expansion européenne s'accélère. En interne, un mémo du responsable des revenus salue le succès du partenariat avec Amazon — un signe de diversification stratégique, au-delà de la relation historique avec Microsoft."""
+
+          words = len(re.findall(r"\b\w+\b", SCRIPT))
+          print(f"Script word count: {words}")
+
+          api_key = os.environ["CARTESIA_API_KEY"]
+          voice_id = os.environ["VOICE_ID"]
+          voice_name = os.environ["VOICE_NAME"]
+          speed = float(os.environ["SPEED"])
+          print(f"Voice: {voice_name} ({voice_id})  speed={speed}  language=fr")
+
+          # Same chunking logic as cartesia.py
+          paragraphs = [p.strip() for p in SCRIPT.split("\n") if p.strip()]
+          chunks = []
+          current = ""
+          for p in paragraphs:
+              cand = f"{current}\n\n{p}".strip() if current else p
+              if len(cand) <= 1500:
+                  current = cand
+              else:
+                  if current:
+                      chunks.append(current)
+                  current = p
+          if current:
+              chunks.append(current)
+          print(f"Chunks: {len(chunks)}")
+
+          context_id = f"voice-test-fr-{uuid.uuid4()}"
+          ws_url = (
+              f"wss://api.cartesia.ai/tts/websocket"
+              f"?cartesia_version=2024-11-13&api_key={api_key}"
+          )
+          SAMPLE_RATE = 44100
+
+          async def render():
+              raw_audio = b""
+              async with websockets.connect(ws_url, max_size=None) as ws:
+                  for i, chunk in enumerate(chunks, 1):
+                      is_last = (i == len(chunks))
+                      req = {
+                          "model_id": "sonic-3",
+                          "transcript": chunk,
+                          "voice": {"mode": "id", "id": voice_id},
+                          "language": "fr",
+                          "context_id": context_id,
+                          "continue": not is_last,
+                          "output_format": {
+                              "container": "raw",
+                              "encoding": "pcm_s16le",
+                              "sample_rate": SAMPLE_RATE,
+                          },
+                          "generation_config": {"volume": 1.0, "speed": speed, "emotion": "serious"},
+                      }
+                      await ws.send(json.dumps(req))
+
+                  while True:
+                      msg = json.loads(await ws.recv())
+                      mtype = msg.get("type")
+                      if mtype == "chunk" and msg.get("context_id") == context_id:
+                          raw_audio += base64.b64decode(msg["data"])
+                      elif mtype == "done" and msg.get("context_id") == context_id:
+                          break
+                      elif mtype == "error":
+                          raise RuntimeError(f"Cartesia error: {msg}")
+              return raw_audio
+
+          raw = asyncio.run(render())
+
+          wav_path = "/tmp/voice-fr.wav"
+          with wave.open(wav_path, "wb") as wf:
+              wf.setnchannels(1)
+              wf.setsampwidth(2)
+              wf.setframerate(SAMPLE_RATE)
+              wf.writeframes(raw)
+
+          seg = AudioSegment.from_file(wav_path, format="wav")
+          out = f"output/voice-fr-{voice_name}.mp3"
+          os.makedirs("output", exist_ok=True)
+          seg.export(out, format="mp3", bitrate="96k")
+
+          mp3 = MP3(out)
+          dur_s = mp3.info.length
+          wpm = words / (dur_s / 60.0)
+          print("=" * 60)
+          print(f"VOICE (FR): {voice_name} ({voice_id})")
+          print(f"  speed:    {speed}")
+          print(f"  language: fr")
+          print(f"  words:    {words}")
+          print(f"  duration: {dur_s:.2f}s")
+          print(f"  WPM:      {wpm:.1f}")
+          print("=" * 60)
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: voice-fr-${{ github.event.inputs.voice_name }}-${{ github.event.inputs.voice_id }}
+          path: output/voice-fr-${{ github.event.inputs.voice_name }}.mp3
+          retention-days: 14
