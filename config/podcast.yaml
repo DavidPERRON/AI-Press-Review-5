@@ -26,7 +26,7 @@ long_description: >
   Every Saturday: a weekly recap of the five trends that defined the week.
 feed_url: "https://podcast.aequitus.net/podcast-feed.xml"
 site_url: "https://podcast.aequitus.net"
-public_audio_base_url: "https://pub-bc812f72712b450fbb9d7f3455e007a0.r2.dev/pressreview"
+public_audio_base_url: "https://ashcroftedition.org/pressreview"
 cover_image: "assets/podcast-cover.png"
 
 # ── EDITORIAL (defaults — les profils peuvent surcharger) ────
