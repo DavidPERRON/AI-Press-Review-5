@@ -55,7 +55,11 @@ llm:
 # ── TTS (Cartesia) ───────────────────────────────────────────
 tts:
   chunk_max_chars: 1500
-  speed: 1.0
+  # Phase 8 / T3: speed 1.0 → 0.95. User ear-test: speed=1.0 delivered 155-168 WPM
+  # depending on content density; the 168 WPM case felt "too fast" and 155 WPM felt
+  # "slightly too slow". Speed=0.95 shifts the distribution down ~5% → target range
+  # 147-160 WPM, capping upper bound at comfortable listening pace.
+  speed: 0.95
   volume: 1.0
   # Phase 5 / T1: news-TV delivery tone (was "confident" / calmer). Phase 7 will validate.
   emotion: "serious"

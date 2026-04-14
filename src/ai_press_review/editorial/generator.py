@@ -324,11 +324,11 @@ def generate_episode_script(manifest: dict, local_preview: bool = False, profile
             best_script = None
             best_wc = 0
 
-            # Phase 8 / P5: break threshold aligned with duration floor (14 min × 150 wpm = 2100)
+            # Phase 8 / P5: break threshold aligned with duration floor (14 min × 160 WPM = 2240)
             # so we don't stop retrying on a 2050-word draft that would fail validation.
             retry_break_threshold = max(
                 settings.min_script_words,
-                settings.target_duration_min * 150,
+                settings.target_duration_min * 160,
             )
 
             for attempt in range(max_length_retries):
@@ -363,14 +363,15 @@ def generate_episode_script(manifest: dict, local_preview: bool = False, profile
                     wc, retry_break_threshold,
                 )
 
-            # Phase 8 / P5: duration-anchored floor. 14-min minimum × ~150 wpm at
-            # Cartesia voice = 2100 words hard floor. This replaces the arbitrary 2000
-            # word floor with one derived from the brand promise ("15 minutes"). Episodes
-            # that land between 2100-2400 words (~14-16 min) now ship without retry
-            # exhaustion; only sub-14-min scripts fail. Prompted minimum stays at
-            # settings.min_script_words (2000) so the LLM aims slightly below the
-            # hard floor — natural safety margin through retries.
-            WORDS_PER_MINUTE = 150
+            # Phase 8 / P5 (recalibrated): duration-anchored floor at 160 WPM.
+            # Empirical measurement on 3 real Cartesia outputs at speed=1.0:
+            #   phase7a: 1977w / 12.76min = 155 WPM
+            #   phase7b: 1992w / 13.28min = 150 WPM
+            #   daily2:  2501w / 14.86min = 168 WPM  ← user: "too fast"
+            # With T3 (speed 1.0 → 0.95), upper-bound WPM caps at ~168 × 0.95 ≈ 160.
+            # Using 160 as the constant guarantees ≥target_duration_min minutes of
+            # audio even at the fastest-delivery outlier. Daily floor: 14 × 160 = 2240w.
+            WORDS_PER_MINUTE = 160
             min_words_for_duration = settings.target_duration_min * WORDS_PER_MINUTE
             if best_wc < min_words_for_duration:
                 est_minutes = best_wc / WORDS_PER_MINUTE

@@ -52,13 +52,13 @@ def synthesize_script(script: str, output_path: Path, local_preview: bool = Fals
         rendered.append(AudioSegment.from_file(chunk_path, format='wav'))
 
     combined = rendered[0]
-    # Phase 8 / T2 E1: crossfade raised 150ms → 400ms. Cartesia's stateless chunk
-    # rendering produces audible breathing artefacts at chunk seams (sonic-3 resets
-    # prosody context between requests). 400ms crossfade masks the prosody discontinuity
-    # without swallowing a full syllable — tested against 250/400/600ms; 400 was the
-    # sweet spot (250 still audible, 600 clipped words at paragraph boundaries).
+    # Phase 8 / T2 E1 (reverted): 400ms crossfade swallowed word transitions and
+    # created audible "set merge" artefacts. 150ms restored — user ear-test on real
+    # audio confirmed 150ms transitions are "almost inaudible". The mouth-noise
+    # artefacts during natural pauses are within-chunk (Cartesia sonic-3 voice model),
+    # not at seams, so crossfade doesn't help them — separate concern for voice swap.
     for seg in rendered[1:]:
-        combined = combined.append(seg, crossfade=400)
+        combined = combined.append(seg, crossfade=150)
 
     # Phase 5 / T4: bitrate read from settings (default 96k — voice-only sweet spot).
     combined.export(output_path, format='mp3', bitrate=settings.tts_bitrate)
