@@ -113,7 +113,10 @@ def _write_feed(episodes: list[dict]) -> None:
         pub_date = format_datetime(ep_dt)
         duration_secs = ep.get('duration_seconds', 0)
         duration_str = f"{duration_secs // 3600}:{(duration_secs % 3600) // 60:02d}:{duration_secs % 60:02d}"
-        brief_url = ep.get('brief_url', '')
+        # Fallback chain for <link>: brief page -> site homepage. Never emit an
+        # empty <link></link> — some podcast aggregators (Apple, Spotify)
+        # silently drop items with a missing canonical URL.
+        item_link = ep.get('brief_url') or settings.site_base_url
         content_encoded = f"<p>{escape(ep['summary'])}</p>"
         items.append(
             f"<item><title>{escape(ep['title'])}</title>"
@@ -124,7 +127,7 @@ def _write_feed(episodes: list[dict]) -> None:
             f'<enclosure url="{escape(ep["audio_url"])}" length="{ep["audio_bytes"]}" type="audio/mpeg" />'
             f"<itunes:summary>{escape(ep['summary'])}</itunes:summary>"
             f"<itunes:duration>{escape(duration_str)}</itunes:duration>"
-            f"<link>{escape(brief_url)}</link></item>"
+            f"<link>{escape(item_link)}</link></item>"
         )
 
     # Freshness signals required by Apple Podcasts / YouTube Music to detect NEW episodes
@@ -176,13 +179,16 @@ _INDEX_TEMPLATE_PATH = Path(__file__).parent / 'templates' / 'index-template.htm
 def _write_index(episodes: list[dict]) -> None:
     template = _INDEX_TEMPLATE_PATH.read_text(encoding='utf-8')
     cards = []
+    settings = load_settings()
     for ep in episodes:
         pub_dt = datetime.fromisoformat(ep['published_at'])
         date_str = pub_dt.strftime('%b %d, %Y')
         dur = ep.get('duration_seconds') or 0
         dur_str = f'{dur // 60} min' if dur else ''
-        brief_url = ep.get('brief_url', '')
-        title_link = escape(brief_url) if brief_url else escape(ep["audio_url"])
+        # Fallback chain for title link: brief page -> site homepage.
+        # Never link the title to the .mp3 directly (that triggers a download
+        # and looks like a blank page in the browser).
+        title_link = escape(ep.get('brief_url') or settings.site_base_url or '/')
         cards.append(
             f'<div class="episode-item">'
             f'<div>'
