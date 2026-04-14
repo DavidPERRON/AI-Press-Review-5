@@ -68,6 +68,7 @@ class Settings:
     llm_max_tokens: int
     llm_temperature: float
     tts_chunk_max_chars: int
+    tts_bitrate: str
     cartesia_api_key: str
     cartesia_voice_id: str
     cartesia_model_id: str
@@ -76,6 +77,7 @@ class Settings:
     cartesia_speed: float
     cartesia_volume: float
     cartesia_emotion: str
+    closing_sentence: str
     r2_bucket_name: str
     r2_endpoint: str
     r2_access_key_id: str
@@ -212,7 +214,7 @@ def load_settings(local_preview: bool = False, profile: str | None = None) -> Se
         podcast_language=_env('PODCAST_LANGUAGE', _yaml_get(config, 'language', 'en')),
         podcast_description_short=_env('PODCAST_DESCRIPTION_SHORT', _yaml_get(config, 'short_description', '')),
         podcast_description_long=_env('PODCAST_DESCRIPTION_LONG', _yaml_get(config, 'long_description', '')),
-        category_primary=_env('PODCAST_CATEGORY_PRIMARY', _yaml_get(config, 'category_primary', 'Business')),
+        category_primary=_env('PODCAST_CATEGORY_PRIMARY', _yaml_get(config, 'category_primary', 'Technology')),
         category_secondary=_env('PODCAST_CATEGORY_SECONDARY', _yaml_get(config, 'category_secondary', '')),
         explicit=_env_bool('PODCAST_EXPLICIT', bool(_yaml_get(config, 'explicit', False))),
         cover_image_path=_env('PODCAST_COVER_IMAGE', _yaml_get(config, 'cover_image', 'assets/podcast-cover.png')),
@@ -237,6 +239,7 @@ def load_settings(local_preview: bool = False, profile: str | None = None) -> Se
         llm_max_tokens=int(_yaml_get(config, 'llm.max_tokens', 12000)),
         llm_temperature=_safe_float(str(_yaml_get(config, 'llm.temperature', 0.2)), 0.2, 'llm.temperature'),
         tts_chunk_max_chars=int(_yaml_get(config, 'tts.chunk_max_chars', 1500)),
+        tts_bitrate=str(_yaml_get(config, 'tts.bitrate', '96k')),
         cartesia_api_key=_env('CARTESIA_API_KEY'),
         cartesia_voice_id=_env('CARTESIA_VOICE_ID'),
         cartesia_model_id=_env('CARTESIA_MODEL_ID', 'sonic-3'),
@@ -244,7 +247,12 @@ def load_settings(local_preview: bool = False, profile: str | None = None) -> Se
         cartesia_language=_env('CARTESIA_LANGUAGE', 'en'),
         cartesia_speed=_safe_float(_env('CARTESIA_SPEED', str(_yaml_get(config, 'tts.speed', 1.0))), 1.0, 'CARTESIA_SPEED'),
         cartesia_volume=_safe_float(_env('CARTESIA_VOLUME', str(_yaml_get(config, 'tts.volume', 1.0))), 1.0, 'CARTESIA_VOLUME'),
-        cartesia_emotion=_env('CARTESIA_EMOTION', str(_yaml_get(config, 'tts.emotion', 'confident'))),
+        cartesia_emotion=_env('CARTESIA_EMOTION', str(_yaml_get(config, 'tts.emotion', 'serious'))),
+        closing_sentence=str(_yaml_get(
+            config,
+            'editorial.closing_sentence',
+            "This podcast is sponsored by my novel, The Last Heaven — every copy bought on Amazon or at ashcroftedition.com pays for a week of production. Thank you.",
+        )),
         r2_bucket_name=_env('R2_BUCKET_NAME', 'pressreview'),
         r2_endpoint=_env('R2_ENDPOINT'),
         r2_access_key_id=_env('R2_ACCESS_KEY_ID'),

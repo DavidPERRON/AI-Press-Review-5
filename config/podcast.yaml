@@ -11,7 +11,8 @@ author: "David Perron"
 email: "david.perron@aequitus.net"
 author_email: "david.perron@aequitus.net"
 language: "en"
-category_primary: "Business"
+# Phase 5 / B1: content is ~90% technology, Business was a discoverability mismatch
+category_primary: "Technology"
 category_secondary: "Artificial Intelligence"
 tagline: "40 sources. 15 minutes. What matters in AI today."
 short_description: "40 sources. 15 minutes. What matters in AI today."
@@ -23,7 +24,10 @@ long_description: >
   Every Saturday: a weekly recap of the five trends that defined the week.
 feed_url: "https://podcast.aequitus.net/podcast-feed.xml"
 site_url: "https://podcast.aequitus.net"
-public_audio_base_url: "https://www.ashcroftedition.org"
+# Phase 5 / B3: move audio CDN under podcast.aequitus.net (unified branding).
+# ⚠️  REQUIRES DNS SETUP: CNAME podcast.aequitus.net → <r2-custom-domain> BEFORE production publish.
+# Ashcroftedition stays visible in the spoken closing (sponsorship narrative).
+public_audio_base_url: "https://podcast.aequitus.net"
 cover_image: "assets/podcast-cover.png"
 
 # ── EDITORIAL (defaults — les profils peuvent surcharger) ────
@@ -31,9 +35,13 @@ editorial:
   target_duration_min: 14
   target_duration_max: 18
   min_script_words: 2000
-  min_source_count: 15
+  # Phase 5 / E5: aligned with "40 sources" tagline (was 15 — contradicted brand promise)
+  min_source_count: 40
   freshness_hours: 48
   exclude_previous_episode: true
+  # Phase 5 / B4: spoken closing moved from hardcoded validate.py to config.
+  # Reframes as sponsorship — buying the book funds production (not a plain plug).
+  closing_sentence: "This podcast is sponsored by my novel, The Last Heaven — every copy bought on Amazon or at ashcroftedition.com pays for a week of production. Thank you."
 
 # ── LLM ───────────────────────────────────────────────────────
 llm:
@@ -46,7 +54,10 @@ tts:
   chunk_max_chars: 1500
   speed: 1.0
   volume: 1.0
-  emotion: "confident"
+  # Phase 5 / T1: news-TV delivery tone (was "confident" / calmer). Phase 7 will validate.
+  emotion: "serious"
+  # Phase 5 / T4: voice-only podcast sweet spot — 96k saves ~25% storage/bandwidth vs 128k
+  bitrate: "96k"
 
 # ── PUBLICATION ───────────────────────────────────────────────
 retention_days: 10
@@ -69,7 +80,8 @@ profiles:
     freshness_hours: 48
     exclude_previous_episode: true
     prefer_unused: false
-    min_source_count: 15
+    # Phase 5 / E5: aligned with "40 sources" tagline
+    min_source_count: 40
     min_script_words: 2000
     target_duration_min: 14
     target_duration_max: 18
@@ -84,9 +96,10 @@ profiles:
     unused_score_bonus: 2.0
     reuse_min_score: 8.0
     min_source_count: 45
-    min_script_words: 2100
-    target_duration_min: 18
-    target_duration_max: 24
+    # Phase 5 / E8: target 20 min (was 18-24 min window). Raises word floor for denser recap.
+    min_script_words: 2600
+    target_duration_min: 19
+    target_duration_max: 22
     prompt_file: "prompt_weekly.txt"
     intro_format: "weekly"
 
@@ -100,19 +113,10 @@ scoring:
   similarity_threshold: 0.88
   max_per_domain: 7
 
-  # Mots-cles interdits — les articles contenant ces termes sont exclus
-  banned_terms:
-    - "policy"
-    - "regulation"
-    - "regulatory"
-    - "lawmakers"
-    - "legislation"
-    - "compliance rule"
-    - "executive order"
-    - "government policy"
-    - "antitrust settlement"
-    - "rumor"
-    - "rumour"
+  # Phase 5 / E6: banned_terms cleared — the list was over-blocking legit enterprise AI
+  # coverage (EU AI Act, compliance tooling, regulatory deployments) and creating false
+  # negatives. Scoring + domain_authority handle quality adequately without a blacklist.
+  banned_terms: []
 
   # Termes AI — poids fort (score +3.0 par match)
   ai_terms_high:
@@ -174,32 +178,29 @@ scoring:
     - "scale"
 
   # Autorite des domaines — bonus automatique par source
-  # Only active/verified feeds are listed here
+  # Phase 5 / E7: CORPORATES CAPPED AT 1.0 to avoid over-mentioning.
+  # Only independent academic publishers keep the 1.5 bonus (arxiv, science.org).
+  # Research arms of corporations (research.google, apple ML) are treated as corporate.
   domain_authority:
-    # Primary sources — Labs
-    "openai.com": 2.0
-    "blog.google": 2.0
-    "deepmind.google": 2.0
-    "research.google": 2.0
-    "cohere.com": 1.5
-    # Hardware & Cloud
-    "nvidia.com": 1.5
-    "blogs.nvidia.com": 1.5
-    "intel.com": 1.0
-    # Research
-    "huggingface.co": 1.5
+    # Independent academic research — highest weight (peer-reviewed / open publication)
     "arxiv.org": 1.5
     "science.org": 1.5
-    "machinelearning.apple.com": 1.5
-    "engineering.fb.com": 1.0
-    # Press
+    # Corporate labs (capped at 1.0 per E7 — product blogs and corporate research arms)
+    "openai.com": 1.0
+    "blog.google": 1.0
+    "research.google": 1.0
+    "nvidia.com": 1.0
+    "huggingface.co": 1.0
+    "machinelearning.apple.com": 1.0
+    "intel.com": 1.0
+    # Third-party press — tech
     "techcrunch.com": 1.0
     "venturebeat.com": 1.0
     "technologyreview.com": 1.0
-    "theverge.com": 0.8
     "ft.com": 1.0
     "economist.com": 1.0
+    "theverge.com": 0.8
     # Finance-specific
     "finextra.com": 0.8
-    "pymnts.com": 0.5
     "americanbanker.com": 0.8
+    "pymnts.com": 0.5

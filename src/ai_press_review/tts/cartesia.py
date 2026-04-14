@@ -55,7 +55,8 @@ def synthesize_script(script: str, output_path: Path, local_preview: bool = Fals
     for seg in rendered[1:]:
         combined = combined.append(seg, crossfade=150)
 
-    combined.export(output_path, format='mp3', bitrate='128k')
+    # Phase 5 / T4: bitrate read from settings (default 96k — voice-only sweet spot).
+    combined.export(output_path, format='mp3', bitrate=settings.tts_bitrate)
     return {
         'chunk_count': len(chunks),
         'duration_seconds': math.ceil(len(combined) / 1000),

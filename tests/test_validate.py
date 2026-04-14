@@ -2,7 +2,10 @@ import pytest
 
 from ai_press_review.editorial.validate import (
     CLOSING_SENTENCE,
+    DEFAULT_CLOSING_SENTENCE,
+    EXPECTED_SECTION_COUNTS,
     REQUIRED_SECTION_KEYS,
+    SECTION_COUNT_TOLERANCE,
     assemble_script,
     build_intro_line,
     validate_final_script,
@@ -115,3 +118,75 @@ def test_validate_final_script_rejects_headings():
     script = f"{intro}\n\n{body}\n\n{heading}\n\n{CLOSING_SENTENCE}\n\nWhat is inference."
     with pytest.raises(ValueError, match="Heading-style"):
         validate_final_script(script)
+
+
+# Phase 5 / E1: section count ±2 flex
+
+
+def test_section_count_tolerance_accepts_expected_minus_tolerance():
+    """A section at its expected count minus tolerance should pass."""
+    payload = _make_payload()
+    # ai_news expected=5, tolerance=2 → min allowed = 3
+    payload["sections"]["ai_news"] = [
+        "OpenAI launched a new model today with significant performance gains." * 2
+    ] * 3
+    validate_section_payload(payload)
+
+
+def test_section_count_tolerance_rejects_too_many():
+    """A section above expected+tolerance should fail."""
+    payload = _make_payload()
+    # tools_and_practice expected=3, tolerance=2 → max allowed = 5, so 6 fails
+    payload["sections"]["tools_and_practice"] = [
+        "New developer tools simplify fine-tuning of large language models." * 2
+    ] * 6
+    with pytest.raises(ValueError, match="paragraphs; expected"):
+        validate_section_payload(payload)
+
+
+def test_section_count_tolerance_rejects_too_few():
+    """A section below expected-tolerance should fail (floor at 1)."""
+    payload = _make_payload()
+    # ai_news expected=5, tolerance=2 → min allowed = 3, so 2 fails
+    payload["sections"]["ai_news"] = [
+        "OpenAI launched a new model today with significant performance gains." * 2
+    ] * 2
+    with pytest.raises(ValueError, match="paragraphs; expected"):
+        validate_section_payload(payload)
+
+
+def test_expected_section_counts_cover_all_required_keys():
+    """Sanity: the EXPECTED_SECTION_COUNTS map aligns with REQUIRED_SECTION_KEYS."""
+    assert set(EXPECTED_SECTION_COUNTS.keys()) == set(REQUIRED_SECTION_KEYS)
+    assert SECTION_COUNT_TOLERANCE == 2
+
+
+# Phase 5 / B4: closing sentence is configurable via assemble_script parameter
+
+
+def test_assemble_script_uses_default_closing_when_not_provided():
+    script = assemble_script("2026-04-12", _make_payload())
+    assert DEFAULT_CLOSING_SENTENCE in script
+
+
+def test_assemble_script_honours_custom_closing():
+    custom = "This is a custom closing line for regression testing."
+    script = assemble_script("2026-04-12", _make_payload(), closing_sentence=custom)
+    assert custom in script
+    assert DEFAULT_CLOSING_SENTENCE not in script
+
+
+def test_validate_final_script_honours_custom_closing():
+    intro = "Your Daily AI Press Review — April 12, 2026: Test."
+    body = "Some paragraph content here for the body."
+    custom_closing = "This is a custom closing line for regression testing."
+    script = f"{intro}\n\n{body}\n\n{custom_closing}\n\nWhat is inference."
+    validate_final_script(script, closing_sentence=custom_closing)
+
+
+def test_validate_final_script_rejects_mismatched_closing():
+    intro = "Your Daily AI Press Review — April 12, 2026: Test."
+    body = "Some paragraph content here for the body."
+    script = f"{intro}\n\n{body}\n\nWrong closing line.\n\nWhat is inference."
+    with pytest.raises(ValueError, match="Closing sentence"):
+        validate_final_script(script, closing_sentence="Expected closing line.")

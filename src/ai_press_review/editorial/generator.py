@@ -38,11 +38,16 @@ def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> 
             }
         )
 
-    # Schema ceiling: 18 paragraphs × 150 max words + intro/closing ≈ 2769 words.
-    # Target ABOVE the floor so the LLM's under-delivery (~85%) lands above the floor.
-    # min_script_words=2000 → target=2700 → LLM delivers ~2300 (well above 2000).
-    target_words = min(max(settings.min_script_words + 600, 2700), 2900)
+    # Phase 5 / L6: raised target_words +100 (2700-2900 → 2800-3000) so the LLM's
+    # ~80-85% under-delivery lands well above 2000 on first attempt.
+    # Empirical: target=2700 → Gemini Flash delivered 1966-1968w (retry always needed).
+    # target=2800 should deliver ~2300-2400w on first attempt, eliminating most retries.
+    target_words = min(max(settings.min_script_words + 700, 2800), 3000)
 
+    # Phase 5 / E2: per-pillar word ranges — adapted to pillar prioritization.
+    # Lead pillars (AI News 120-170, Use Cases 120-160) get wider upper bound for denser coverage.
+    # Tighter pillars (Weak Signals 100-140) are more constrained.
+    # Total min=2050, max=2820 — well-centered around the 2800 target with 2000 floor.
     schema = {
         "episode_title": "string — short, factual, no clickbait",
         "episode_summary": "string — 2-3 sentence summary of the episode",
@@ -51,17 +56,17 @@ def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> 
         "tomorrow_pedagogical_concept": "one short sentence fragment, no more than 12 words, announcing a concept to explain tomorrow",
         "sections": {
             "ai_news": [
-                "paragraph 1 (110-150 words): lead story — set the scene, why it matters now",
-                "paragraph 2 (110-150 words): second major story, bridge naturally from the first",
-                "paragraph 3 (110-150 words): third story — partnership, funding, or company move",
-                "paragraph 4 (110-150 words): fourth story, connect to a broader theme if possible",
-                "paragraph 5 (110-150 words): fifth story or follow-up on a developing trend",
+                "paragraph 1 (120-170 words): lead story — set the scene, why it matters now",
+                "paragraph 2 (120-170 words): second major story, bridge naturally from the first",
+                "paragraph 3 (120-170 words): third story — partnership, funding, or company move",
+                "paragraph 4 (120-170 words): fourth story, connect to a broader theme if possible",
+                "paragraph 5 (120-170 words): fifth story or follow-up on a developing trend",
             ],
             "use_cases_and_deployments": [
-                "paragraph 1 (110-150 words): most impactful deployment — what changed in practice",
-                "paragraph 2 (110-150 words): second deployment with measurable business gains",
-                "paragraph 3 (110-150 words): third use case — different industry or scale",
-                "paragraph 4 (110-150 words): adoption pattern or what these deployments have in common",
+                "paragraph 1 (120-160 words): most impactful deployment — what changed in practice",
+                "paragraph 2 (120-160 words): second deployment with measurable business gains",
+                "paragraph 3 (120-160 words): third use case — different industry or scale",
+                "paragraph 4 (120-160 words): adoption pattern or what these deployments have in common",
             ],
             "tools_and_practice": [
                 "paragraph 1 (110-150 words): most notable tool — what can someone do now that they couldn't before",
@@ -69,8 +74,8 @@ def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> 
                 "paragraph 3 (110-150 words): additional tool or ecosystem shift worth knowing",
             ],
             "weak_signals_and_trends": [
-                "paragraph 1 (110-150 words): emerging pattern grounded in multiple cited facts",
-                "paragraph 2 (110-150 words): forward-looking observation — connect the dots across stories",
+                "paragraph 1 (100-140 words): emerging pattern grounded in multiple cited facts",
+                "paragraph 2 (100-140 words): forward-looking observation — connect the dots across stories",
             ],
             "research_and_breakthroughs": [
                 "paragraph 1 (110-150 words): ONE breakthrough explained simply — what was achieved and why it matters",
@@ -86,7 +91,9 @@ def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> 
     length_instructions = (
         f"Your script MUST contain at least {settings.min_script_words} words total. "
         f"Target {target_words} words. "
-        "Each paragraph MUST be between 110 and 150 words — never shorter than 110 words. "
+        "Paragraph lengths are ADAPTED BY PILLAR — use the per-paragraph word ranges in the schema. "
+        "Lead pillars (AI News 120-170, Use Cases 120-160) get denser coverage; "
+        "secondary pillars (Weak Signals 100-140) stay tighter. "
         "Write ALL 18 paragraphs listed in the schema. Do NOT skip any. "
     )
 
@@ -321,7 +328,12 @@ def generate_episode_script(manifest: dict, local_preview: bool = False, profile
 
                 try:
                     payload = _generate_with_model(model, manifest, settings, force_length=force)
-                    script = assemble_script(manifest["run_date"], payload, intro_format=settings.intro_format)
+                    script = assemble_script(
+                        manifest["run_date"],
+                        payload,
+                        intro_format=settings.intro_format,
+                        closing_sentence=settings.closing_sentence,
+                    )
                     wc = _word_count(script)
                 except Exception as inner_exc:
                     logger.warning("Attempt %d failed: %s", attempt + 1, inner_exc)
