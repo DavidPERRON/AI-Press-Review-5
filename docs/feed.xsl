@@ -247,7 +247,7 @@
             AI Press Review ·
             <a href="/">Home</a> ·
             <a href="/about.html">Methodology</a> ·
-            <a href="mailto:david.perron@gmx.fr">Contact</a>
+            <a href="mailto:david.perron@aequitus.net">Contact</a>
           </p>
         </footer>
 

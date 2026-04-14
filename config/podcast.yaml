@@ -8,11 +8,8 @@
 title: "AI Press Review"
 subtitle: "Factual, Clear, Built for Busy Professionals"
 author: "David Perron"
-# TEMPORARY (2026-04-14): gmx.fr inbox for Apple Podcasts / YouTube Music verification
-# emails. Automated revert to david.perron@aequitus.net at 18:00 Paris via
-# .github/workflows/revert-email.yml (cron: 0 16 14 4 *).
-email: "david.perron@gmx.fr"
-author_email: "david.perron@gmx.fr"
+email: "david.perron@aequitus.net"
+author_email: "david.perron@aequitus.net"
 language: "en"
 category_primary: "Business"
 category_secondary: "Artificial Intelligence"
