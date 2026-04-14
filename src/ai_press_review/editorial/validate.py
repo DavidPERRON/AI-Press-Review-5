@@ -30,6 +30,26 @@ def build_intro_line(run_date: str, highlights_label: str, intro_format: str = '
     return f"Your Daily AI Press Review — {formatted}: {label}."
 
 
+def _coerce_paragraph(item) -> str:
+    """Normalise a paragraph to a plain string.
+
+    Some LLMs (notably Claude) emit paragraphs as dicts — {"text": "..."} or
+    {"content": "..."} — when given a schema whose values are strings. Rather
+    than fail the whole run, extract the first string-typed value we can find.
+    """
+    if isinstance(item, str):
+        return item
+    if isinstance(item, dict):
+        for key in ("text", "content", "body", "paragraph", "value"):
+            candidate = item.get(key)
+            if isinstance(candidate, str) and candidate.strip():
+                return candidate
+        for value in item.values():
+            if isinstance(value, str) and value.strip():
+                return value
+    return str(item) if item is not None else ""
+
+
 def validate_section_payload(payload: dict) -> None:
     sections = payload.get("sections") or {}
     if list(sections.keys()) != REQUIRED_SECTION_KEYS:
@@ -40,7 +60,7 @@ def validate_section_payload(payload: dict) -> None:
         if not isinstance(paragraphs, list) or not paragraphs:
             raise ValueError(f"Missing section content for {key}")
         for paragraph in paragraphs:
-            _validate_paragraph(paragraph)
+            _validate_paragraph(_coerce_paragraph(paragraph))
 
     tomorrow_concept = (payload.get("tomorrow_pedagogical_concept") or "").strip()
     if not tomorrow_concept:
@@ -57,7 +77,8 @@ def assemble_script(run_date: str, payload: dict, intro_format: str = 'daily') -
 
     ordered_paragraphs = [intro]
     for key in REQUIRED_SECTION_KEYS:
-        ordered_paragraphs.extend([p.strip() for p in sections[key] if p.strip()])
+        normalised = [_coerce_paragraph(p).strip() for p in sections[key]]
+        ordered_paragraphs.extend([p for p in normalised if p])
 
     ordered_paragraphs.append(CLOSING_SENTENCE)
     ordered_paragraphs.append(payload["tomorrow_pedagogical_concept"].strip().rstrip(".") + ".")

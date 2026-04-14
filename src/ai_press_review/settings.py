@@ -221,7 +221,7 @@ def load_settings(local_preview: bool = False, profile: str | None = None) -> Se
         public_audio_base_url=_env('PUBLIC_AUDIO_BASE_URL', _yaml_get(config, 'public_audio_base_url', '')),
         target_duration_min=int(_env('TARGET_DURATION_MIN', str(_yaml_get(config, 'editorial.target_duration_min', 14)))),
         target_duration_max=int(_env('TARGET_DURATION_MAX', str(_yaml_get(config, 'editorial.target_duration_max', 18)))),
-        min_script_words=int(_env('MIN_SCRIPT_WORDS', str(_yaml_get(config, 'editorial.min_script_words', 2100)))),
+        min_script_words=int(_env('MIN_SCRIPT_WORDS', str(_yaml_get(config, 'editorial.min_script_words', 2000)))),
         min_source_count=int(_env('MIN_SOURCE_COUNT', str(_yaml_get(config, 'editorial.min_source_count', 15)))),
         freshness_hours=int(_env('FRESHNESS_HOURS', str(_yaml_get(config, 'editorial.freshness_hours', 48)))),
         exclude_previous_episode=_env_bool('EXCLUDE_PREVIOUS_EPISODE', bool(_yaml_get(config, 'editorial.exclude_previous_episode', True))),

@@ -75,6 +75,25 @@ def test_assemble_script_produces_valid_output():
     assert script.endswith(".")
 
 
+def test_assemble_script_accepts_dict_paragraphs():
+    """Some LLMs (notably Claude) emit each paragraph as {'text': '...'}
+    instead of a plain string. The assembler must coerce rather than crash.
+    """
+    payload = _make_payload()
+    sample_text = "OpenAI launched a new model today with significant performance gains." * 2
+    payload["sections"]["ai_news"] = [{"text": sample_text}] * 4
+    script = assemble_script("2026-04-12", payload)
+    assert sample_text.strip() in script
+
+
+def test_assemble_script_accepts_content_keyed_dict_paragraphs():
+    payload = _make_payload()
+    sample_text = "Banks are deploying AI agents for customer service automation." * 2
+    payload["sections"]["use_cases_and_deployments"] = [{"content": sample_text}] * 3
+    script = assemble_script("2026-04-12", payload)
+    assert sample_text.strip() in script
+
+
 def test_validate_final_script_rejects_empty():
     with pytest.raises(ValueError, match="empty"):
         validate_final_script("")

@@ -30,7 +30,7 @@ cover_image: "assets/podcast-cover.png"
 editorial:
   target_duration_min: 14
   target_duration_max: 18
-  min_script_words: 2100
+  min_script_words: 2000
   min_source_count: 15
   freshness_hours: 48
   exclude_previous_episode: true
@@ -70,7 +70,7 @@ profiles:
     exclude_previous_episode: true
     prefer_unused: false
     min_source_count: 15
-    min_script_words: 2100
+    min_script_words: 2000
     target_duration_min: 14
     target_duration_max: 18
     prompt_file: "prompt_system.txt"
@@ -84,7 +84,7 @@ profiles:
     unused_score_bonus: 2.0
     reuse_min_score: 8.0
     min_source_count: 45
-    min_script_words: 2200
+    min_script_words: 2100
     target_duration_min: 18
     target_duration_max: 24
     prompt_file: "prompt_weekly.txt"
