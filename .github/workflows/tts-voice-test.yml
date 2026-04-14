@@ -1,0 +1,156 @@
+name: TTS Voice Test
+
+# Render the standard 471-word excerpt with a user-provided Cartesia voice_id,
+# using the same path as production (websocket continuity, speed=0.97,
+# emotion=serious). Use this to A/B candidate voices.
+
+on:
+  workflow_dispatch:
+    inputs:
+      voice_id:
+        description: 'Cartesia voice_id (UUID)'
+        required: true
+      voice_name:
+        description: 'Friendly name for filename (e.g. vincent)'
+        required: false
+        default: 'unknown'
+      speed:
+        description: 'Cartesia speed'
+        required: false
+        default: '0.97'
+
+jobs:
+  voice_test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Install dependencies
+        run: pip install websockets pydub mutagen
+
+      - name: Render TTS for candidate voice
+        env:
+          CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
+          VOICE_ID: ${{ github.event.inputs.voice_id }}
+          VOICE_NAME: ${{ github.event.inputs.voice_name }}
+          SPEED: ${{ github.event.inputs.speed }}
+        run: |
+          python - <<'PY'
+          import os, re, asyncio, json, base64, uuid, wave
+          import websockets
+          from pydub import AudioSegment
+          from mutagen.mp3 import MP3
+
+          SCRIPT = """Cloudflare is launching Agent Cloud, a new platform for enterprises to build and deploy AI agents, and it's doing so with OpenAI's most advanced models. The partnership gives millions of Cloudflare customers direct access to frontier models, including the recently announced GPT-5.4 and the coding-focused Codex. The goal is to move AI agents from developer laptops into production-grade, secure, and scalable environments. This matters because it integrates powerful AI capabilities directly into the network infrastructure that many businesses already use for security and performance. Instead of just being an application, AI becomes a service that can be deployed at the edge, close to the user. For enterprises, this means the ability to build agents that can perform real work — like handling customer service requests, managing security alerts, or automating complex business processes — with the speed and security provided by Cloudflare's global network. It's a significant move to make agentic AI a core part of enterprise IT infrastructure.
+
+          The push for enterprise agents is creating a new category of specialized platforms. Following the Cloudflare announcement, a new company called Primitive launched its own agent operating system, but this one is purpose-built for regulated financial institutions. Primitive's system is designed from the ground up to provide the control, third-party integrations, and detailed measurement that banks and financial firms require for compliance. This end-to-end platform handles the creation, deployment, and governance of AI agents across a firm's operations. This is a critical development because it addresses the specific security and regulatory hurdles that have slowed AI adoption in finance. While general-purpose platforms like Agent Cloud offer scale, vertical-specific solutions like Primitive's offer the deep, domain-specific guardrails necessary for high-stakes environments. It shows the market is maturing, with vendors now building tools tailored to the unique operational realities of different industries, moving beyond one-size-fits-all solutions.
+
+          OpenAI is making several strategic moves to deepen its enterprise footprint. The company has acquired Hiro, a startup that built a personal AI CFO for financial planning and analysis. The Hiro team will join OpenAI, and their service is being shut down, signaling a talent acquisition focused on financial AI expertise. This move aligns with OpenAI's increasing focus on business applications. Concurrently, OpenAI is significantly expanding its physical presence, opening a new London office with space for over 500 employees, more than doubling its current headcount in the city. This expansion underscores its commitment to the European market. Internally, a memo from OpenAI's revenue chief highlighted the success of its partnership with Amazon, suggesting a strategic diversification of its cloud dependencies beyond its foundational relationship with Microsoft. Together, these actions paint a picture of a company aggressively scaling its enterprise operations, talent, and infrastructure partnerships globally."""
+
+          words = len(re.findall(r"\b\w+\b", SCRIPT))
+          print(f"Script word count: {words}")
+
+          api_key = os.environ["CARTESIA_API_KEY"]
+          voice_id = os.environ["VOICE_ID"]
+          voice_name = os.environ["VOICE_NAME"]
+          speed = float(os.environ["SPEED"])
+          print(f"Voice: {voice_name} ({voice_id})  speed={speed}")
+
+          # Same chunking logic as cartesia.py
+          paragraphs = [p.strip() for p in SCRIPT.split("\n") if p.strip()]
+          chunks = []
+          current = ""
+          for p in paragraphs:
+              cand = f"{current}\n\n{p}".strip() if current else p
+              if len(cand) <= 1500:
+                  current = cand
+              else:
+                  if current:
+                      chunks.append(current)
+                  current = p
+          if current:
+              chunks.append(current)
+          print(f"Chunks: {len(chunks)}")
+
+          context_id = f"voice-test-{uuid.uuid4()}"
+          ws_url = (
+              f"wss://api.cartesia.ai/tts/websocket"
+              f"?cartesia_version=2024-11-13&api_key={api_key}"
+          )
+          SAMPLE_RATE = 44100
+
+          async def render():
+              raw_audio = b""
+              async with websockets.connect(ws_url, max_size=None) as ws:
+                  for i, chunk in enumerate(chunks, 1):
+                      is_last = (i == len(chunks))
+                      req = {
+                          "model_id": "sonic-3",
+                          "transcript": chunk,
+                          "voice": {"mode": "id", "id": voice_id},
+                          "language": "en",
+                          "context_id": context_id,
+                          "continue": not is_last,
+                          "output_format": {
+                              "container": "raw",
+                              "encoding": "pcm_s16le",
+                              "sample_rate": SAMPLE_RATE,
+                          },
+                          "generation_config": {"volume": 1.0, "speed": speed, "emotion": "serious"},
+                      }
+                      await ws.send(json.dumps(req))
+
+                  bytes_received = 0
+                  while True:
+                      msg = json.loads(await ws.recv())
+                      mtype = msg.get("type")
+                      if mtype == "chunk" and msg.get("context_id") == context_id:
+                          raw_audio += base64.b64decode(msg["data"])
+                          bytes_received += len(raw_audio)
+                      elif mtype == "done" and msg.get("context_id") == context_id:
+                          break
+                      elif mtype == "error":
+                          raise RuntimeError(f"Cartesia error: {msg}")
+              return raw_audio
+
+          raw = asyncio.run(render())
+
+          wav_path = "/tmp/voice.wav"
+          with wave.open(wav_path, "wb") as wf:
+              wf.setnchannels(1)
+              wf.setsampwidth(2)
+              wf.setframerate(SAMPLE_RATE)
+              wf.writeframes(raw)
+
+          seg = AudioSegment.from_file(wav_path, format="wav")
+          out = f"output/voice-{voice_name}.mp3"
+          os.makedirs("output", exist_ok=True)
+          seg.export(out, format="mp3", bitrate="96k")
+
+          mp3 = MP3(out)
+          dur_s = mp3.info.length
+          wpm = words / (dur_s / 60.0)
+          print("=" * 60)
+          print(f"VOICE: {voice_name} ({voice_id})")
+          print(f"  speed:    {speed}")
+          print(f"  words:    {words}")
+          print(f"  duration: {dur_s:.2f}s")
+          print(f"  WPM:      {wpm:.1f}")
+          print("=" * 60)
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: voice-${{ github.event.inputs.voice_name }}-${{ github.event.inputs.voice_id }}
+          path: output/voice-${{ github.event.inputs.voice_name }}.mp3
+          retention-days: 14
