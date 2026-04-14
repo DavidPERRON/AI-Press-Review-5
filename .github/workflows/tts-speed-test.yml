@@ -1,0 +1,126 @@
+name: TTS Speed Test
+
+# One-off workflow to test Cartesia TTS speed settings on a short excerpt.
+# Renders ~500 words at the requested speed, reports measured WPM in logs,
+# uploads the MP3 as a workflow artifact.
+
+on:
+  workflow_dispatch:
+    inputs:
+      speed:
+        description: 'Cartesia speed (0.50 - 2.00, default 0.97 targets ~164 WPM)'
+        required: false
+        default: '0.97'
+
+jobs:
+  tts_test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Install dependencies
+        run: pip install requests pydub mutagen
+
+      - name: Render TTS and report WPM
+        env:
+          CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
+          CARTESIA_VOICE_ID: ${{ vars.CARTESIA_VOICE_ID }}
+          SPEED: ${{ github.event.inputs.speed }}
+        run: |
+          python - <<'PY'
+          import os, math, re, sys
+          import requests
+          from pydub import AudioSegment
+          from mutagen.mp3 import MP3
+
+          SCRIPT = """Cloudflare is launching Agent Cloud, a new platform for enterprises to build and deploy AI agents, and it's doing so with OpenAI's most advanced models. The partnership gives millions of Cloudflare customers direct access to frontier models, including the recently announced GPT-5.4 and the coding-focused Codex. The goal is to move AI agents from developer laptops into production-grade, secure, and scalable environments. This matters because it integrates powerful AI capabilities directly into the network infrastructure that many businesses already use for security and performance. Instead of just being an application, AI becomes a service that can be deployed at the edge, close to the user. For enterprises, this means the ability to build agents that can perform real work — like handling customer service requests, managing security alerts, or automating complex business processes — with the speed and security provided by Cloudflare's global network. It's a significant move to make agentic AI a core part of enterprise IT infrastructure.
+
+          The push for enterprise agents is creating a new category of specialized platforms. Following the Cloudflare announcement, a new company called Primitive launched its own agent operating system, but this one is purpose-built for regulated financial institutions. Primitive's system is designed from the ground up to provide the control, third-party integrations, and detailed measurement that banks and financial firms require for compliance. This end-to-end platform handles the creation, deployment, and governance of AI agents across a firm's operations. This is a critical development because it addresses the specific security and regulatory hurdles that have slowed AI adoption in finance. While general-purpose platforms like Agent Cloud offer scale, vertical-specific solutions like Primitive's offer the deep, domain-specific guardrails necessary for high-stakes environments. It shows the market is maturing, with vendors now building tools tailored to the unique operational realities of different industries, moving beyond one-size-fits-all solutions.
+
+          OpenAI is making several strategic moves to deepen its enterprise footprint. The company has acquired Hiro, a startup that built a personal AI CFO for financial planning and analysis. The Hiro team will join OpenAI, and their service is being shut down, signaling a talent acquisition focused on financial AI expertise. This move aligns with OpenAI's increasing focus on business applications. Concurrently, OpenAI is significantly expanding its physical presence, opening a new London office with space for over 500 employees, more than doubling its current headcount in the city. This expansion underscores its commitment to the European market. Internally, a memo from OpenAI's revenue chief highlighted the success of its partnership with Amazon, suggesting a strategic diversification of its cloud dependencies beyond its foundational relationship with Microsoft. Together, these actions paint a picture of a company aggressively scaling its enterprise operations, talent, and infrastructure partnerships globally."""
+
+          # Word count (same regex as generator.py)
+          word_count = len(re.findall(r"\b\w+\b", SCRIPT))
+          print(f"Script word count: {word_count}")
+
+          api_key = os.environ["CARTESIA_API_KEY"]
+          voice_id = os.environ["CARTESIA_VOICE_ID"]
+          speed = float(os.environ["SPEED"])
+          print(f"Speed: {speed}")
+
+          # Split into paragraphs for chunked rendering (matches cartesia.py behaviour)
+          paragraphs = [p.strip() for p in SCRIPT.split("\n") if p.strip()]
+          chunks = []
+          current = ""
+          for p in paragraphs:
+              cand = f"{current}\n\n{p}".strip() if current else p
+              if len(cand) <= 1500:
+                  current = cand
+              else:
+                  if current:
+                      chunks.append(current)
+                  current = p
+          if current:
+              chunks.append(current)
+          print(f"Chunks: {len(chunks)}")
+
+          headers = {
+              "Authorization": f"Bearer {api_key}",
+              "Cartesia-Version": "2024-06-10",
+              "Content-Type": "application/json",
+          }
+
+          rendered = []
+          for i, chunk in enumerate(chunks, 1):
+              payload = {
+                  "model_id": "sonic-3",
+                  "transcript": chunk,
+                  "voice": {"mode": "id", "id": voice_id},
+                  "output_format": {"container": "wav", "encoding": "pcm_f32le", "sample_rate": 44100},
+                  "language": "en",
+                  "generation_config": {"volume": 1.0, "speed": speed, "emotion": "serious"},
+                  "save": False,
+              }
+              r = requests.post("https://api.cartesia.ai/tts/bytes", headers=headers, json=payload, timeout=180)
+              r.raise_for_status()
+              path = f"/tmp/chunk_{i}.wav"
+              with open(path, "wb") as f:
+                  f.write(r.content)
+              rendered.append(AudioSegment.from_file(path, format="wav"))
+              print(f"  chunk {i}: {len(rendered[-1])/1000:.2f}s")
+
+          combined = rendered[0]
+          for seg in rendered[1:]:
+              combined = combined.append(seg, crossfade=150)
+
+          out = "output/tts-speed-test.mp3"
+          os.makedirs("output", exist_ok=True)
+          combined.export(out, format="mp3", bitrate="96k")
+
+          mp3 = MP3(out)
+          duration_sec = mp3.info.length
+          duration_min = duration_sec / 60.0
+          wpm = word_count / duration_min
+          print("=" * 60)
+          print(f"RESULT: speed={speed}")
+          print(f"  words:    {word_count}")
+          print(f"  duration: {duration_sec:.2f}s ({duration_min:.2f} min)")
+          print(f"  WPM:      {wpm:.1f}")
+          print("=" * 60)
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tts-speed-test-${{ github.event.inputs.speed }}
+          path: output/tts-speed-test.mp3
+          retention-days: 14
