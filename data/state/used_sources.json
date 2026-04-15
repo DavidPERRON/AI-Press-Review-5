@@ -1,6 +1,406 @@
 {
   "items": [
     {
+      "title": "NVIDIA and the University of Maryland Researchers Released Audio Flamingo Next (AF-Next): A Super Powerful and Open Large Audio-Language Model",
+      "url": "https://www.marktechpost.com/2026/04/14/nvidia-and-the-university-of-maryland-researchers-released-audio-flamingo-next-af-next-a-super-powerful-and-open-large-audio-language-model/",
+      "used_at": "2026-04-15T05:06:17.190176+00:00"
+    },
+    {
+      "title": "Trusted access for the next era of cyber defense",
+      "url": "https://openai.com/index/scaling-trusted-access-for-cyber-defense",
+      "used_at": "2026-04-15T05:06:17.190185+00:00"
+    },
+    {
+      "title": "TinyFish AI Releases Full Web Infrastructure Platform for AI Agents: Search, Fetch, Browser, and Agent Under One API Key",
+      "url": "https://www.marktechpost.com/2026/04/14/tinyfish-ai-releases-full-web-infrastructure-platform-for-ai-agents/",
+      "used_at": "2026-04-15T05:06:17.190188+00:00"
+    },
+    {
+      "title": "Claude Code routines let AI fix bugs and review code on autopilot",
+      "url": "https://the-decoder.com/claude-code-routines-let-ai-fix-bugs-and-review-code-on-autopilot/",
+      "used_at": "2026-04-15T05:06:17.190191+00:00"
+    },
+    {
+      "title": "Robust Explanations for User Trust in Enterprise NLP Systems",
+      "url": "https://arxiv.org/abs/2604.12069",
+      "used_at": "2026-04-15T05:06:17.190193+00:00"
+    },
+    {
+      "title": "Towards EnergyGPT: A Large Language Model Specialized for the Energy Sector",
+      "url": "https://arxiv.org/abs/2509.07177",
+      "used_at": "2026-04-15T05:06:17.190195+00:00"
+    },
+    {
+      "title": "Redefining the future of software engineering",
+      "url": "https://www.technologyreview.com/2026/04/14/1134397/redefining-the-future-of-software-engineering/",
+      "used_at": "2026-04-15T05:06:17.190197+00:00"
+    },
+    {
+      "title": "Gemini Robotics-ER 1.6: Powering real-world robotics tasks through enhanced embodied reasoning",
+      "url": "https://deepmind.google/blog/gemini-robotics-er-1-6/",
+      "used_at": "2026-04-15T05:06:17.190201+00:00"
+    },
+    {
+      "title": "Nemotron 3 Super: Open, Efficient Mixture-of-Experts Hybrid Mamba-Transformer Model for Agentic Reasoning",
+      "url": "https://arxiv.org/abs/2604.12374",
+      "used_at": "2026-04-15T05:06:17.190203+00:00"
+    },
+    {
+      "title": "Monte Carlo Stochastic Depth for Uncertainty Estimation in Deep Learning",
+      "url": "https://arxiv.org/abs/2604.12719",
+      "used_at": "2026-04-15T05:06:17.190205+00:00"
+    },
+    {
+      "title": "Aethon: A Reference-Based Replication Primitive for Constant-Time Instantiation of Stateful AI Agents",
+      "url": "https://arxiv.org/abs/2604.12129",
+      "used_at": "2026-04-15T05:06:17.190207+00:00"
+    },
+    {
+      "title": "KnowRL: Boosting LLM Reasoning via Reinforcement Learning with Minimal-Sufficient Knowledge Guidance",
+      "url": "https://arxiv.org/abs/2604.12627",
+      "used_at": "2026-04-15T05:06:17.190209+00:00"
+    },
+    {
+      "title": "MGA: Memory-Driven GUI Agent for Observation-Centric Interaction",
+      "url": "https://arxiv.org/abs/2510.24168",
+      "used_at": "2026-04-15T05:06:17.190211+00:00"
+    },
+    {
+      "title": "Coming soon: 10 Things That Matter in AI Right Now",
+      "url": "https://www.technologyreview.com/2026/04/14/1135298/coming-soon-10-things-that-matter-in-ai-right-now/",
+      "used_at": "2026-04-15T05:06:17.190213+00:00"
+    },
+    {
+      "title": "Stanford's AI Index 2026 shows rapid progress, growing safety concerns, and declining public trust",
+      "url": "https://the-decoder.com/stanfords-ai-index-2026-shows-rapid-progress-growing-safety-concerns-and-declining-public-trust/",
+      "used_at": "2026-04-15T05:06:17.190215+00:00"
+    },
+    {
+      "title": "datasette PR #2689: Replace token-based CSRF with Sec-Fetch-Site header protection",
+      "url": "https://simonwillison.net/2026/Apr/14/replace-token-based-csrf/",
+      "used_at": "2026-04-15T05:06:17.190217+00:00"
+    },
+    {
+      "title": "Cybersecurity Looks Like Proof of Work Now",
+      "url": "https://simonwillison.net/2026/Apr/14/cybersecurity-proof-of-work/",
+      "used_at": "2026-04-15T05:06:17.190219+00:00"
+    },
+    {
+      "title": "AccessInn.ai Launches: API-Driven Ontological Services for Multi-Disciplinary Large Language Model Development",
+      "url": "https://www.sspnet.org/community/news/accessinn-ai-launches-api-driven-ontological-services-for-multi-disciplinary-large-language-model-development/",
+      "used_at": "2026-04-15T05:06:17.190221+00:00"
+    },
+    {
+      "title": "Google Launches ‘Skills’ in Chrome: Turning Reusable AI Prompts into One-Click Browser Workflows",
+      "url": "https://www.marktechpost.com/2026/04/14/google-launches-skills-in-chrome-turning-reusable-ai-prompts-into-one-click-browser-workflows/",
+      "used_at": "2026-04-15T05:06:17.190223+00:00"
+    },
+    {
+      "title": "OpenAI acquires AI finance startup Hiro, which built a \"personal AI CFO\"",
+      "url": "https://the-decoder.com/openai-acquires-ai-finance-startup-hiro-which-built-a-personal-ai-cfo/",
+      "used_at": "2026-04-15T05:06:17.190225+00:00"
+    },
+    {
+      "title": "Use-case based deployments on SageMaker JumpStart",
+      "url": "https://aws.amazon.com/blogs/machine-learning/use-case-based-deployments-on-sagemaker-jumpstart/",
+      "used_at": "2026-04-15T05:06:17.190226+00:00"
+    },
+    {
+      "title": "Best practices to run inference on Amazon SageMaker HyperPod",
+      "url": "https://aws.amazon.com/blogs/machine-learning/best-practices-to-run-inference-on-amazon-sagemaker-hyperpod/",
+      "used_at": "2026-04-15T05:06:17.190228+00:00"
+    },
+    {
+      "title": "Buffet breakfasts could be less wasteful",
+      "url": "https://www.economist.com/science-and-technology/2026/04/14/buffet-breakfasts-could-be-less-wasteful",
+      "used_at": "2026-04-15T05:06:17.190230+00:00"
+    },
+    {
+      "title": "Zig 0.16.0 release notes: \"Juicy Main\"",
+      "url": "https://simonwillison.net/2026/Apr/15/juicy-main/",
+      "used_at": "2026-04-15T05:06:17.190232+00:00"
+    },
+    {
+      "title": "Trusted access for the next era of cyber defense",
+      "url": "https://simonwillison.net/2026/Apr/14/trusted-access-openai/",
+      "used_at": "2026-04-15T05:06:17.190234+00:00"
+    },
+    {
+      "title": "A Coding Implementation of Crawl4AI for Web Crawling, Markdown Generation, JavaScript Execution, and LLM-Based Structured Extraction",
+      "url": "https://www.marktechpost.com/2026/04/14/a-coding-implementation-of-crawl4ai-for-web-crawling-markdown-generation-javascript-execution-and-llm-based-structured-extraction/",
+      "used_at": "2026-04-15T05:06:17.190236+00:00"
+    },
+    {
+      "title": "How Guidesly built AI-generated trip reports for outdoor guides on AWS",
+      "url": "https://aws.amazon.com/blogs/machine-learning/how-guidesly-built-ai-generated-trip-reports-for-outdoor-guides-on-aws/",
+      "used_at": "2026-04-15T05:06:17.190238+00:00"
+    },
+    {
+      "title": "Google Chrome's new \"Skills\" feature lets you save AI prompts and reuse them with a single click",
+      "url": "https://the-decoder.com/google-chromes-new-skills-feature-lets-you-save-ai-prompts-and-reuse-them-with-a-single-click/",
+      "used_at": "2026-04-15T05:06:17.190239+00:00"
+    },
+    {
+      "title": "Claude Mythos can autonomously compromise weakly defended enterprise networks end-to-end",
+      "url": "https://the-decoder.com/claude-mythos-can-autonomously-compromise-weakly-defended-enterprise-networks-end-to-end/",
+      "used_at": "2026-04-15T05:06:17.190241+00:00"
+    },
+    {
+      "title": "Spring AI SDK for Amazon Bedrock AgentCore is now Generally Available",
+      "url": "https://aws.amazon.com/blogs/machine-learning/spring-ai-sdk-for-amazon-bedrock-agentcore-is-now-generally-available/",
+      "used_at": "2026-04-15T05:06:17.190243+00:00"
+    },
+    {
+      "title": "The problem with thinking you’re part Neanderthal",
+      "url": "https://www.technologyreview.com/2026/04/14/1135169/problem-thinking-part-neanderthal-human-evolution/",
+      "used_at": "2026-04-15T05:06:17.190245+00:00"
+    },
+    {
+      "title": "What is Fine-Tuning vs Prompt Tuning in AI Models?",
+      "url": "https://www.c-sharpcorner.com/article/what-is-fine-tuning-vs-prompt-tuning-in-ai-models/",
+      "used_at": "2026-04-15T05:06:17.190247+00:00"
+    },
+    {
+      "title": "AI learns language from skewed sources. That could change how we humans speak – and think | Bruce Schneier",
+      "url": "https://www.theguardian.com/commentisfree/2026/apr/14/ai-language-human-speech",
+      "used_at": "2026-04-15T05:06:17.190249+00:00"
+    },
+    {
+      "title": "NAACP lawsuit accuses Elon Musk’s xAI of polluting Black neighborhoods near Memphis",
+      "url": "https://www.theguardian.com/technology/2026/apr/14/naacp-lawsuit-elon-musk-xai-memphis",
+      "used_at": "2026-04-15T05:06:17.190251+00:00"
+    },
+    {
+      "title": "Greg Brockman predicts AI will let small teams match the output of large ones if they can afford the compute",
+      "url": "https://the-decoder.com/greg-brockman-predicts-ai-will-let-small-teams-match-the-output-of-large-ones-if-they-can-afford-the-compute/",
+      "used_at": "2026-04-15T05:06:17.190253+00:00"
+    },
+    {
+      "title": "Turn your best AI prompts into one-click tools in Chrome",
+      "url": "https://blog.google/products-and-platforms/products/chrome/skills-in-chrome/",
+      "used_at": "2026-04-15T05:06:17.190255+00:00"
+    },
+    {
+      "title": "Ukraine captures a Russian position using only drones and ground robots",
+      "url": "https://the-decoder.com/ukraine-captures-a-russian-position-using-only-drones-and-ground-robots/",
+      "used_at": "2026-04-15T05:06:17.190256+00:00"
+    },
+    {
+      "title": "The Download: the state of AI, and protecting bears with drones",
+      "url": "https://www.technologyreview.com/2026/04/14/1135847/the-download-state-of-ai-drones-protecting-bears/",
+      "used_at": "2026-04-15T05:06:17.190258+00:00"
+    },
+    {
+      "title": "Bringing people together at AI for the Economy Forum",
+      "url": "https://blog.google/company-news/outreach-and-initiatives/creating-opportunity/ai-economy-forum/",
+      "used_at": "2026-04-15T05:06:17.190260+00:00"
+    },
+    {
+      "title": "Navigating the generative AI journey: The Path-to-Value framework from AWS",
+      "url": "https://aws.amazon.com/blogs/machine-learning/navigating-the-generative-ai-journey-the-path-to-value-framework-from-aws/",
+      "used_at": "2026-04-15T05:06:17.190262+00:00"
+    },
+    {
+      "title": "OpenAI et Anthropic, en quête de rentabilité, envisagent d’entrer en Bourse pour lever les capitaux nécessaires à leurs investissements",
+      "url": "https://www.lemonde.fr/economie/article/2026/04/14/openai-et-anthropic-en-quete-de-rentabilite-envisagent-d-entrer-en-bourse-pour-lever-les-capitaux-necessaires-a-leurs-investissements_6679933_3234.html",
+      "used_at": "2026-04-15T05:06:17.190264+00:00"
+    },
+    {
+      "title": "Quantum computing: A tech race Europe could win?",
+      "url": "https://www.bbc.com/news/articles/c20q4nv89yzo",
+      "used_at": "2026-04-15T05:06:17.190266+00:00"
+    },
+    {
+      "title": "Rolls-Royce launches new two-seater electric car",
+      "url": "https://www.bbc.com/news/articles/c1eqqlnzq7yo",
+      "used_at": "2026-04-15T05:06:17.190268+00:00"
+    },
+    {
+      "title": "Korean AI chip startup DEEPX, Hyundai work on robots powered by generative AI - Reuters",
+      "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxQN3dqQ0UtTjhzTnZrd1YxcGJMTzR0Rmhha3lCaU9raENRaFlnUXlEckh5RjhMU2NBYXU1MC04bzk0YmF6LWZGZFRqRWJRdG9GRlZzZE5QV0NLaXczaS1Lb2dkd3M2Q2tlUEdEZWZfTmZvQ0xPVmdGU2ZBQS1nZUdnbkZPWWljcnk4QUVIcTNBUnVEcEJEOTBpcjROSjBwaWZvSEZGa1k1eU1ZWXBPN21NTEJzY2RXZkdXY1hLOUZqQ2FNWm5oMWp3Q29ueHJKRzRyLUx1cGdB",
+      "used_at": "2026-04-15T05:06:17.190269+00:00"
+    },
+    {
+      "title": "Nissan turnaround plan pins hopes on ‘AI-defined vehicles’",
+      "url": "https://www.theguardian.com/business/2026/apr/14/nissan-turnaround-plan-pins-hopes-on-ai-defined-vehicles",
+      "used_at": "2026-04-15T05:06:17.190271+00:00"
+    },
+    {
+      "title": "AI companies make powerful tech – but they’re also savvy marketers",
+      "url": "https://www.theguardian.com/technology/2026/apr/13/ai-tech-marketing",
+      "used_at": "2026-04-15T05:06:17.190273+00:00"
+    },
+    {
+      "title": "Thoras AI and Agiletek Partner to Accelerate Deployment of Agentic AI Infrastructure Across Federal Environments - Yahoo Finance Singapore",
+      "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxPdVZTN2ktM0RoRVM1Wk9IdVNqdU1MZGR6SklmZ2laSXdPbWFYS3dkWEc5WUpMRjBHUXM5WUdXX2RyX25BNUtXbk5tNm4xa1BBaWhJcVpUSXNSa1dpTzdUX0lvTVlDVnZhN0pCN3V2S251OWE2eFEwNFpuOVdNUDU2X01BeXp2RXJBcXpFdVJEZw",
+      "used_at": "2026-04-15T05:06:17.190275+00:00"
+    },
+    {
+      "title": "FinTech bets big on AI agents, but deployment gaps persist - IBS Intelligence",
+      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQRzhkX1lRYjNxVjVtSGpZQURRcTZTTEVHWG4yUHZtX01yT3pQajluV2VhVnVVT2NHVUt0TXc2TnFCV0k1aW1PZTVEU0k4clc0UENob2FLSzVQVkE0WFI3WVVtZkd3WkxVQjAtT3V0Y2hvODZyeFM2UXF2MzJpLWdMSlNoZ014NlVxbk9NZmFUNWp0Z3JvLUZ1REFucGU",
+      "used_at": "2026-04-15T05:06:17.190277+00:00"
+    },
+    {
+      "title": "China now the ‘good guy’ on AI as Trump takes ‘wild west’ approach, MPs told",
+      "url": "https://www.theguardian.com/technology/2026/apr/14/china-now-ais-good-guy-as-us-takes-a-wild-west-approach-mps-told",
+      "used_at": "2026-04-15T05:06:17.190279+00:00"
+    },
+    {
+      "title": "New Book Release: Vibrant’s 'Artificial Intelligence Essentials' Simplifies AI, ML, and Generative AI for Professionals - The National Law Review",
+      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOTjlWczFvSkpiUExkNi1LWTJxQkRLV0NLYklKZ3NleUNpb0YtZFRFd0hMNndWdm1HNnZpbnZ1RTdhR2VFSWRtTlc4clJsRUpTN3A3U2szcjlZOERHNFVDLU1jLS1Jek5BaFJTMVhaODBtbkxHWUF4QXY5cWJRczExNTR2WXprSXVMZ2Jod1NGNWhyYklZYTRpZGpQaE5DNTl2WGRVM0Z4QU5FeWJ2LWhzMkRiQ24",
+      "used_at": "2026-04-15T05:06:17.190280+00:00"
+    },
+    {
+      "title": "Could AI write this column? In a world of slop-inion, I’m certifying myself human | Peter Lewis",
+      "url": "https://www.theguardian.com/commentisfree/2026/apr/14/ai-opinion-piece-column-writing-articles-certified-human-writer",
+      "used_at": "2026-04-15T05:06:17.190282+00:00"
+    },
+    {
+      "title": "Bosses say AI boosts productivity – workers say they’re drowning in ‘workslop’",
+      "url": "https://www.theguardian.com/technology/2026/apr/14/ai-productivity-workplace-errors",
+      "used_at": "2026-04-15T05:06:17.190284+00:00"
+    },
+    {
+      "title": "Xtrackers Artificial Intelligence and Big Data ETF: Is This ETF Late to the Party? - The Globe and Mail",
+      "url": "https://news.google.com/rss/articles/CBMi-gFBVV95cUxOeDVtc1RwNlA4VzA0OW5KRUdZcHU3ZllYYjRBUjRQOFotc3VXYUpoNkRDM1dCRUJ6N1hzVkNDaWJpRE1CNGpxTmpDeDF2cmRHNS05Q3FYUmQ1SHVVX2V3VXNqQXhyam55M0lmWGVKYnJINWVrbkI2aWJVZzZ5WW1RY2lIVDQ4RlpxY3pTcndZazRWRWdWN0F4V3BKSGxxTkZlbjdnMFliMWRaQTA5U2tDSVJTZURrQ1JGamtvWTE2ZFdiS3ZheTRiVldHWEQ2b0llejdWWm5tN0o2OEdIQ3hEWGdrQnRVR1BOXzgyUXRGZU1PNlRMZERxRWNn",
+      "used_at": "2026-04-15T05:06:17.190286+00:00"
+    },
+    {
+      "title": "Upstage Becomes Korea's First Generative AI Unicorn After Closing $125.9M Series C First Close - Wowtale",
+      "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBGU3pRbF9HYWVxZFp1WWNBeXNXLXV3NlRFSThpM05CX1NRaW8xNGQxdlAtVVdkQXVWd0U4MDBfUEppWDlSRHNBM2h5UnRTWkNROFhR",
+      "used_at": "2026-04-15T05:06:17.190288+00:00"
+    },
+    {
+      "title": "Experts warn against using artificial intelligence to prepare your taxes due to privacy and legal risks - Denver7",
+      "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxOSE1XWllRb0RZWFllNlZiQ2IwUm5kbFdfV1MzUWNoU1k1TkVRMEdrcjU3YV9nNHFRaENwUmkwWl8xREJxbnViWmd1d21fNXI3UWQ2eUdhYmxPR0RPMTNHVkhSUHcxSkd2SF8yeXlUSmUxOFBnTHJsbWczS21NTVVTbldZUTVKNGp1RFhmVk5XS2lKS0t1cm5pNmxSeXZRVm51ZWFJY0VYZXl1VG1KQzNUSHVzMUtUWmd3TDFmb3gzOGdMN1dvNmlBMEFBczBsM0dmbGFKVVB1SmUyZGM",
+      "used_at": "2026-04-15T05:06:17.190290+00:00"
+    },
+    {
+      "title": "Heading Into the Heart of Q2, These Are the 3 Artificial Intelligence (AI) Stocks I Want to Own - The Motley Fool",
+      "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQUWlja0NGa1BDZ2hiTDZwS2o1eXNNTExLa0REdHpRQ3FtZnV3UXFBZkRjY0RkbTRwbHhqVGo4Y2tiVEpzb1dTS0MxUExmMmdZUkw1akt2WHE3Z1VyQWVINTJDckJXQ3pHZnN3Q2ZTMnkydEQ4dkdWaHhUR05sbUdkQ1BWekVkTmZEVktaQWhaeGFGMU5PNWRPLQ",
+      "used_at": "2026-04-15T05:06:17.190292+00:00"
+    },
+    {
+      "title": "Experts warn against using artificial intelligence to prepare your taxes due to privacy and legal risks - Yahoo News Canada",
+      "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxONTBDRjI2TWpHTlMwQlJhenpuZ0VGSHBra2dqbHZPNE9SaGdYZ0hBSkZoQzlERWM5Q2R2b1o0NlNoZ0c2RXFUcmE3bXNmdXdfSkNNNi1INGF3M3lnSHpYLW80cTNIeVNjd2Z2V09VTjNPa0dPX3ZPbVBGc1hmX0k5N0RMdjI",
+      "used_at": "2026-04-15T05:06:17.190294+00:00"
+    },
+    {
+      "title": "Heading Into the Heart of Q2, These Are the 3 Artificial Intelligence (AI) Stocks I Want to Own - The Globe and Mail",
+      "url": "https://news.google.com/rss/articles/CBMigAJBVV95cUxPRkxhQW9QcFJ6WDgwNGp5RVZvZlpXVzFNMEZUMThMMzlscUVtYkdyQTVTc05hSnpXeEhBNmJzbjgyYWJFYTk5d2FDRG9EYVRYcGY0aUpiZDVsa1V5Y012dHR0bl9Ra0t1OXplS0RCdlRBdURzbWxLRnc4U1U5RE1Xdl9DMURnM2JnRzctWDNoLXF5bUJfSGhXb3BsMk1OaGlpLUx6WUJNcUphYWxwMldrOXRlMEpvaEhsd3EyQkwzTG5Nd0lpTndCeUh0eHlHTVFUU0NoZjh1UWd4dUhIVDVlOWJxVGxFWGw5cThMTUlUWVRaY09TNl9UanNJNkFYUmc5",
+      "used_at": "2026-04-15T05:06:17.190296+00:00"
+    },
+    {
+      "title": "Artificial Intelligence Minister says Anthropic taking ‘responsible’ approach with Mythos - The Globe and Mail",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPOUlaUkJmWkIwX3djLXM5UXpJUHg2YnJtU3BIdDE3THd6VFA1dHNiUm9rUjJKLXN5OUpFNFhPMHZMTG9xMTRxMWxWWDVEZm1IU1RtM0xfT3Rfd082UFllQ3dnOVdZN09wUVQ5T3FOdmJod1owRFNmQ0c3S2ZSbEFVcUF6akFBbWJhSll1cldRSmpyNVJadUF0Tm9qck1iNUlaQzJNbjUyTUYtYzA0Q1lnWnpQMjAwM28",
+      "used_at": "2026-04-15T05:06:17.190298+00:00"
+    },
+    {
+      "title": "Could artificial intelligence help with your taxes? Experts say you need to be cautious - NBC 6 South Florida",
+      "url": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxPU1hWMXlsekFiMWJnS1pXZFgyVzV3dUFkeldqSnBaY3JXN182OWJGZnRINGZuRHdMNm5lZVhsOHFvTHJtRVRjUWJZYzFabzhmZjlaaE1Wd1B1V2d6X3VkcEcxd3FDNWNsbVRFcFUxMHVfMzJxMHVzUnIyUzVVMENYMXNWVkV3VWNjamZ3R0dLMTljaG5CRV9fdFIzLTJFZWp2TXlVNGVweS1ReW9Tb0N5YjNCUWdPTVd6TDZUT01JbVZxOUVqb1AxbUJQVGdIbnFMOW5SR0xIZ19fWXZDZjBwLdIB6AFBVV95cUxQMGlaNmpwNVJ2WXRDZzRGLUg0NEhqbi10V1hVX1gtdGxSdVpFaVhkOFZrS280UDcwZl91dGszam11a1VwanhFSXJpcmdQTThWVmRVZlBwSzNhQXpldlVEd0l0OFQ3ZjIyZEZQVmRBTnhWc05fVk15d0JyX19HUGtFc05rSURsb2JkbzlyaGpUeGFGaVpvN1JpMUZ1VFUtb1I5blY2Z1JnTjVJOWUzYUZVWnZESThtUjA2LWRBLV85ODdvVTlGQWFtWmhPcU1YQ2VsNV9QT2l2QUI0cjd5SDBnRy1qcF9QZmRh",
+      "used_at": "2026-04-15T05:06:17.190300+00:00"
+    },
+    {
+      "title": "Navigating the generative AI journey: The Path-to-Value framework from AWS - Amazon Web Services",
+      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPb3AyalRYMG9wZFI0Sm80Yzk4V3lfcjVadm4yMGRQUzVPUGFrdGlOSndHUjJWa1B1UElFZ1hhajZHSVQ1Y1FrZlVmd2NwbW5PS2tHZVlhM1lyeFZLVmZIVGoxSFRUQTllLWlWS2o3cGFWcDFGeVIyR05GLWczUEdheXM3S19oUjJiNmhrMUtnV2VFaEN0T05ySFNOWmVDVXdHWWF0Z1gwbFFRZnJfOXRJbzV3ekIxX1JiSDA1Sg",
+      "used_at": "2026-04-15T05:06:17.190302+00:00"
+    },
+    {
+      "title": "Artificial Intelligence - Humans vs. AI: How Global Companies Are Handling Translation [Infographic] - MarketingProfs",
+      "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQYjNvUVg0SjNWR3BCak52cmRaa05ncDdsaEtEM3ZYeHJvb2hWRWZ6d2RDYVVkcW5NVXV5bGNBOGxXdXYyUmtRYjM1a3RLRy1qSDNfNlpvNjMwN0FDOW1ScmlTY0xtTmNxSGJyWDJXLVpqN3ZOWTRfRl9CbV9RTkpJZXA2cHFrTmt0SWdOdW55WlQ3TGpvSVdsblA4cUhJX0FQNFlUczNFR19fOGdwMThNbGJaMmlZUE82THc",
+      "used_at": "2026-04-15T05:06:17.190304+00:00"
+    },
+    {
+      "title": "The Artificial Intelligence (AI) Hype Is Fading, and That's Creating the Best Buying Opportunity of 2026 - The Motley Fool",
+      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPWDRrVmhYSG00UFZRckpHNEFUakx3QmhyOF9yRUdtMEgxSjNiTHFzODN0eWpqMVFyM0dwM2NCMEVhbzh5azBubnJDNnhSTHZDeXZvQWFIcGVpSTFJaXhZZmk0b1Y5SlFmRFhVZXA1WE9ab21qWDQ4Sk82eUp0QWI1WWZ2LW1Vc3hDdHZsYlhqdlMwOUhNVUhz",
+      "used_at": "2026-04-15T05:06:17.190305+00:00"
+    },
+    {
+      "title": "Client Alert: Artificial Intelligence (AI) Is Supposed to Reduce Risk. Why Does It Feel Like the Opposite? - JD Supra",
+      "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxPUVd1TDV3ODJTWF9yTmk4SkVaXzZoQVowV3J4Tm1kT1BRQW9mSGZGcFE4d2xSMEJWV0xpSzEyMTFSWjRfdnBhWlc4Ti05U0ZUdTdKX0Y1MGE4UGlfUGlheUxYdmthcExEQnFkVERDdG1aV3lkemdRdFhpTk52WWZXRkQ1M1V0bFZLYmc",
+      "used_at": "2026-04-15T05:06:17.190307+00:00"
+    },
+    {
+      "title": "Half of all US employees now use artificial intelligence at work, crossing landmark threshold for first time — Gallup data shows daily and weekly usage hitting all-time high of 28% in Q1 2026, with 65% feeling positive about its impact on productivity - Tom's Hardware",
+      "url": "https://news.google.com/rss/articles/CBMi0gNBVV95cUxPUnNPSFlicWN6dXM1Qnp4c241MUc1Z21sTFp4d2J1SjdybjQ4c0NfOS1IcWV4S3M3VUJCTW84eUFla2pwMDlEa2cxQkJ3ZUFPMnRKZUNxanoxRjhMcDdyTHlBWDVHcjZxUkVKbXFFZGVqUWg5X3hhNE12R1RTUDVlUUNpMVpHTmpvUW9kSG1TUkN3ZjBPbGVUWTVqNF9sanV3aXR3S3U4b1lqemFJMm5SWjZFOTBzTFoxdHBoVjM1ZlU3d19HUUZlTFZFNnBMRGdnbXNqVVZXVEtQZ0RfdmswYzgxVk15bklEM2NwVHU3eW5UemJnNkVpTDdSMjNva2ViSjJVWXUxNHdmVUxWWWQ0S0kyWnUxS1p1Ym84Mmt6TkJnSnhSaUs1SXBCUEo2RzhvXzFjWHJpRTluaXRHU3ZRQllNUWV6eldPdnp5djVmWjl2TEM3SmRQWDZTQXdtWTZOVWhqa2tNc3NMT2hRQUp2OEdHZUlwbFJXdk0wOXNMakhRcWJNeG5CaFpiUHloNXVmZmZoUGxGQUpDdE5EaHRuU0NxX1RzckJBYTRsMTdlT1dWa3lZNW4tVTN6SFY2bExxaW0wbnpHeDdhS214SUNlWWpB",
+      "used_at": "2026-04-15T05:06:17.190309+00:00"
+    },
+    {
+      "title": "Avec l’IA, « Mark Zuckerberg réfléchit à donner naissance à une nouvelle créature : un PDG augmenté, un PDG jamais fatigué »",
+      "url": "https://www.lemonde.fr/economie/article/2026/04/14/avec-l-ia-mark-zuckerberg-reflechit-a-donner-naissance-a-une-nouvelle-creature-un-pdg-augmente-un-pdg-jamais-fatigue_6679902_3234.html",
+      "used_at": "2026-04-15T05:06:17.190311+00:00"
+    },
+    {
+      "title": "Prediction: This Artificial Intelligence (AI) Stock Is Going to Double Before 2026 Is Over - The Motley Fool",
+      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxNVkJnZWFVTEY5cGhrN2tUX0E3Mi1NWC1JQjl3X090Mk5LUXdoemFoRkhzbFlTMktVWGxXdVRQQnEzdnlvVDZqUXBoa3ZJVFFqcWc0NkxxYTdhY1B3WnZ3NWlac0Z4eDZRbGdodDNNY1VyWVNVM0c5Tm4xSFBvelh2c1JON0h6WnJjV0VWVUZkNjBXUmwwSkpN",
+      "used_at": "2026-04-15T05:06:17.190313+00:00"
+    },
+    {
+      "title": "Oracle Debuts AI Agents for Corporate Banking - PYMNTS.com",
+      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxPNW5MS29EeDFSdHZuY29mR0ZLc2hfU01DUm9XYnBsU3JiSHkxaG5QME5lZWlZZ1N5U09tOEdEam84NGVVc2JqT2tSMkRTRGkyVWNaRWpQY01DYW9nT1V5QmNDWi1vUHl6QmFSd1V2Y3hfNXU3YVZQa29LbE0xRGdQcXhwSHFmSDJsYmw5VUNhdF9aTE5jQXZGLVVETGhaNmlWVHc",
+      "used_at": "2026-04-15T05:06:17.190315+00:00"
+    },
+    {
+      "title": "American Express to Back Purchases Made by Customers’ AI Agents - PYMNTS.com",
+      "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNSVhORDlPallkQjJVMUJpUmZsZGdzTFBkdEs0ZEdSNkRMeVN3a0d4NnFwYU4zMUpMSjBLNHpEOU9RRG1uWFZaLTBPZUE2Mk85VGIybXpBWGZKODVqTGdyWWRlZmxIZC1SeXFhdkNWdVdpTGdtSUZFVHlJbE84R0xhMVh0a1FJY1NsSGJ0Y3FEcC1GRjRJMUlSTkg1cVpuUVpaaVlGZzBuSzBTT1p0WXBHbUQtd3RTVWcz",
+      "used_at": "2026-04-15T05:06:17.190317+00:00"
+    },
+    {
+      "title": "6 ways agentic AI will reshape the enterprise software market - cio.com",
+      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNbzZBenBJckxSRzU5U1AzR09TbFB2WG0zbW93NWl5VGpPM2kzeXVfNk9ydTI2WkJSTUtGcFVUclJXbEZmTzhpN1lVWmV1Q0QyVzFvb0g4X0hTelk4T0Fqd2xXdzVNc2l6MlVKNkNLYXFpQXd3bFlSeThvMEFjekFadkdpUHhhOWd1YlA4UGdQRExreURLSS0wdjJPZl9Fd042U2p6LQ",
+      "used_at": "2026-04-15T05:06:17.190319+00:00"
+    },
+    {
+      "title": "Nvidia says AI cuts 10-month, eight-engineer GPU design task to overnight job — company is still 'a long way' from AI designing chips without human input - Tom's Hardware",
+      "url": "https://news.google.com/rss/articles/CBMiuwJBVV95cUxQYVZfd1NPM2ppd3Exd1dqZllwanllLWVndjJaakJ2Zk1NT09oYnc3X2t3UEhHd2JkUmxPZWRNTnB6aVlaVWhhcFNkelhubzhaMVMyU2ZuZ3NKNTlQX2tHa3BYV29FVDVNblVLZ3RMVHhYelRCMXgxSV9GQ3l5YXZTcWkyQ1RPNks1WHZzUE1NdjVCeV9Vd19DQXUxM0FoakMxWGRtUE1PU3NGUjgtQmNfR3MzUDRUT1hDVXVfSDFVMV9NZUd2eVFJcVJTTUJ6bUw2Sm5GcVZtYzUtUHRyZk5NRVlfR3cxZDZzUXZ2dE1rN3BTUGwtX08zelJrS3pyMlAtU2ZTOVVjZGtEU2Rya0JWLUlwalk5WE9ZdnBZY1ZlNTJzbk15enhSd2tqb1FtTWxERDBIQjhuQjVYUVk",
+      "used_at": "2026-04-15T05:06:17.190321+00:00"
+    },
+    {
+      "title": "Curity looks to reinvent IAM with runtime authorization for AI agents - csoonline.com",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNUXVBdF9abGxXTlhRT1BhXzJWd0NWdVJWMXZWZmVCWGRrYXJ5RWxwbkdKVlM5VUtmeFdMR2dUenFOZ2xqY0w1R3pJN29hVVJsQk05bEhwRGpZT0FUVDlVLTlWN2tPTEU5WURrTE5XdHJ6X1o3RlB1bGpMNnFlYjlRWlM1eHIxQ0hqbzRLcXgyRTc0bXd0WnJaYmxOOU54bEo2eEFhbTN3TThOMllsaEZmMmlzemJHYnM",
+      "used_at": "2026-04-15T05:06:17.190323+00:00"
+    },
+    {
+      "title": "Inside a Retail Store Run Entirely by AI - PYMNTS.com",
+      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQU3NoUThhNmpjZlNqTjZ0YUM0d3M5bllmSno2SlZLWUJCc1pBcWpvLURGd21nenJqbWpZTllrcEh3M2hzb0xuUUhuTDdyZkVMbngxSFktdmVHWms1OE5kMmlOUnVGMVlMdFpyNURtSWhtOUVJczZITm9LZW8zcW1IRnJ2bVRMVk9nMmJxcGdnalNTbm1KSXF1Z2pFYw",
+      "used_at": "2026-04-15T05:06:17.190324+00:00"
+    },
+    {
+      "title": "Anthropic's Claude Mythos might be the best overall AI model for cybersecurity, but cheaper models can attain similar results, research shows — cross-examination of the frontier model raises questions on uptime and reliability - Tom's Hardware",
+      "url": "https://news.google.com/rss/articles/CBMinANBVV95cUxOLUwtOFJRUlZiaXlEY3pxQjBwSW1QQUlGejNENUpLOXBlZEhNd1JIZGRjWkdNZ3ZNWmNmS3BZNE14dF93aGdoQ0lMbUpDWWRNaDNScF90aFNvcVQ2N19rYkZSVzlJZDNYNWZtTlh3ZUZxaEswRWpjQ3FRcHVPYzh0d2JxVlVTZ2hEbkNpWGloNnVnbzV4X0x1XzRGWV9nRmdoSUJiWWxXSlBmbnRBOFhIeDMzU1JfVlBZNERyQkZBbWhrdmVzeHJIR1dlTXBfckhVSDhkbEszT0draS10SWxINmdFMHN4TUMwYUtEQTlUeTA2anNHMUxjYm1sTzRzNFQ4ZzhCQlJpSjZkd25fRUNjRVd5VXFUU0YzU29KNHMtdlRSdlgxZGtWTW1tVEk1OURBeXNJYm1uSXpDQlozZWdmU3hpWGIyT2p3NkkwenV2QnRCc3BRR3RCeGloQy0yMHpXT0hMekZSZTg1SlFIUlVRUzZtUGJGVHkwaWpvS1A2bUF6QWxsdVBJTXhINnJYNktmWTNReXVsSzBSdDJY",
+      "used_at": "2026-04-15T05:06:17.190326+00:00"
+    },
+    {
+      "title": "From Roadmap to Reality: Phasing Agentic AI into Production - Bain & Company",
+      "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxONWdubi1GZWg4SWRua0dFeDBCcG8zTW1zUzYyVmM2TUFvMlRHazV1Y3NrV0FXRWJ6X25RdDRFVHcwTEdMb2pmd0lBX3V2cVFSWEo4WE5ReXA0MnZxZ1RtQmdWc3hoUjJoVzNqYXZVSHg5WEUtSlRCODAyRXROQXBmV0k1S2hZTWo4aGNsNXlTbmE1NzA",
+      "used_at": "2026-04-15T05:06:17.190328+00:00"
+    },
+    {
+      "title": "Spring AI SDK for Amazon Bedrock AgentCore is now Generally Available - Amazon Web Services",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNcVBEelh3ZUg5NEtoTUZIZVRKT01kb1YzTl9RSlJfYTBPVmpqdU9tMUtmalZZdWw5SWdnUkZOV3JLZTIyU3RqRzFQZzB1TFozd21fc2NPcWFuX3RJUloxTS1TeV8zRGw3UlVOWmY4TEFsNkM2TDdwV2xVLUdiQTRSd3dRc2k1N2hiaXctc21jbDlfYUpRMm5talJLeVJGdXI5X2xidUppWG9uYzNyV28zdjdJM3B2ZDg",
+      "used_at": "2026-04-15T05:06:17.190330+00:00"
+    },
+    {
+      "title": "Xtrackers Artificial Intelligence and Big Data ETF: Is This ETF Late to the Party? - The Motley Fool",
+      "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPNXRIZmxSR3Vqb2NKdkR4aXR1QXZCNDkwYVVJX0N2WmctalgwN000V3Q5RDhLanlkMkNRTjhDSWFiUTROVGJvc0hyRG9qdVQzNTBmdEpRTDF1MjY3VnRBWkNiUVlqRm1tR0pPLTNUVmUyOTFwRU9JVnl1cDVZZ0tvZlRDdF9WSWZCTDRaY0l6WmxDc1htdjcweQ",
+      "used_at": "2026-04-15T05:06:17.190332+00:00"
+    },
+    {
+      "title": "Artificial Intelligence and All That Jazz: Preparing Students for the Future of Work - Faculty Focus",
+      "url": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxPSkVNM0NMa1YzZkVfVmFESlpaTjdocUZaRzl3YzZkZ0pHVXd5U1l2cTZSaGxER1FHMGNvSEF4WUpubEJsTHpSWUE2eFUtMjhCMUtxYWtfVTRKX2cyYkVyMld1TU4weC1fdkswT21PRFdXVGtWbVV5NzAwbExpZk4tdUZaMm9fS3VqLXVvVlBhVVJDbVMtUnB4U3dhdlY4TXhvM1JsT2xkaWUwSlNsbkU1RC0tc2xxUW9Nc01zenRGR2pzV3BrZlNkbW13Z2pNQ1U2YVpjVHZZeEtmSlU5",
+      "used_at": "2026-04-15T05:06:17.190334+00:00"
+    },
+    {
+      "title": "Nuanced clinical reasoning remains beyond the ken of frontier LLMs - HealthExec",
+      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPUHduLTl1ZlZkMkpfQXdsR0l6eFJwV1ZhS1M2T0o2emk5RFF4QWxxdDhIWllqRzVObklNSFh0RmNPcWN0VmhnSFR0Zkh0cTVKZFFqRFZqZDlNdjlyTFJoZ2xBX0VYcFNybkNPVEt5MlljbmZMZzRsSjJrSzNfVHJ5SlJabVVaalp0ZW9ZVEpSdG5tem1nM1A2UWpfTHlaUUVMd2YzbWtaWXZxemd3Nm1RYk9Xbw",
+      "used_at": "2026-04-15T05:06:17.190336+00:00"
+    },
+    {
+      "title": "Artificial intelligence unlocks new potential for biochar in carbon capture and climate solutions - EurekAlert!",
+      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5ZckwzeUo1blBLZ1dXNlBkMWhxMVZSSzBZSmhvRVdPSk9YdXp1c04wZkpFdmNxQWtNY1NIR2hwVWl6YU8wT2NPaGcwa280TkVuOUZfSWVLN1ozd21q",
+      "used_at": "2026-04-15T05:06:17.190337+00:00"
+    },
+    {
       "title": "Want to understand the current state of AI? Check out these charts.",
       "url": "https://www.technologyreview.com/2026/04/13/1135675/want-to-understand-the-current-state-of-ai-check-out-these-charts/",
       "used_at": "2026-04-14T05:55:30.994881+00:00"
