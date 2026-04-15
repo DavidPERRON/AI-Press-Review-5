@@ -52,7 +52,8 @@ jobs:
           pip install -e .
 
       - name: Pull latest state
-        run: git pull --rebase origin main
+        # --autostash handles any stray unstaged changes from the runner cache.
+        run: git pull --rebase --autostash origin main
 
       - name: Release pending draft
         env:
@@ -86,7 +87,7 @@ jobs:
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
+          git pull --rebase --autostash origin main
           git add data/state/ docs/
           git diff --cached --quiet || git commit -m "release: publish episode ${{ matrix.locale }} [skip ci]"
           git push

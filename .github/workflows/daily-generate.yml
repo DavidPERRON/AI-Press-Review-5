@@ -100,8 +100,10 @@ jobs:
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          # Pull any commits made by prior matrix jobs (e.g. EN when FR is running)
-          git pull --rebase origin main
+          # Pull any commits made by prior matrix jobs (e.g. EN when FR is running).
+          # --autostash because the pipeline may have modified tracked files
+          # (e.g. data/state/episode_history_{locale}.json) before this step.
+          git pull --rebase --autostash origin main
           git add -f data/state/ data/sources/ docs/
           git diff --cached --quiet || git commit -m "draft: daily episode ${{ matrix.locale }} ${{ github.event.inputs.run_date || 'auto' }} [skip ci]"
           git push
