@@ -295,18 +295,50 @@ def _subscribe_buttons_html(settings, feed_url: str) -> str:
     if settings.youtube_url:
         parts.append(f"<a href='{escape(settings.youtube_url)}' rel='noopener' target='_blank'>YouTube</a>")
     parts.append(f"<a href='{escape(feed_url)}'>RSS</a>")
-    return " &middot; ".join(parts)
+    return "<span class='dot'>&middot;</span>".join(parts)
+
+
+def _arch_bars_svg(n: int = 30, width: int = 320, baseline: int = 78,
+                   max_h: int = 70, min_h: int = 8) -> str:
+    """Render the waveform-arch SVG used inside the banner. Bars get
+    progressively taller toward the center then back down, evoking a
+    podcast waveform shaped as an arch."""
+    bars = []
+    center = (n - 1) / 2
+    for i in range(n):
+        normalized = abs(i - center) / center
+        height = min_h + (max_h - min_h) * (1 - normalized ** 1.4)
+        x = (i + 0.5) * (width / n)
+        y_top = baseline - height
+        bars.append(f'<line x1="{x:.1f}" y1="{baseline}" x2="{x:.1f}" y2="{y_top:.1f}" />')
+    return (
+        f'<svg class="banner-arch" viewBox="0 0 {width} {baseline + 4}" '
+        'aria-hidden="true" role="presentation">'
+        '<g stroke="#BF8520" stroke-width="2.4" stroke-linecap="round" fill="none">'
+        f'{"".join(bars)}'
+        '</g>'
+        '</svg>'
+    )
 
 
 def _episode_card(ep: dict, base: str) -> str:
     episode_link = ep.get('episode_page_url') or f"{base}/episodes/{ep.get('slug', '')}/"
+    pub_label = (ep.get('published_at') or '')[:10]
+    duration = ''
+    if ep.get('duration_seconds'):
+        duration = f" &nbsp;&middot;&nbsp; {int(ep['duration_seconds']) // 60} min"
     return (
         f"<article class='card'>"
+        f"<p class='card-meta'>{escape(pub_label)}{duration}</p>"
         f"<h3><a href='{escape(episode_link)}'>{escape(ep['title'])}</a></h3>"
-        f"<p>{escape(ep['summary'])}</p>"
-        f"<p><a href='{escape(episode_link)}'>Transcript &amp; episode page</a> &middot; "
-        f"<a href='{escape(ep['audio_url'])}'>Listen</a> &middot; "
-        f"<a href='{escape(ep['source_manifest_url'])}'>Sources</a></p>"
+        f"<p class='card-summary'>{escape(ep['summary'])}</p>"
+        f"<p class='card-links'>"
+        f"<a href='{escape(episode_link)}'>Transcript &amp; episode page</a> "
+        f"<span class='dot'>&middot;</span> "
+        f"<a href='{escape(ep['audio_url'])}'>Listen</a> "
+        f"<span class='dot'>&middot;</span> "
+        f"<a href='{escape(ep['source_manifest_url'])}'>Sources</a>"
+        f"</p>"
         f"</article>"
     )
 
@@ -326,8 +358,15 @@ def _write_index(episodes: list[dict]) -> None:
     )
 
     cards = [_episode_card(ep, base) for ep in episodes]
-    empty = "<div class='card'><strong>No episodes published yet.</strong></div>"
+    empty = (
+        "<div class='card empty'>"
+        "<p class='card-meta'>Coming soon</p>"
+        "<h3>First episode publishing within days.</h3>"
+        "<p class='card-summary'>Subscribe via Apple, Spotify, YouTube, or RSS to be notified.</p>"
+        "</div>"
+    )
     subscribe_html = _subscribe_buttons_html(settings, feed_url)
+    banner_svg = _arch_bars_svg()
 
     json_ld = _json_ld(settings, episodes)
 
@@ -342,7 +381,7 @@ def _write_index(episodes: list[dict]) -> None:
         f"<meta name='keywords' content='{escape(keywords)}'>"
         f"<meta name='author' content='{escape(settings.podcast_author)}'>"
         "<meta name='robots' content='index,follow,max-image-preview:large'>"
-        "<meta name='theme-color' content='#111111'>"
+        "<meta name='theme-color' content='#071028'>"
         f"<link rel='canonical' href='{escape(base)}/'>"
         f"<link rel='alternate' type='application/rss+xml' title='{escape(settings.podcast_title)} RSS' href='{escape(feed_url)}'>"
         f"<link rel='icon' type='image/png' href='{escape(cover_rel)}'>"
@@ -363,51 +402,156 @@ def _write_index(episodes: list[dict]) -> None:
         f"<meta name='twitter:image' content='{escape(cover_url)}'>"
         # JSON-LD
         f"<script type='application/ld+json'>{json_ld}</script>"
+        # Web font
+        "<link rel='preconnect' href='https://fonts.googleapis.com'>"
+        "<link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>"
+        "<link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap'>"
         "<style>"
-        "body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:760px;"
-        "margin:1.25rem auto;padding:0 1rem;line-height:1.55;color:#111}"
-        "img.cover{max-width:280px;border-radius:20px;display:block;margin:0 auto}"
-        "h1{margin:.75rem 0 .25rem;text-align:center}"
-        ".subtitle{color:#555;margin:0 0 .4rem;text-align:center}"
-        ".subscribe{text-align:center;margin:.2rem 0 .6rem;font-size:.95rem}"
-        ".subscribe a{color:#0b5fff;text-decoration:none}"
-        ".subscribe a:hover{text-decoration:underline}"
-        ".hiw-link{display:block;text-align:center;margin:0 0 1.1rem;font-size:.9rem}"
-        ".card{border:1px solid #ddd;border-radius:16px;padding:1rem 1.25rem;margin:1rem 0}"
-        ".card h3{margin:.1rem 0 .4rem}"
-        ".card h3 a{color:#111;text-decoration:none}"
-        ".card h3 a:hover{color:#0b5fff}"
-        "#how-it-works{margin-top:2.5rem;padding-top:1.25rem;border-top:1px solid #eee}"
-        "#how-it-works h2{font-size:1.2rem;margin:0 0 .8rem}"
-        "#how-it-works .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.9rem}"
-        "#how-it-works .step{padding:.9rem 1rem;background:#f7f7f8;border-radius:12px}"
-        "#how-it-works .step strong{display:block;margin-bottom:.25rem}"
-        "#how-it-works .step span{color:#555;font-size:.9rem}"
-        "a{color:#0b5fff}"
+        # Palette derived from MAISON D'ALVENOR spec
+        ":root{"
+        "--bg:#FAF7F1;"
+        "--bg-card:#FFFCF6;"
+        "--ink:#1A1806;"
+        "--ink-soft:#4A3E28;"
+        "--rule:#E5DCC5;"
+        "--navy:#071028;"
+        "--gold:#BF8520;"
+        "--gold-dark:#6B3F08;"
+        "--gold-antique:#A87530;"
+        "}"
+        "*{box-sizing:border-box}"
+        "html,body{margin:0;padding:0}"
+        "body{font-family:'EB Garamond','Garamond','Cormorant Garamond',Georgia,serif;"
+        "background:var(--bg);color:var(--ink);line-height:1.6;"
+        "font-size:18px;-webkit-font-smoothing:antialiased}"
+        "a{color:var(--gold-dark);text-decoration:none;border-bottom:1px solid transparent;"
+        "transition:border-color .15s,color .15s}"
+        "a:hover{color:var(--gold);border-bottom-color:var(--gold)}"
+        # ── BANNER ──
+        ".banner{background:var(--navy);padding:3.2rem 1.25rem 2.6rem;text-align:center;"
+        "position:relative;border-bottom:1px solid var(--gold);overflow:hidden}"
+        ".banner::before{content:'';position:absolute;inset:0;pointer-events:none;"
+        "background:radial-gradient(circle at 50% 60%,rgba(191,133,32,.10) 0%,rgba(191,133,32,0) 55%)}"
+        ".banner::after{content:'';position:absolute;inset:0;pointer-events:none;"
+        "background:repeating-radial-gradient(circle at 50% 110%,transparent 0,transparent 80px,"
+        "rgba(191,133,32,.04) 81px,rgba(191,133,32,.04) 82px)}"
+        ".banner-inner{position:relative;z-index:1;max-width:760px;margin:0 auto}"
+        ".banner-arch{display:block;width:min(320px,55vw);height:auto;margin:0 auto 1.1rem;opacity:.95}"
+        ".banner-title{font-family:'EB Garamond',Garamond,Georgia,serif;font-weight:700;"
+        "font-variant:small-caps;letter-spacing:.32em;color:var(--gold);"
+        "font-size:clamp(1.55rem,4vw,2.5rem);margin:0;padding-left:.32em;line-height:1.1}"
+        ".banner-rule{width:90px;height:1px;background:var(--gold);border:0;"
+        "margin:.85rem auto .55rem;opacity:.55}"
+        ".banner-author{font-family:'EB Garamond',Garamond,Georgia,serif;font-variant:small-caps;"
+        "letter-spacing:.32em;color:var(--gold);font-size:.78rem;margin:0;padding-left:.32em;opacity:.85}"
+        # ── PAGE WRAP ──
+        ".wrap{max-width:760px;margin:0 auto;padding:2rem 1.25rem 3rem}"
+        ".tagline{font-family:'EB Garamond',serif;font-style:italic;font-size:1.18rem;"
+        "color:var(--ink-soft);text-align:center;margin:0 0 .35rem;line-height:1.4}"
+        ".tagline-note{font-size:.82rem;color:var(--ink-soft);text-align:center;margin:0 0 1.4rem;"
+        "font-variant:small-caps;letter-spacing:.18em}"
+        # Subscribe row
+        ".subscribe{text-align:center;margin:0 0 .55rem;font-size:1rem;color:var(--ink-soft)}"
+        ".subscribe .label{font-variant:small-caps;letter-spacing:.18em;font-size:.78rem;"
+        "color:var(--gold-antique);margin-right:.45rem}"
+        ".subscribe a{color:var(--navy);font-weight:500}"
+        ".subscribe a:hover{color:var(--gold-dark)}"
+        ".subscribe .dot{margin:0 .45rem;color:var(--gold-antique);opacity:.7}"
+        ".hiw-link{text-align:center;margin:.4rem 0 1.6rem;font-size:.85rem;"
+        "font-variant:small-caps;letter-spacing:.2em}"
+        ".hiw-link a{color:var(--gold-dark)}"
+        # Section divider
+        ".sect-rule{display:block;width:60px;height:1px;background:var(--gold-antique);"
+        "border:0;margin:2rem auto 1.4rem;opacity:.6}"
+        ".sect-head{font-family:'EB Garamond',serif;font-weight:700;font-variant:small-caps;"
+        "letter-spacing:.22em;color:var(--gold-dark);font-size:.92rem;text-align:center;"
+        "margin:0 0 1.1rem}"
+        # Episode cards
+        ".card{background:var(--bg-card);border:1px solid var(--rule);border-radius:4px;"
+        "padding:1.3rem 1.5rem;margin:0 0 1rem;transition:border-color .2s,box-shadow .2s}"
+        ".card:hover{border-color:var(--gold-antique);box-shadow:0 4px 18px rgba(7,16,40,.05)}"
+        ".card.empty{text-align:center;border-style:dashed}"
+        ".card-meta{font-variant:small-caps;letter-spacing:.18em;font-size:.78rem;"
+        "color:var(--gold-antique);margin:0 0 .35rem}"
+        ".card h3{font-family:'EB Garamond',serif;font-weight:700;color:var(--navy);"
+        "font-size:1.4rem;line-height:1.25;margin:0 0 .55rem}"
+        ".card h3 a{color:var(--navy);border-bottom:none}"
+        ".card h3 a:hover{color:var(--gold-dark);border-bottom:none}"
+        ".card-summary{margin:0 0 .8rem;color:var(--ink);font-size:1rem;line-height:1.55}"
+        ".card-links{margin:0;font-size:.88rem;color:var(--ink-soft)}"
+        ".card-links a{color:var(--gold-dark)}"
+        ".card-links .dot{margin:0 .25rem;color:var(--gold-antique);opacity:.7}"
+        # How it works
+        "#how-it-works{margin-top:3rem;padding-top:1.6rem;border-top:1px solid var(--rule)}"
+        "#how-it-works h2{font-family:'EB Garamond',serif;font-weight:700;color:var(--navy);"
+        "font-size:1.6rem;margin:0 0 .35rem;text-align:center}"
+        "#how-it-works .lead{text-align:center;font-style:italic;color:var(--ink-soft);"
+        "margin:.25rem 0 1.6rem;font-size:1rem}"
+        ".hiw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));"
+        "gap:1rem;margin:0 auto}"
+        ".hiw-step{padding:1.1rem 1.25rem;background:var(--bg-card);"
+        "border:1px solid var(--rule);border-radius:4px}"
+        ".hiw-step strong{display:block;font-family:'EB Garamond',serif;font-weight:700;"
+        "color:var(--navy);font-size:1.05rem;margin-bottom:.3rem;letter-spacing:.01em}"
+        ".hiw-step span{color:var(--ink-soft);font-size:.95rem;line-height:1.5}"
+        # Footer
+        "footer{margin-top:3rem;padding:1.4rem 1rem 1rem;border-top:1px solid var(--rule);"
+        "text-align:center;color:var(--ink-soft);font-size:.85rem}"
+        "footer .sep{margin:0 .5rem;color:var(--gold-antique);opacity:.7}"
+        "footer a{color:var(--gold-dark)}"
+        # Mobile tweaks
+        "@media (max-width:560px){"
+        ".banner{padding:2.4rem 1rem 1.9rem}"
+        ".banner-title{font-size:1.4rem;letter-spacing:.28em}"
+        ".banner-author{font-size:.7rem}"
+        ".wrap{padding:1.5rem 1rem 2rem}"
+        ".card{padding:1.1rem 1.15rem}"
+        ".card h3{font-size:1.2rem}"
+        "}"
         "</style>"
         "</head>"
         "<body>"
-        f"<img class='cover' src='{escape(cover_rel)}' alt='{escape(settings.podcast_title)} cover'>"
-        f"<h1>{escape(settings.podcast_title)}</h1>"
-        f"<p class='subtitle'>{escape(settings.podcast_subtitle)}</p>"
-        f"<p class='subscribe'>Subscribe: {subscribe_html}</p>"
+        # ── BANNER ──
+        "<header class='banner'>"
+        "<div class='banner-inner'>"
+        f"{banner_svg}"
+        f"<h1 class='banner-title'>{escape(settings.podcast_title)}</h1>"
+        "<hr class='banner-rule' />"
+        f"<p class='banner-author'>{escape(settings.podcast_author)}</p>"
+        "</div>"
+        "</header>"
+        # ── PAGE ──
+        "<div class='wrap'>"
+        f"<p class='tagline'>{escape(settings.podcast_subtitle)}</p>"
+        "<p class='tagline-note'>An editorial podcast &middot; Daily, 7&thinsp;AM CET</p>"
+        f"<p class='subscribe'><span class='label'>Subscribe</span>{subscribe_html}</p>"
         "<p class='hiw-link'><a href='#how-it-works'>How it works &rarr;</a></p>"
+        # ── EPISODES ──
+        "<hr class='sect-rule' />"
+        "<h2 class='sect-head'>Latest episodes</h2>"
         "<main>"
         f"{''.join(cards) if cards else empty}"
         "</main>"
+        # ── HOW IT WORKS ──
         "<section id='how-it-works'>"
         "<h2>How it works</h2>"
-        "<div class='steps'>"
-        "<div class='step'><strong>40+ sources, weighted</strong>"
-        "<span>Primary labs (OpenAI, DeepMind, Anthropic, arXiv) carry more weight than aggregators. Regulatory speculation and rumors are excluded.</span></div>"
-        "<div class='step'><strong>Semantic clustering</strong>"
-        "<span>Sources reporting the same story are grouped before the editorial pass. Single-source claims become weak signals.</span></div>"
-        "<div class='step'><strong>Claim &rarr; source grounding</strong>"
-        "<span>Every factual claim is verified against its cited source. Per-episode coverage is published on the transcript page.</span></div>"
-        "<div class='step'><strong>14&ndash;18 minute briefing</strong>"
-        "<span>Six pillars across AI News, Use Cases, Tools, Weak Signals, Research and Education. Weekly recap every Saturday.</span></div>"
+        f"<p class='lead'>{escape(description)}</p>"
+        "<div class='hiw-grid'>"
+        "<div class='hiw-step'><strong>40+ sources, weighted</strong>"
+        "<span>A minimum threshold &mdash; not a target. Primary labs (OpenAI, DeepMind, Anthropic, arXiv) carry more weight than aggregators. Regulatory speculation and unverified rumors are excluded.</span></div>"
+        "<div class='hiw-step'><strong>Semantic clustering</strong>"
+        "<span>Sources reporting the same story are grouped before the editorial pass. Single-source claims are flagged as weak signals rather than amplified as news.</span></div>"
+        "<div class='hiw-step'><strong>Claim &rarr; source grounding</strong>"
+        "<span>Every factual claim in the script is verified against its cited source. Per-episode coverage is published on the transcript page.</span></div>"
+        "<div class='hiw-step'><strong>14&ndash;18 minute briefing</strong>"
+        "<span>Six pillars: AI News, Use Cases, Tools &amp; Practice, Weak Signals, Research, Education. Every Saturday, a weekly recap of the five trends that defined the week.</span></div>"
         "</div>"
         "</section>"
+        "</div>"
+        "<footer>"
+        f"Hosted by {escape(settings.podcast_author)}"
+        f"<span class='sep'>&middot;</span><a href='{escape(feed_url)}'>RSS feed</a>"
+        "</footer>"
         "</body></html>"
     )
     (DOCS_DIR / 'index.html').write_text(html, encoding='utf-8')
