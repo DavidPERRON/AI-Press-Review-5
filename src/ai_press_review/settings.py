@@ -68,6 +68,7 @@ class Settings:
     llm_max_tokens: int
     llm_temperature: float
     tts_chunk_max_chars: int
+    tts_bitrate: str
     cartesia_api_key: str
     cartesia_voice_id: str
     cartesia_model_id: str
@@ -237,6 +238,7 @@ def load_settings(local_preview: bool = False, profile: str | None = None) -> Se
         llm_max_tokens=int(_yaml_get(config, 'llm.max_tokens', 12000)),
         llm_temperature=_safe_float(str(_yaml_get(config, 'llm.temperature', 0.2)), 0.2, 'llm.temperature'),
         tts_chunk_max_chars=int(_yaml_get(config, 'tts.chunk_max_chars', 1800)),
+        tts_bitrate=str(_yaml_get(config, 'tts.bitrate', '96k')),
         cartesia_api_key=_env('CARTESIA_API_KEY'),
         cartesia_voice_id=_env('CARTESIA_VOICE_ID'),
         cartesia_model_id=_env('CARTESIA_MODEL_ID', 'sonic-3'),
