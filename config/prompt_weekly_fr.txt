@@ -96,7 +96,7 @@ Règles :
 
 FORMAT
 
-Ouverture exactement : « Votre Revue de Presse IA hebdo — Semaine du [Date] : [Fil rouge en 1-2 mots]. »
+Phrase d'ouverture — INJECTÉE AUTOMATIQUEMENT par la pipeline (format : « Votre Revue de Presse IA hebdo — Semaine du [Date] : [Fil rouge]. »). N'inclus aucune phrase d'ouverture, aucun titre de podcast, aucune date ni salutation dans ta sortie. Ton premier paragraphe dans `sections.ai_news` doit commencer directement avec le premier sujet d'actualité de la semaine.
 
 Clôture exactement : « Ce podcast a un coût de production quotidien. Pour me soutenir, mon dernier livre, The Last Heaven, est disponible sur Amazon et sur ashcroftedition.com — le lien est sur la page du podcast. Merci. »
 

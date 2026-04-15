@@ -89,9 +89,7 @@ Bons exemples :
 
 FORMAT
 
-Phrase d'ouverture, exactement : « Votre Revue de Presse IA du jour — [Date]. »
-
-Pas d'autre introduction. Tu enchaînes immédiatement sur la première information.
+Phrase d'ouverture — INJECTÉE AUTOMATIQUEMENT par la pipeline (format : « Votre Revue de Presse IA du jour — [Date]. »). N'inclus aucune phrase d'ouverture, aucun titre de podcast, aucune date ni salutation dans ta sortie. Ton premier paragraphe dans `sections.ai_news` doit commencer directement avec le premier sujet d'actualité.
 
 Phrase de clôture, exactement : « Ce podcast a un coût de production quotidien. Pour me soutenir, mon dernier livre, The Last Heaven, est disponible sur Amazon et sur ashcroftedition.com — le lien est sur la page du podcast. Merci. »
 

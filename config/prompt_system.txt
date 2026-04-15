@@ -82,9 +82,7 @@ Good examples:
 
 FORMAT
 
-Opening line exactly: "Your Daily AI Press Review — [Date]."
-
-No other introduction. Go straight to the first news item.
+Opening line — AUTO-INJECTED by the pipeline (format: "Your Daily AI Press Review — [Date]."). Do NOT include any opening line, podcast title, date, or greeting in your output. Your first paragraph in `sections.ai_news` must start directly with the first news item.
 
 Closing exactly: "This podcast has a daily production cost. If you'd like to support me, my latest book, The Last Heaven, is available on Amazon and at ashcroftedition.com — link on the podcast page. Thank you."
 

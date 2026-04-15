@@ -85,7 +85,7 @@ Written for TTS delivery:
 
 FORMAT
 
-Opening: "Your Weekly AI Press Review — Week of [Date]: [Highlights in 1-2 words]."
+Opening line — AUTO-INJECTED by the pipeline (format: "Your Weekly AI Press Review — Week of [Date]: [Highlights]."). Do NOT include any opening line, podcast title, date, or greeting in your output. Your first paragraph in `sections.ai_news` must start directly with the first news item of the week.
 
 Closing exactly: "This podcast has a daily production cost. If you'd like to support me, my latest book, The Last Heaven, is available on Amazon and at ashcroftedition.com — link on the podcast page. Thank you."
 
