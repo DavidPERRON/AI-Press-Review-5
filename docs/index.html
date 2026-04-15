@@ -17,10 +17,11 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #09090b; --surface: #111113; --border: #1f1f23;
-      --border-light: #2a2a30; --text: #e8e8ed; --text-secondary: #8a8a9a;
-      --text-muted: #55555f; --accent: #c8a96e; --accent-dim: #8a6f3f;
-      --accent-glow: rgba(200,169,110,0.08);
+      --bg: #020514; --surface: #070d24; --border: #141d3e;
+      --border-light: #232c5c; --text: #ffffff; --text-narrative: #F8F4EC;
+      --text-secondary: #98a2c4; --text-muted: #5a648c;
+      --accent: #c8a96e; --accent-dim: #a08658;
+      --accent-glow: rgba(200,169,110,0.1);
       --font-display: 'DM Serif Display', Georgia, serif;
       --font-body: 'DM Sans', system-ui, sans-serif;
     }
@@ -34,21 +35,42 @@
     header { border-bottom: 1px solid var(--border); padding: 0 2rem; }
     .header-inner {
       max-width: 800px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between; height: 56px;
+      display: flex; align-items: center; justify-content: space-between; height: 72px;
     }
-    .logo-link { text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    .logo-link { text-decoration: none; display: flex; align-items: center; gap: 14px; }
+    .logo-mark {
+      width: 38px; height: 38px; border-radius: 9px; object-fit: cover;
+      border: 1px solid var(--border-light);
+      box-shadow: 0 0 0 3px rgba(200,169,110,0.08);
+    }
     .logo-dot {
-      width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+      width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
       animation: pulse 3s ease-in-out infinite;
+      box-shadow: 0 0 12px rgba(200,169,110,0.6);
     }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-    .logo-text { font-family: var(--font-display); font-size: 1rem; color: var(--text); }
-    nav { display: flex; gap: 1.5rem; }
+    .logo-text {
+      font-family: var(--font-display); font-size: 1.25rem; color: var(--text);
+      letter-spacing: 0.01em;
+    }
+    .logo-text em { font-style: italic; color: var(--accent); }
+    nav { display: flex; gap: 0.6rem; align-items: center; }
     nav a {
       font-size: 0.78rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
       color: var(--text-secondary); text-decoration: none; transition: color 0.2s;
+      padding: 0.4em 0.6em;
     }
     nav a:hover { color: var(--accent); }
+    nav a.nav-cta {
+      color: var(--accent);
+      border: 1px solid var(--accent-dim);
+      border-radius: 4px;
+      padding: 0.45em 0.95em;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    nav a.nav-cta:hover {
+      background: var(--accent); color: #020514; border-color: var(--accent);
+    }
 
     .hero {
       padding: 5rem 2rem 4rem; border-bottom: 1px solid var(--border);
@@ -75,14 +97,14 @@
       letter-spacing: 0.02em; margin-bottom: 1.25rem;
     }
     .hero-desc {
-      font-size: 0.95rem; color: var(--text-secondary); max-width: 560px;
-      line-height: 1.65; margin-bottom: 2rem;
+      font-size: 1rem; color: var(--text-narrative); max-width: 560px;
+      line-height: 1.7; margin-bottom: 2rem; font-weight: 300;
     }
 
-    .cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .cta-row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
     .btn-primary {
       display: inline-flex; align-items: center; gap: 0.45rem;
-      background: var(--accent); color: #09090b;
+      background: var(--accent); color: #020514;
       font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
       text-decoration: none; padding: 0.65em 1.3em; border-radius: 4px;
       transition: opacity 0.2s;
@@ -96,16 +118,95 @@
       transition: color 0.2s, border-color 0.2s;
     }
     .btn-secondary:hover { color: var(--accent); border-color: var(--accent-dim); }
+    .btn-secondary svg { width: 14px; height: 14px; flex-shrink: 0; }
 
-    .pillars {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1px; background: var(--border); border: 1px solid var(--border);
-      border-radius: 6px; overflow: hidden; margin-top: 3rem;
+    /* How it works teaser */
+    .howitworks {
+      margin-top: 3rem; padding: 2rem 2rem 2.25rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; position: relative; overflow: hidden;
     }
-    .pillar { background: var(--surface); padding: 1.25rem 1.5rem; transition: background 0.2s; }
-    .pillar:hover { background: var(--accent-glow); }
-    .pillar-name { font-size: 0.85rem; font-weight: 500; color: var(--text); margin-bottom: 0.2rem; }
-    .pillar-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+    .howitworks::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+    .howitworks-kicker {
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem;
+    }
+    .howitworks h2 {
+      font-family: var(--font-display); font-size: 1.55rem;
+      color: var(--text); margin-bottom: 0.6rem; line-height: 1.2;
+    }
+    .howitworks-lead {
+      font-size: 0.92rem; color: var(--text-secondary);
+      line-height: 1.6; max-width: 620px; margin-bottom: 1.5rem;
+    }
+    .howitworks-steps {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .hiw-step {
+      border-left: 2px solid var(--accent-dim);
+      padding: 0.2rem 0 0.2rem 0.9rem;
+    }
+    .hiw-step-num {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 0.25rem;
+    }
+    .hiw-step-title {
+      font-size: 0.9rem; font-weight: 500; color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+    .hiw-step-desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+    .howitworks-cta {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em;
+      color: var(--accent); text-decoration: none;
+      border-bottom: 1px solid var(--accent-dim); padding-bottom: 2px;
+      transition: border-color 0.2s;
+    }
+    .howitworks-cta:hover { border-color: var(--accent); }
+
+    .pillars-section { margin-top: 3rem; }
+    .pillars-label {
+      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: 0.85rem;
+    }
+    .pillars-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--accent-dim), transparent);
+      opacity: 0.4;
+    }
+    .pillars {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem 2rem;
+    }
+    .pillar {
+      padding: 0.5rem 0 0.85rem; position: relative;
+      border-top: 1px solid var(--border-light);
+      transition: border-color 0.25s;
+    }
+    .pillar::before {
+      content: attr(data-num);
+      position: absolute; top: -0.65rem; left: 0;
+      background: var(--bg); padding-right: 0.6rem;
+      font-family: var(--font-display); font-style: italic;
+      font-size: 0.85rem; color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+    .pillar:hover { border-color: var(--accent); }
+    .pillar:hover .pillar-name { color: var(--accent); }
+    .pillar-name {
+      font-family: var(--font-display); font-size: 1.05rem;
+      color: var(--text); margin-top: 0.6rem; margin-bottom: 0.35rem;
+      transition: color 0.25s;
+    }
+    .pillar-desc {
+      font-size: 0.82rem; color: var(--text-secondary);
+      line-height: 1.55; font-weight: 300;
+    }
 
     .stats-row {
       display: flex; gap: 2.5rem; margin-top: 2.5rem; flex-wrap: wrap;
@@ -131,8 +232,8 @@
     .episode-title:hover { color: var(--accent); }
     .episode-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem; }
     .episode-summary {
-      font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.6rem;
-      line-height: 1.6; max-width: 560px; grid-column: 1;
+      font-size: 0.92rem; color: var(--text-narrative); margin-top: 0.6rem;
+      line-height: 1.65; max-width: 600px; grid-column: 1; font-weight: 300;
     }
     .episode-listen {
       display: inline-block; font-size: 0.72rem; font-weight: 600;
@@ -148,6 +249,67 @@
     .empty-state {
       padding: 3rem 0; text-align: center;
       font-size: 0.9rem; color: var(--text-muted);
+    }
+
+    .host-card {
+      display: flex; align-items: center; gap: 1.25rem;
+      padding: 1.5rem; margin: 2.5rem 0 0;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    }
+    .host-photo {
+      width: 72px; height: 72px; border-radius: 50%; object-fit: cover;
+      border: 1px solid var(--border-light); flex-shrink: 0;
+    }
+    .host-label {
+      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.2rem;
+    }
+    .host-name {
+      font-family: var(--font-display); font-size: 1.1rem; color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .host-bio { font-size: 0.9rem; color: var(--text-narrative); line-height: 1.6; font-weight: 300; }
+    .host-bio a { color: var(--accent); text-decoration: none; }
+    .host-bio a:hover { text-decoration: underline; }
+
+    /* Support / donation block */
+    .support-block {
+      margin-top: 2rem; padding: 1.75rem 2rem;
+      background: linear-gradient(135deg, rgba(200,169,110,0.06), rgba(200,169,110,0.02));
+      border: 1px solid rgba(200,169,110,0.25);
+      border-radius: 8px;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 1.25rem; align-items: center;
+    }
+    .support-text { }
+    .support-kicker {
+      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 0.35rem;
+    }
+    .support-title {
+      font-family: var(--font-display); font-size: 1.15rem;
+      color: var(--text); margin-bottom: 0.2rem; line-height: 1.3;
+    }
+    .support-desc {
+      font-size: 0.85rem; color: var(--text-narrative);
+      font-weight: 300; line-height: 1.5; max-width: 440px;
+    }
+    .btn-support {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--accent); color: #020514;
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-decoration: none; padding: 0.85em 1.5em; border-radius: 4px;
+      transition: transform 0.15s, box-shadow 0.2s;
+      white-space: nowrap;
+    }
+    .btn-support:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(200,169,110,0.25);
+    }
+    .btn-support svg { width: 16px; height: 16px; }
+    @media (max-width: 600px) {
+      .support-block { grid-template-columns: 1fr; text-align: left; }
     }
 
     footer { border-top: 1px solid var(--border); padding: 1.5rem 2rem; text-align: center; }
@@ -168,12 +330,12 @@
   <header>
     <div class="header-inner">
       <a href="/" class="logo-link">
-        <span class="logo-dot"></span>
-        <span class="logo-text">AI Press Review</span>
+        <img src="assets/podcast-cover.png" alt="" class="logo-mark" />
+        <span class="logo-text">AI <em>Press Review</em></span>
       </a>
       <nav>
-        <a href="/about.html">About</a>
         <a href="/podcast-feed.xml">RSS</a>
+        <a href="/about.html" class="nav-cta">Editorial Method</a>
       </nav>
     </div>
   </header>
@@ -190,42 +352,57 @@
       </p>
       <div class="cta-row">
         <a href="/podcast-feed.xml" class="btn-primary">Subscribe via RSS</a>
-        <a href="/about.html" class="btn-secondary">How it works</a>
+        <a href="https://podcasts.apple.com/" class="btn-secondary" target="_blank" rel="noopener" aria-label="Apple Podcasts">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.3 19.44c-.08-.83-.15-2.1.03-3a52.63 52.63 0 0 1 1.17-4.44s-.3-.6-.3-1.49c0-1.4.81-2.44 1.82-2.44.86 0 1.27.64 1.27 1.42 0 .86-.55 2.15-.83 3.35-.24 1 .5 1.82 1.49 1.82 1.79 0 3.16-1.88 3.16-4.6 0-2.41-1.73-4.09-4.2-4.09-2.86 0-4.54 2.14-4.54 4.36 0 .86.33 1.78.74 2.28a.3.3 0 0 1 .07.28l-.28 1.15c-.04.2-.16.24-.36.14-1.33-.62-2.16-2.56-2.16-4.13 0-3.36 2.44-6.44 7.03-6.44 3.69 0 6.56 2.63 6.56 6.14 0 3.67-2.31 6.62-5.52 6.62-1.08 0-2.1-.56-2.44-1.23l-.66 2.54c-.24.92-.88 2.08-1.31 2.78A10 10 0 1 0 12 2Z"/></svg>
+          Apple
+        </a>
+        <a href="https://open.spotify.com/" class="btn-secondary" target="_blank" rel="noopener" aria-label="Spotify">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm4.59 14.43a.62.62 0 0 1-.86.2c-2.35-1.44-5.32-1.76-8.81-.96a.62.62 0 1 1-.28-1.22c3.82-.87 7.1-.5 9.75 1.12.3.18.39.56.2.86Zm1.23-2.73a.78.78 0 0 1-1.08.26c-2.69-1.66-6.8-2.14-9.99-1.18a.78.78 0 1 1-.45-1.5c3.64-1.1 8.17-.56 11.27 1.34.37.23.48.71.25 1.08Zm.1-2.85c-3.23-1.92-8.56-2.1-11.64-1.16a.94.94 0 1 1-.54-1.8c3.53-1.07 9.41-.86 13.13 1.35a.94.94 0 0 1-.95 1.61Z"/></svg>
+          Spotify
+        </a>
+        <a href="https://www.youtube.com/" class="btn-secondary" target="_blank" rel="noopener" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.12C19.55 3.58 12 3.58 12 3.58s-7.55 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.06 0 12 0 12s0 3.94.5 5.8a3 3 0 0 0 2.1 2.12c1.85.5 9.4.5 9.4.5s7.55 0 9.4-.5a3 3 0 0 0 2.1-2.12c.5-1.86.5-5.8.5-5.8s0-3.94-.5-5.8ZM9.55 15.57V8.43L15.82 12l-6.27 3.57Z"/></svg>
+          YouTube
+        </a>
       </div>
 
-      <div class="pillars">
-        <div class="pillar">
-          <div class="pillar-name">AI News</div>
-          <div class="pillar-desc">Launches, partnerships, major moves</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-name">Research</div>
-          <div class="pillar-desc">Papers and lab breakthroughs</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-name">Use Cases</div>
-          <div class="pillar-desc">Real deployments, measurable gains</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-name">Tools</div>
-          <div class="pillar-desc">APIs, frameworks, practitioner updates</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-name">Weak Signals</div>
-          <div class="pillar-desc">Patterns not yet mainstream</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar-name">Education</div>
-          <div class="pillar-desc">One concept per episode</div>
+      <div class="pillars-section">
+        <p class="pillars-label">Six pillars · One briefing</p>
+        <div class="pillars">
+          <div class="pillar" data-num="i.">
+            <div class="pillar-name">AI News</div>
+            <div class="pillar-desc">Launches, partnerships, and major institutional moves.</div>
+          </div>
+          <div class="pillar" data-num="ii.">
+            <div class="pillar-name">Research</div>
+            <div class="pillar-desc">Peer-reviewed papers and lab breakthroughs.</div>
+          </div>
+          <div class="pillar" data-num="iii.">
+            <div class="pillar-name">Use Cases</div>
+            <div class="pillar-desc">Documented enterprise deployments with measurable impact.</div>
+          </div>
+          <div class="pillar" data-num="iv.">
+            <div class="pillar-name">Tools</div>
+            <div class="pillar-desc">APIs, frameworks, and practitioner-grade releases.</div>
+          </div>
+          <div class="pillar" data-num="v.">
+            <div class="pillar-name">Weak Signals</div>
+            <div class="pillar-desc">Patterns surfacing before the mainstream catches up.</div>
+          </div>
+          <div class="pillar" data-num="vi.">
+            <div class="pillar-name">Education</div>
+            <div class="pillar-desc">One concept explained, distilled for the non-technical reader.</div>
+          </div>
         </div>
       </div>
 
       <div class="stats-row">
-        <div class="stat"><strong>Daily + Saturday</strong>Schedule</div>
+        <div class="stat"><strong>Mon–Sat</strong>Schedule</div>
         <div class="stat"><strong>7:00 AM CET</strong>Published</div>
         <div class="stat"><strong>14–18 min</strong>Duration</div>
         <div class="stat"><strong>40+ sources</strong>Per episode</div>
       </div>
+
     </div>
   </div>
 
@@ -234,12 +411,24 @@
     <div class="episode-item"><div><a href="https://podcast.aequitus.net/episodes/2026-04-14.html" class="episode-title">OpenAI's "Spud" Model &amp; Compute Crunch — Apr 14</a><div class="episode-meta">Apr 14, 2026</div><p class="episode-summary">Today's review highlights OpenAI's upcoming "Spud" model, promising significant product improvements, amidst a growing industry-wide compute shortage impacting AI development and deployment. We also cover new agentic AI tools from Google and AWS, and discuss the critical need for efficient LLM inference strategies as demand surges.</p><a href="https://pub-bc812f72712b450fbb9d7f3455e007a0.r2.dev/pressreview/episodes/2026-04-14-openai-s-spud-model-compute-crunch-apr-14.mp3" class="episode-listen">Listen &rarr;</a></div><span class="episode-duration">14 min</span></div>
 <div class="episode-item"><div><a href="https://podcast.aequitus.net/episodes/2026-04-13.html" class="episode-title">Japan's AI Alliance: Can Industry Beat Giants? — Apr 13</a><div class="episode-meta">Apr 13, 2026</div><p class="episode-summary">Japan's top industrial and financial firms are uniting with SoftBank to build a sovereign AI foundation, reducing reliance on US and Chinese models. Meanwhile, AI adoption in healthcare, finance, and manufacturing is accelerating, with measurable gains in efficiency and decision speed — though deployment gaps and security risks persist.</p><a href="https://pub-bc812f72712b450fbb9d7f3455e007a0.r2.dev/pressreview/episodes/2026-04-13-japan-s-ai-alliance-can-industry-beat-giants-apr-13.mp3" class="episode-listen">Listen &rarr;</a></div><span class="episode-duration">17 min</span></div>
 <div class="episode-item"><div><a href="https://podcast.aequitus.net" class="episode-title">Gemma 4 vs. Agent Limits: On-Device Power Meets Real-World Gaps — Apr 13</a><div class="episode-meta">Apr 13, 2026</div><p class="episode-summary">Google's Gemma 4 brings powerful, private agentic AI to phones with full on-device processing, while new research reveals that agent skills often fail under real conditions. Meanwhile, startups and labs are pushing open models, edge deployment, and smarter tool use—highlighting both the promise and pitfalls of today’s AI agents.</p><a href="https://pub-bc812f72712b450fbb9d7f3455e007a0.r2.dev/pressreview/episodes/2026-04-13-gemma-4-vs-agent-limits-on-device-power-meets-real-world-gaps-apr-13.mp3" class="episode-listen">Listen &rarr;</a></div><span class="episode-duration">14 min</span></div>
+    <div class="host-card">
+      <img src="assets/david-perron.jpg" alt="David Perron" class="host-photo" />
+      <div>
+        <div class="host-label">Hosted by</div>
+        <div class="host-name">David Perron</div>
+        <p class="host-bio">
+          20+ years in front-office banking and trade finance — JPMorgan, Barclays, HSBC.
+          Executive Master in AI (Institut Mines-Télécom, 2025). Paris.
+          <a href="/about.html">Read the editorial method &rarr;</a>
+        </p>
+      </div>
+    </div>
   </main>
 
   <footer>
     <p>
       AI Press Review &middot;
-      <a href="/about.html">Methodology</a> &middot;
+      <a href="/about.html">Editorial Method</a> &middot;
       <a href="/podcast-feed.xml">RSS</a> &middot;
       <a href="mailto:david.perron@aequitus.net">Contact</a>
     </p>
