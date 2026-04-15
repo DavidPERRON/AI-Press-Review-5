@@ -141,7 +141,12 @@ locales:
     # TTS locale-specific overrides
     voice_id_env: "CARTESIA_VOICE_ID_FR"   # nouveau secret GitHub
     cartesia_language: "fr"                # CRITIQUE pour prosodie francaise
-    tts_speed: 0.92                        # valide ear-test 2026-04-15 (serious + 0.92)
+    # Speed 0.82 (2026-04-15): 0.92 etait trop rapide sur un episode complet
+    # — pauses entre phrases comprimees, sensation de lecture precipitee.
+    # FR etant intrinsequement plus rapide que EN en WPM, on compense avec
+    # une vitesse plus basse que EN (0.9). Normalisation pause_hints_fr
+    # ajoute des virgules de respiration apres les points (voir tts/cartesia.py).
+    tts_speed: 0.82
     tts_emotion: "serious"
 
 # ──────────────────────────────────────────────────────────────

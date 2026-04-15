@@ -76,3 +76,72 @@ def test_normalize_pronunciations_default_locale_is_english():
     text = "BERT model."
     assert normalize_pronunciations(text, '') == "Burt model."
     assert normalize_pronunciations(text, 'en') == normalize_pronunciations(text, '')
+
+
+# FR pause hints: Cartesia's native sentence-end pauses were compressing to
+# near-imperceptible on full episodes, so we insert an ellipsis at sentence
+# boundaries. These tests lock the regex against common false positives —
+# French abbreviations and alternate sentence-end punctuation.
+
+
+def test_fr_pause_hints_basic_sentence_boundary():
+    text = "C'est vrai. Le modele est solide."
+    out = normalize_pronunciations(text, 'fr')
+    assert out == "C'est vrai... Le modele est solide."
+
+
+def test_fr_pause_hints_skip_monsieur_abbreviation():
+    # "M. Dupont" must NOT be split — single uppercase before the period
+    # signals an abbreviation, not a sentence end.
+    text = "L'annonce de M. Dupont concerne Paris."
+    out = normalize_pronunciations(text, 'fr')
+    assert "M... Dupont" not in out
+    assert "M. Dupont" in out
+
+
+def test_fr_pause_hints_apply_after_abbreviation_at_sentence_end():
+    # Sentence ends with lowercase word before the period → should be split
+    # even when the prior sentence contains an abbreviation.
+    text = "L'annonce de M. Dupont est confirmee. Le ministre reagit."
+    out = normalize_pronunciations(text, 'fr')
+    assert "M. Dupont" in out  # abbreviation preserved
+    assert "confirmee... Le ministre" in out  # true sentence boundary hit
+
+
+def test_fr_pause_hints_preserve_question_and_exclamation():
+    text = "Est-ce vrai? Le benchmark confirme. Excellent! Le resultat tient."
+    out = normalize_pronunciations(text, 'fr')
+    # ? and ! carry their own prosody — we do not add ellipsis there
+    assert "vrai? Le" in out
+    assert "Excellent! Le" in out
+    # But the "confirme. Excellent" boundary gets the hint
+    assert "confirme... Excellent" in out
+
+
+def test_fr_pause_hints_digit_ending_sentence():
+    text = "Le score atteint 95.5. La difference est reelle."
+    out = normalize_pronunciations(text, 'fr')
+    # Decimal "95.5" must stay intact; only the terminal "5. L" splits
+    assert "95.5" in out
+    assert "95.5... La difference" in out
+
+
+def test_fr_pause_hints_accented_word_ending():
+    text = "Le projet est acheve. Ensuite, on pivote."
+    out = normalize_pronunciations(text, 'fr')
+    assert "acheve... Ensuite" in out
+
+
+def test_fr_pause_hints_composes_with_pronunciation_rewrite():
+    # "arXiv" → "ar-kive", and the sentence boundary after it should still fire
+    text = "Le papier arXiv. Le laboratoire confirme."
+    out = normalize_pronunciations(text, 'fr')
+    assert "ar-kive... Le laboratoire" in out
+
+
+def test_fr_pause_hints_do_not_apply_to_en():
+    # EN path must remain unchanged — this is the regression guard for users
+    # who never touch FR content.
+    text = "Sentence one. Sentence two."
+    out = normalize_pronunciations(text, 'en')
+    assert out == text

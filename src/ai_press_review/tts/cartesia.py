@@ -46,16 +46,47 @@ _PRONUNCIATIONS_FR: dict[str, str] = {
 }
 
 
+# Insert a longer pause hint at sentence boundaries for FR TTS.
+#
+# Cartesia Sonic's native sentence-end pauses can compress to near-imperceptible
+# at speeds that otherwise sound fine — observed 2026-04-15 on full 15-minute FR
+# episodes where single-dot sentence breaks ran into each other with no breath.
+# Replacing ". " with "... " before a capital letter cues Cartesia to insert
+# a clearer pause without touching the stored script.txt (which humans read).
+#
+# Lookbehind [a-z...0-9] avoids matching French abbreviations like "M. Dupont",
+# "Mme.", "Dr." — those end in uppercase letters or short cap+dot patterns and
+# we don't want "M... Dupont". Digits before the period are fine ("GPT-5. Le…"
+# is a real sentence boundary).
+#
+# We deliberately do NOT touch "? " or "! " — those already carry strong
+# prosodic endings; adding ellipsis there sounds dramatic or hesitant.
+_FR_SENTENCE_BOUNDARY = re.compile(
+    r'(?<=[a-zàâéèêëîïôùûüÿ0-9])\. (?=[A-ZÀÂÉÈÊËÎÏÔÙÛÜŸ])'
+)
+
+
+def _insert_fr_pause_hints(text: str) -> str:
+    """Add breath cues at FR sentence boundaries. See _FR_SENTENCE_BOUNDARY."""
+    return _FR_SENTENCE_BOUNDARY.sub('... ', text)
+
+
 def normalize_pronunciations(text: str, locale: str) -> str:
     """Rewrite known-mispronounced acronyms to their spoken-language form.
 
     Applied right before chunking so Cartesia hears the phonetic version
     while `script.txt` (read by humans, used for transcripts) keeps the
     canonical uppercase/camelcase spelling.
+
+    For FR, also inserts sentence-boundary pause hints — Cartesia's default
+    sentence-end prosody collapses to unnatural runs otherwise.
     """
-    table = _PRONUNCIATIONS_FR if (locale or '').lower().startswith('fr') else _PRONUNCIATIONS_EN
+    is_fr = (locale or '').lower().startswith('fr')
+    table = _PRONUNCIATIONS_FR if is_fr else _PRONUNCIATIONS_EN
     for pattern, phon in table.items():
         text = re.sub(pattern, phon, text)
+    if is_fr:
+        text = _insert_fr_pause_hints(text)
     return text
 
 
