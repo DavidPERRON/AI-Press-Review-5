@@ -9,10 +9,10 @@ from xml.sax.saxutils import escape
 import logging
 
 from ..models import PublishedEpisode
-from ..settings import load_settings
+from ..settings import DATA_DIR, DOCS_DIR, load_settings
 from ..state import load_episode_history, save_episode_history
 from ..storage.r2 import delete_key
-from ..utils import utcnow
+from ..utils import read_json, utcnow
 from .episode_brief import generate_episode_brief
 from .sitemap import write_sitemap
 
@@ -302,3 +302,181 @@ def _write_index(episodes: list[dict]) -> None:
     out_dir = settings.docs_output_dir
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / 'index.html').write_text(html, encoding='utf-8')
+
+
+# ── SOCIAL FEED (LinkedIn) ───────────────────────────────────────────────
+# A single merged EN+FR feed designed to drive an external RSS-to-LinkedIn
+# automation (Buffer, Zapier, Make, etc.). The canonical podcast feeds stay
+# per-locale; this feed only exists to produce LinkedIn-ready post copy.
+
+# Per-locale metadata for the social feed. Kept inline rather than in
+# podcast.yaml to avoid polluting the main config — this is presentation
+# layer only, not runtime behavior.
+_SOCIAL_LOCALES: dict[str, dict[str, str]] = {
+    'en': {
+        'state_file': 'episode_history.json',          # legacy un-suffixed path
+        'site_base_url': 'https://podcast.aequitus.net',
+        'hashtags': '#AI #Podcast #TechBriefing',
+        'listen_label': 'Listen',
+    },
+    'fr': {
+        'state_file': 'episode_history_fr.json',
+        'site_base_url': 'https://podcast.aequitus.net/fr',
+        'hashtags': '#IntelligenceArtificielle #Podcast #IA',
+        'listen_label': 'Écouter',
+    },
+}
+
+_SOCIAL_SUMMARY_MAX_CHARS = 200
+_SOCIAL_ITEM_LIMIT = 20
+_SOCIAL_CHANNEL_TITLE = 'AI Press Review — Social Feed (EN+FR)'
+_SOCIAL_CHANNEL_DESC = (
+    'Merged bilingual feed for LinkedIn distribution. Each item carries '
+    'LinkedIn-ready copy — short summary, listen link, hashtags.'
+)
+
+
+def _truncate_summary(text: str, max_chars: int = _SOCIAL_SUMMARY_MAX_CHARS) -> str:
+    """Cut at the last sentence/word boundary within max_chars, add ellipsis."""
+    if not text:
+        return ''
+    text = text.strip()
+    if len(text) <= max_chars:
+        return text
+    # Prefer a sentence boundary, then a word boundary
+    cutoff = text[:max_chars]
+    for marker in ('. ', '! ', '? '):
+        idx = cutoff.rfind(marker)
+        if idx >= max_chars * 0.5:
+            return cutoff[:idx + 1].rstrip()
+    idx = cutoff.rfind(' ')
+    if idx >= max_chars * 0.5:
+        return cutoff[:idx].rstrip() + '…'
+    return cutoff.rstrip() + '…'
+
+
+def _build_social_copy(ep: dict, locale_meta: dict[str, str]) -> str:
+    """Build the LinkedIn-ready post body for a single episode.
+
+    Rules (aligned with brand voice):
+    - Title on its own line.
+    - One-to-two sentence summary, truncated at a sentence/word boundary.
+    - Single-line CTA with em-dash separator.
+    - Hashtags adapted to locale.
+    - No emojis. No negatives. No greetings.
+    """
+    title = (ep.get('title') or '').strip()
+    summary = _truncate_summary(ep.get('summary') or '')
+    listen_url = ep.get('brief_url') or locale_meta['site_base_url']
+    hashtags = locale_meta['hashtags']
+    listen_label = locale_meta['listen_label']
+
+    parts = [title]
+    if summary:
+        parts.append('')
+        parts.append(summary)
+    parts.append('')
+    parts.append(f'{listen_label} — {listen_url}')
+    parts.append('')
+    parts.append(hashtags)
+    return '\n'.join(parts)
+
+
+def _load_social_episodes() -> list[dict]:
+    """Load episodes from both EN and FR histories, tagged with locale.
+
+    Returns a list merged and sorted by published_at descending, capped at
+    _SOCIAL_ITEM_LIMIT.
+    """
+    merged: list[dict] = []
+    for locale, meta in _SOCIAL_LOCALES.items():
+        state_path = DATA_DIR / 'state' / meta['state_file']
+        if not state_path.exists():
+            logger.info('Social feed: no history for locale=%s (%s)', locale, state_path)
+            continue
+        history = read_json(state_path, {'episodes': []})
+        for ep in history.get('episodes', []):
+            ep_copy = dict(ep)
+            ep_copy['_locale'] = locale
+            merged.append(ep_copy)
+
+    def _sort_key(ep: dict) -> datetime:
+        try:
+            dt = datetime.fromisoformat(ep['published_at'])
+        except (KeyError, ValueError):
+            return datetime.min.replace(tzinfo=timezone.utc)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt
+
+    merged.sort(key=_sort_key, reverse=True)
+    return merged[:_SOCIAL_ITEM_LIMIT]
+
+
+def build_social_feed(output_path: Path | None = None) -> Path:
+    """Generate the bilingual LinkedIn-oriented RSS feed.
+
+    Reads both EN and FR episode histories, merges them, and writes a single
+    RSS file with LinkedIn-optimized <description> copy per item.
+
+    Returns the path to the generated file.
+    """
+    if output_path is None:
+        output_path = DOCS_DIR / 'social-feed.xml'
+
+    episodes = _load_social_episodes()
+
+    items: list[str] = []
+    latest_pub_dt: datetime | None = None
+    for ep in episodes:
+        locale = ep.get('_locale', 'en')
+        locale_meta = _SOCIAL_LOCALES[locale]
+
+        try:
+            ep_dt = datetime.fromisoformat(ep['published_at'])
+        except (KeyError, ValueError):
+            continue
+        if ep_dt.tzinfo is None:
+            ep_dt = ep_dt.replace(tzinfo=timezone.utc)
+        if latest_pub_dt is None or ep_dt > latest_pub_dt:
+            latest_pub_dt = ep_dt
+
+        pub_date = format_datetime(ep_dt)
+        post_body = _build_social_copy(ep, locale_meta)
+        link = ep.get('brief_url') or locale_meta['site_base_url']
+        guid = f"social-{locale}-{ep.get('date', '')}-{ep.get('slug', '')}"
+
+        items.append(
+            f"<item>"
+            f"<title>{escape(ep.get('title', ''))}</title>"
+            f"<link>{escape(link)}</link>"
+            f"<description><![CDATA[{post_body}]]></description>"
+            f"<guid isPermaLink=\"false\">{escape(guid)}</guid>"
+            f"<pubDate>{pub_date}</pubDate>"
+            f"</item>"
+        )
+
+    now_dt = utcnow()
+    last_build_date = format_datetime(now_dt)
+    channel_pub_date = format_datetime(latest_pub_dt) if latest_pub_dt else last_build_date
+    self_href = 'https://podcast.aequitus.net/social-feed.xml'
+
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">'
+        '<channel>'
+        f"<title>{escape(_SOCIAL_CHANNEL_TITLE)}</title>"
+        f"<link>{escape('https://podcast.aequitus.net')}</link>"
+        f'<atom:link href="{escape(self_href)}" rel="self" type="application/rss+xml" />'
+        '<language>mul</language>'
+        f"<description>{escape(_SOCIAL_CHANNEL_DESC)}</description>"
+        f"<lastBuildDate>{last_build_date}</lastBuildDate>"
+        f"<pubDate>{channel_pub_date}</pubDate>"
+        '<ttl>60</ttl>'
+        f"{''.join(items)}"
+        '</channel></rss>'
+    )
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(xml, encoding='utf-8')
+    logger.info('Social feed written: %s (%d items)', output_path, len(items))
+    return output_path
