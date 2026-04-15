@@ -61,6 +61,66 @@ schedule:
   weekdays_only: false
 
 # ──────────────────────────────────────────────────────────────
+#  LOCALES — PODCASTS MULTILINGUES
+#  Chaque locale genere son propre feed RSS, ses propres pages
+#  et son propre prefixe audio R2. Les champs top-level ci-dessus
+#  restent les defauts EN pour compatibilite descendante.
+#  Le workflow matrix daily-generate.yml itere sur les locales
+#  dont enabled=true.
+# ──────────────────────────────────────────────────────────────
+locales:
+  en:
+    enabled: true
+    title: "AI Press Review"
+    subtitle: "Factual, Clear, Built for Busy Professionals"
+    language: "en"
+    tagline: "40 sources. 15 minutes. What matters in AI today."
+    short_description: "40 sources. 15 minutes. What matters in AI today."
+    long_description: >
+      Every weekday morning at 7AM CET, AI Press Review distills 40+ global sources
+      into a focused 15-minute briefing — filtered, weighted, and structured around
+      six pillars: AI News, Research & Breakthroughs, Use Cases, Tools & Practice,
+      Weak Signals, and Education. Built for professionals who need signal, not noise.
+      Every Saturday: a weekly recap of the five trends that defined the week.
+    feed_url: "https://podcast.aequitus.net/podcast-feed.xml"
+    site_url: "https://podcast.aequitus.net"
+    public_audio_base_url: "https://pub-bc812f72712b450fbb9d7f3455e007a0.r2.dev/pressreview"
+    cover_image: "assets/podcast-cover.png"
+    docs_subdir: ""                        # racine de docs/
+    prompt_daily: "prompt_system.txt"
+    prompt_weekly: "prompt_weekly.txt"
+    category_primary: "Business"
+    category_secondary: "Artificial Intelligence"
+    opening_line_daily: "Your Daily AI Press Review"
+    opening_line_weekly: "Your Weekly AI Press Review"
+
+  fr:
+    enabled: true
+    title: "Revue de Presse IA"
+    subtitle: "Factuel, clair, pense pour les professionnels presses"
+    language: "fr"
+    tagline: "40 sources. 15 minutes. Ce qui compte aujourd'hui en IA."
+    short_description: "40 sources. 15 minutes. Ce qui compte aujourd'hui en IA."
+    long_description: >
+      Chaque matin a 7h, la Revue de Presse IA distille plus de 40 sources
+      internationales en un brief de 15 minutes — filtre, pondere, et structure
+      autour de six piliers : Actualite IA, Recherche et Percees, Cas d'usage,
+      Outils et Pratique, Signaux faibles, et Pedagogie. Pense pour les
+      professionnels qui ont besoin de signal, pas de bruit.
+      Chaque samedi : le recap des cinq tendances qui ont defini la semaine.
+    feed_url: "https://podcast.aequitus.net/fr/podcast-feed.xml"
+    site_url: "https://podcast.aequitus.net/fr"
+    public_audio_base_url: "https://pub-bc812f72712b450fbb9d7f3455e007a0.r2.dev/pressreview-fr"
+    cover_image: "assets/podcast-cover.png"   # reutilise cover EN pour demarrer
+    docs_subdir: "fr"                         # docs/fr/
+    prompt_daily: "prompt_system_fr.txt"
+    prompt_weekly: "prompt_weekly_fr.txt"
+    category_primary: "Business"
+    category_secondary: "Artificial Intelligence"
+    opening_line_daily: "Votre Revue de Presse IA du jour"
+    opening_line_weekly: "Votre Revue de Presse IA hebdo"
+
+# ──────────────────────────────────────────────────────────────
 #  PROFILS EDITORIAUX
 #  Chaque profil surcharge les parametres editorial ci-dessus.
 #  Pour creer un nouveau workflow : ajoutez un profil ici,
