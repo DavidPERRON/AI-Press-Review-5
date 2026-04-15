@@ -60,3 +60,14 @@ jobs:
           git add data/state/ docs/
           git diff --cached --quiet || git commit -m "release: manually approved episode [skip ci]"
           git push
+
+      # Push the freshly-published URLs to IndexNow (Bing + Yandex + federated
+      # engines). GitHub Pages needs ~30-90s to redeploy after the push above,
+      # so we wait before submitting — IndexNow drops URLs that 404 at submit
+      # time. Non-blocking: IndexNow failures must not fail the release job.
+      - name: Wait for GitHub Pages deploy
+        run: sleep 90
+
+      - name: Notify IndexNow (Bing/Yandex)
+        continue-on-error: true
+        run: python seo/tools/submit_indexnow.py --all
