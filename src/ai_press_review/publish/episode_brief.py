@@ -4,7 +4,7 @@ import re
 from html import escape
 from pathlib import Path
 
-from ..settings import DOCS_DIR
+from ..settings import load_settings
 
 TEMPLATE_PATH = Path(__file__).parent / 'templates' / 'episode-brief-template.html'
 
@@ -12,7 +12,13 @@ TEMPLATE_PATH = Path(__file__).parent / 'templates' / 'episode-brief-template.ht
 def generate_episode_brief(episode_data: dict) -> str:
     """Render an episode brief HTML page from template + episode_data dict.
 
-    Returns the path (relative to docs/) of the generated file.
+    Writes to settings.docs_output_dir / 'episodes/' so EN goes to docs/episodes/
+    and FR goes to docs/fr/episodes/ (driven by APR_LOCALE via settings).
+
+    Returns the path (relative to the locale's docs subdir) of the generated
+    file — e.g. 'episodes/2026-04-20.html' for both EN and FR. The site_url
+    already carries the locale prefix, so concatenating site_url + return value
+    gives the correct absolute URL.
     """
     template = TEMPLATE_PATH.read_text(encoding='utf-8')
     html = template
@@ -90,7 +96,8 @@ def generate_episode_brief(episode_data: dict) -> str:
 
     # ── Write output ──
     date_iso = episode_data.get('date_iso', 'unknown')
-    episodes_dir = DOCS_DIR / 'episodes'
+    settings = load_settings()
+    episodes_dir = settings.docs_output_dir / 'episodes'
     episodes_dir.mkdir(parents=True, exist_ok=True)
     out_path = episodes_dir / f'{date_iso}.html'
     out_path.write_text(html, encoding='utf-8')

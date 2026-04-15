@@ -304,9 +304,18 @@ def load_settings(
     so title, prompt file, voice_id, TTS params, public URLs, and docs_subdir
     all switch to the locale's values.
 
-    When `locale` is None, settings use the top-level yaml defaults (backward
+    When `locale` is None, the env var APR_LOCALE is checked — this lets
+    the matrix workflow set `APR_LOCALE=fr` once per job and have every
+    downstream load_settings() call pick up the right locale without needing
+    to thread the param through every function signature.
+
+    When neither is set, settings use the top-level yaml defaults (backward
     compatible with the single-locale EN pipeline).
     """
+    if locale is None:
+        env_locale = _env('APR_LOCALE')
+        locale = env_locale if env_locale else None
+
     config = _yaml_config()
 
     local_base = _env('LOCAL_LLM_BASE_URL') if local_preview else ''

@@ -10,7 +10,7 @@ from .collectors.newsapi import fetch_newsapi_articles
 from .collectors.rss import fetch_rss_entries
 from .extractors.web_content import batch_extract
 from .models import SourceItem
-from .settings import DATA_DIR, DOCS_DIR, ScoringConfig, load_settings, load_sources_config
+from .settings import DATA_DIR, ScoringConfig, load_settings, load_sources_config
 from .state import load_episode_history, load_used_sources, save_used_sources
 from .utils import fingerprint, iso_now, title_similarity, within_hours, write_json
 
@@ -317,8 +317,15 @@ def collect_sources(run_date: str, local_preview: bool = False, profile: str | N
         "sources": [s.to_dict() for s in sources],
     }
 
-    data_sources_dir = DATA_DIR / "sources"
-    docs_sources_dir = DOCS_DIR / "sources"
+    # Per-locale manifest storage prevents EN and FR matrix jobs from
+    # clobbering each other's data/sources/latest.json on the same run date.
+    # Legacy single-locale mode (no APR_LOCALE) keeps writing to data/sources/.
+    if settings.locale:
+        data_sources_dir = DATA_DIR / "sources" / settings.locale
+    else:
+        data_sources_dir = DATA_DIR / "sources"
+    # docs/sources/ for EN, docs/fr/sources/ for FR — driven by APR_LOCALE.
+    docs_sources_dir = settings.docs_output_dir / "sources"
     data_sources_dir.mkdir(parents=True, exist_ok=True)
     docs_sources_dir.mkdir(parents=True, exist_ok=True)
 

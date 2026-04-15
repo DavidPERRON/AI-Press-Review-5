@@ -1,6 +1,9 @@
 name: Daily Generate
 
 # Genere l'episode quotidien Lun-Ven a 6h Paris (4h UTC ete / 5h UTC hiver)
+# Matrix: genere EN puis FR en serie (max-parallel: 1) pour eviter les races
+# sur git push. Chaque locale ecrit son propre state (episode_history_{en,fr}.json),
+# ses propres pages (docs/ vs docs/fr/) et son propre prefixe audio R2.
 # L'audio est uploade sur R2 pour ecoute preview.
 # Le feed RSS n'est PAS mis a jour — voir auto-release.yml
 
@@ -13,6 +16,10 @@ on:
         description: Run date (YYYY-MM-DD)
         required: false
         default: ''
+      locale:
+        description: Locale to run (leave empty for all enabled, or 'en'/'fr')
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -21,11 +28,24 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    strategy:
+      fail-fast: false       # FR doit tourner meme si EN casse
+      max-parallel: 1        # serialise les git push pour eviter les races
+      matrix:
+        locale: [en, fr]
 
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main           # toujours partir de main pour cumuler EN puis FR
+
+      # Skip non-selected locales when a manual run narrows the scope
+      - name: Skip if locale filter excludes this job
+        if: ${{ github.event.inputs.locale != '' && github.event.inputs.locale != matrix.locale }}
+        run: |
+          echo "Locale filter '${{ github.event.inputs.locale }}' excludes '${{ matrix.locale }}' — skipping."
+          exit 0
 
       - uses: actions/setup-python@v5
         with:
@@ -49,6 +69,8 @@ jobs:
 
       - name: Generate daily draft
         env:
+          # Locale selector — drives load_settings() + state file suffix
+          APR_LOCALE: ${{ matrix.locale }}
           PODCAST_DESCRIPTION_LONG: ${{ vars.PODCAST_DESCRIPTION_LONG }}
           PUBLIC_AUDIO_BASE_URL: ${{ vars.PUBLIC_AUDIO_BASE_URL }}
           LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
@@ -56,7 +78,11 @@ jobs:
           LLM_FALLBACK_MODEL: ${{ vars.LLM_FALLBACK_MODEL }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
+          # Both voice IDs are passed — settings._apply_locale picks the right
+          # one via voice_id_env in podcast.yaml (CARTESIA_VOICE_ID for EN,
+          # CARTESIA_VOICE_ID_FR for FR).
           CARTESIA_VOICE_ID: ${{ vars.CARTESIA_VOICE_ID }}
+          CARTESIA_VOICE_ID_FR: ${{ vars.CARTESIA_VOICE_ID_FR }}
           R2_BUCKET_NAME: ${{ vars.R2_BUCKET_NAME }}
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -66,6 +92,7 @@ jobs:
           set -e
           RUN_DATE=${{ github.event.inputs.run_date }}
           if [ -z "$RUN_DATE" ]; then RUN_DATE=$(date +%F); fi
+          echo "Generating daily draft for locale=$APR_LOCALE date=$RUN_DATE"
           python scripts/generate_draft.py --date "$RUN_DATE" --profile daily
 
       - name: Commit draft state
@@ -73,14 +100,15 @@ jobs:
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f data/state/ data/sources/ docs/sources/
-          git diff --cached --quiet || git commit -m "draft: daily episode ${{ github.event.inputs.run_date || 'auto' }} [skip ci]"
+          # Pull any commits made by prior matrix jobs (e.g. EN when FR is running)
           git pull --rebase origin main
+          git add -f data/state/ data/sources/ docs/
+          git diff --cached --quiet || git commit -m "draft: daily episode ${{ matrix.locale }} ${{ github.event.inputs.run_date || 'auto' }} [skip ci]"
           git push
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: daily-draft-output
+          name: daily-draft-output-${{ matrix.locale }}
           path: output/
           retention-days: 7

@@ -1,37 +1,66 @@
 from __future__ import annotations
 
+import os
+
 from .settings import DATA_DIR
 from .utils import read_json, write_json
 
-USED_SOURCES_PATH = DATA_DIR / 'state' / 'used_sources.json'
-EPISODE_HISTORY_PATH = DATA_DIR / 'state' / 'episode_history.json'
-PENDING_DRAFT_PATH = DATA_DIR / 'state' / 'pending_draft.json'
+
+def _locale_suffix() -> str:
+    """Return `_<locale>` suffix when APR_LOCALE is set, else empty string.
+
+    Empty suffix preserves legacy file names for the single-locale EN pipeline.
+    Once matrix EN/FR runs are live, each job sets APR_LOCALE and writes to
+    its own state files — so EN and FR histories never collide.
+    """
+    loc = os.getenv('APR_LOCALE', '').strip().lower()
+    return f'_{loc}' if loc else ''
+
+
+def _used_sources_path():
+    return DATA_DIR / 'state' / f'used_sources{_locale_suffix()}.json'
+
+
+def _episode_history_path():
+    return DATA_DIR / 'state' / f'episode_history{_locale_suffix()}.json'
+
+
+def _pending_draft_path():
+    return DATA_DIR / 'state' / f'pending_draft{_locale_suffix()}.json'
+
+
+# Backward-compat module-level constants (read at import time, no locale).
+# Callers should prefer the load/save functions below which respect APR_LOCALE.
+USED_SOURCES_PATH = _used_sources_path()
+EPISODE_HISTORY_PATH = _episode_history_path()
+PENDING_DRAFT_PATH = _pending_draft_path()
 
 
 def load_episode_history() -> dict:
-    return read_json(EPISODE_HISTORY_PATH, {'episodes': []})
+    return read_json(_episode_history_path(), {'episodes': []})
 
 
 def save_episode_history(data: dict) -> None:
-    write_json(EPISODE_HISTORY_PATH, data)
+    write_json(_episode_history_path(), data)
 
 
 def load_used_sources() -> dict:
-    return read_json(USED_SOURCES_PATH, {'items': []})
+    return read_json(_used_sources_path(), {'items': []})
 
 
 def save_used_sources(data: dict) -> None:
-    write_json(USED_SOURCES_PATH, data)
+    write_json(_used_sources_path(), data)
 
 
 def load_pending_draft() -> dict:
-    return read_json(PENDING_DRAFT_PATH, {})
+    return read_json(_pending_draft_path(), {})
 
 
 def save_pending_draft(data: dict) -> None:
-    write_json(PENDING_DRAFT_PATH, data)
+    write_json(_pending_draft_path(), data)
 
 
 def delete_pending_draft() -> None:
-    if PENDING_DRAFT_PATH.exists():
-        PENDING_DRAFT_PATH.unlink()
+    path = _pending_draft_path()
+    if path.exists():
+        path.unlink()

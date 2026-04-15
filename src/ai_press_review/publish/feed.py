@@ -8,7 +8,7 @@ from xml.sax.saxutils import escape
 import logging
 
 from ..models import PublishedEpisode
-from ..settings import DOCS_DIR, load_settings
+from ..settings import load_settings
 from ..state import load_episode_history, save_episode_history
 from ..storage.r2 import delete_key
 from ..utils import utcnow
@@ -170,7 +170,10 @@ def _write_feed(episodes: list[dict]) -> None:
         f"{''.join(items)}"
         '</channel></rss>'
     )
-    (DOCS_DIR / 'podcast-feed.xml').write_text(xml, encoding='utf-8')
+    # Write to locale-specific docs dir (docs/ for EN, docs/fr/ for FR).
+    out_dir = settings.docs_output_dir
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / 'podcast-feed.xml').write_text(xml, encoding='utf-8')
 
 
 _INDEX_TEMPLATE_PATH = Path(__file__).parent / 'templates' / 'index-template.html'
@@ -202,4 +205,6 @@ def _write_index(episodes: list[dict]) -> None:
         )
     episodes_html = '\n'.join(cards) if cards else '<div class="empty-state">First episode coming soon.</div>'
     html = template.replace('{{EPISODES}}', episodes_html)
-    (DOCS_DIR / 'index.html').write_text(html, encoding='utf-8')
+    out_dir = settings.docs_output_dir
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / 'index.html').write_text(html, encoding='utf-8')

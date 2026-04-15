@@ -1,13 +1,19 @@
 name: Auto Release
 
 # Publie automatiquement le draft en attente a 10h Paris
-# Si aucun draft pending n'existe, le job se termine sans erreur
-# Pour rejeter avant 10h, lancer manuellement le workflow "Reject Episode"
+# Matrix: EN puis FR en serie (max-parallel: 1). Si aucun draft pending
+# n'existe pour une locale, le job se termine sans erreur.
+# Pour rejeter avant 10h, lancer manuellement le workflow "Reject Episode".
 
 on:
   schedule:
     - cron: '0 8 * * 1-6'   # 10h Paris CEST, Lun-Sam
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      locale:
+        description: Locale to release (leave empty for all enabled, or 'en'/'fr')
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -16,11 +22,23 @@ jobs:
   release:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        locale: [en, fr]
 
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
+
+      - name: Skip if locale filter excludes this job
+        if: ${{ github.event.inputs.locale != '' && github.event.inputs.locale != matrix.locale }}
+        run: |
+          echo "Locale filter '${{ github.event.inputs.locale }}' excludes '${{ matrix.locale }}' — skipping."
+          exit 0
 
       - uses: actions/setup-python@v5
         with:
@@ -38,6 +56,7 @@ jobs:
 
       - name: Release pending draft
         env:
+          APR_LOCALE: ${{ matrix.locale }}
           PUBLIC_AUDIO_BASE_URL: ${{ vars.PUBLIC_AUDIO_BASE_URL }}
           R2_BUCKET_NAME: ${{ vars.R2_BUCKET_NAME }}
           R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
@@ -45,16 +64,17 @@ jobs:
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
         run: |
           set -e
+          # Use state module (respects APR_LOCALE) rather than a hardcoded path —
+          # otherwise EN and FR would both read the same pending_draft.json.
           python -c "
-          import json, sys
-          from pathlib import Path
-          draft_path = Path('data/state/pending_draft.json')
-          if not draft_path.exists():
-              print('No pending draft found — nothing to release')
+          import sys
+          from ai_press_review.state import load_pending_draft
+          draft = load_pending_draft()
+          if not draft:
+              print('No pending draft found for locale — nothing to release')
               sys.exit(0)
-          data = json.loads(draft_path.read_text())
-          if data.get('status') != 'pending':
-              print(f'Draft status is {data.get(\"status\")!r}, not pending — skipping')
+          if draft.get('status') != 'pending':
+              print(f'Draft status is {draft.get(\"status\")!r}, not pending — skipping')
               sys.exit(0)
           from ai_press_review.pipeline import release_pending_draft
           result = release_pending_draft()
@@ -66,6 +86,7 @@ jobs:
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
           git add data/state/ docs/
-          git diff --cached --quiet || git commit -m "release: publish episode [skip ci]"
+          git diff --cached --quiet || git commit -m "release: publish episode ${{ matrix.locale }} [skip ci]"
           git push
