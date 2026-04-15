@@ -1,6 +1,111 @@
 {
   "items": [
     {
+      "title": "China’s Dishan Technology nears 2nm AI chip breakthrough, reports say",
+      "url": "https://www.scmp.com/tech/tech-trends/article/3350050/chinas-dishan-technology-nears-2nm-ai-chip-breakthrough-reports-say",
+      "used_at": "2026-04-15T11:22:25.106054+00:00"
+    },
+    {
+      "title": "GRACE: A Dynamic Coreset Selection Framework for Large Language Model Optimization",
+      "url": "https://arxiv.org/abs/2604.11810",
+      "used_at": "2026-04-15T11:22:25.106067+00:00"
+    },
+    {
+      "title": "SEA-Eval: A Benchmark for Evaluating Self-Evolving Agents Beyond Episodic Assessment",
+      "url": "https://arxiv.org/abs/2604.08988",
+      "used_at": "2026-04-15T11:22:25.106070+00:00"
+    },
+    {
+      "title": "MeloTune: On-Device Arousal Learning and Peer-to-Peer Mood Coupling for Proactive Music Curation",
+      "url": "https://arxiv.org/abs/2604.10815",
+      "used_at": "2026-04-15T11:22:25.106072+00:00"
+    },
+    {
+      "title": "SpecBound: Adaptive Bounded Self-Speculation with Layer-wise Confidence Calibration",
+      "url": "https://arxiv.org/abs/2604.12247",
+      "used_at": "2026-04-15T11:22:25.106075+00:00"
+    },
+    {
+      "title": "ToxiTrace: Gradient-Aligned Training for Explainable Chinese Toxicity Detection",
+      "url": "https://arxiv.org/abs/2604.12321",
+      "used_at": "2026-04-15T11:22:25.106077+00:00"
+    },
+    {
+      "title": "Decoding by Perturbation: Mitigating MLLM Hallucinations via Dynamic Textual Perturbation",
+      "url": "https://arxiv.org/abs/2604.12424",
+      "used_at": "2026-04-15T11:22:25.106080+00:00"
+    },
+    {
+      "title": "Learning Chain Of Thoughts Prompts for Predicting Entities, Relations, and even Literals on Knowledge Graphs",
+      "url": "https://arxiv.org/abs/2604.12651",
+      "used_at": "2026-04-15T11:22:25.106083+00:00"
+    },
+    {
+      "title": "Greg Brockman predicts AI will let small teams match the output of large ones if they can afford the compute",
+      "url": "https://the-decoder.com/greg-brockman-predicts-ai-will-let-small-teams-match-the-output-of-large-ones-if-they-can-afford-the-compute/",
+      "used_at": "2026-04-15T11:22:25.106086+00:00"
+    },
+    {
+      "title": "Lavery is accelerating its integration of artificial intelligence into its practices and asserting its position as a leader in innovation - Yahoo! Finance Canada",
+      "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxQMkFVWVl4RHVQbHFOUXZFX1R5UGY5RFFreUliazl1Zm1iTmFTRkZzbWFmaHBJOTRjRFFIOUlYbGxOM0w3Qi1laGlkS2xxOGwzeVZ6RFJ3RDV1QVItTVNiYm9ORVdkUWtWeUIxY1YybC1lVHFHSlFLWHVEYy1rTkFmcmlOcWR5ZkR4c0J6M2ppdjhsMDBram5Jc2EtS0hzVDVDb3pLVzVoZw",
+      "used_at": "2026-04-15T11:22:25.106088+00:00"
+    },
+    {
+      "title": "Debate: Artificial Intelligence - KSFR",
+      "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxQT2RqbWN4bWkzanlJV2MxU0J3UmNMd094Qzg0RHllYmQ2Q2F6ZXdkQlBVQ081djk5cE1LcFRDSTdZdEhzeFU0b3NuMFNaQ1VWbEhYR1lUZ3RMTXh6ZjNVT3VMNFAzVS1xc1VRTUlWZnRhX3VSbXdxbG90UFlRTTJWSDVrZnBOODdPYllCbE1Xcw",
+      "used_at": "2026-04-15T11:22:25.106090+00:00"
+    },
+    {
+      "title": "The 15 Colleges Best Preparing Students for the AI Economy - Town & Country Magazine",
+      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOTWsyaEJTOGFUMjlWOW1RWXlxY0V5QU05cmhtNTNCVEEtdmFYbWo5cTc3SUUtU2VLa3NvRnJYZVNiZ0xRaU5NWmxFcjlaYmZVRmJ3NmV2YUV6Qm9OWkgwVDQtZkRCeWdMWDdfSFRNUDdnUEpqWHkzTV9xNWpVLW0zbUxhdV9wOXRGaTFOMUFsQkI5WnpaYUdyVloxb3U",
+      "used_at": "2026-04-15T11:22:25.106093+00:00"
+    },
+    {
+      "title": "AI ruling prompts warnings from US lawyers: Your chats could be used against you - Reuters",
+      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPR2ZtWkI5VERwRTZkZDVXU3VuVUxiY2N6N3FfYlNpNUZ6OFViQVhvTmwtYVpTb1VjM1NCWWVfM2Q2dkI3YzdZb3NyTkR0VG5TNXNveWlQTGlrYWlqYmEwTWYxVk12TkRQbTlxYTlLaXJZbzU2UkFwVjZsSnlnT1RWVm5MdDU4RW56Rnc1cEZybnR4anQ0dGsyNTdwV0Vpay1TajV4d2RPZ0ZldzdfRmRMdHRoOFgtVVJfVFU2SnNteHdmSFVnZWc",
+      "used_at": "2026-04-15T11:22:25.106095+00:00"
+    },
+    {
+      "title": "The good, the bad and the unknown: The future of AI in North Carolina - NC Newsline",
+      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPVEtjZlZXV0ZLWi1xWWxIOENLUE4ydmExVWdWTHlhZ3RsSm9TQUxfbHZMLVd6WmVJQ3NGYU9HYlA1eUREbWEtZDBtMEdkeklqS0hzWnUtNm91WmVCTFBMS3RGaXpZNndITzlWa2FZcEtRQ09HY0VwaU5OMEQxZ2RwVzhIWUxqZUFfZE5uamVVeEdMR21ZZjlsQTUwdWZ5M3RHaXZLNQ",
+      "used_at": "2026-04-15T11:22:25.106098+00:00"
+    },
+    {
+      "title": "The US-China AI gap closed. The responsible AI gap didn’t - AI News",
+      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOV3E4M2xuclZCdmxUQnc3aUlrUnI1NV82NWR5VEtZMDVyMEpSaE5KZkozX3ZER3NUWEl1UFFoVTVldk8zcWw3SFZmZkV6OUFkSjdzUWRmY2tQQXJpWThISXVfalpEaERtMXRvcGFYNjdXM2pwQXJIdGFmMGMzOV91QVFaSUN5SkI0YUNpd0g5Q2dnNlVvYmpLYmdyaw",
+      "used_at": "2026-04-15T11:22:25.106100+00:00"
+    },
+    {
+      "title": "Consulting Was a Dream First Job Until AI Destroyed Those Roles - Bloomberg Law News",
+      "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOeURyMG1TRzlZY0c3MmgwRDhoTEVxN0d4bndlV2JXUmd0U1JDOUdVRFZyQU1iRGdMRlRPcm5faHBSSWNsaFZ2MWdWYmFJOXpJdFRJVlVKckVYU3hZQnFyb1NmZkRWSGNtQlBUZHBlTmpCcGNWUktLQmRJeF9LU0JRRGJxcnpSajhNazdQZWFnOGY4WDM1NlRvQldxRG0zWHNfZnBrQ2F0bl9td3BHQkdjbjhVS2k2VWUt",
+      "used_at": "2026-04-15T11:22:25.106103+00:00"
+    },
+    {
+      "title": "Scientists turn AI-generated proteins into smart molecular sensors - EurekAlert!",
+      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9PU2hNUnVISkhSV2dybDNocEMtbGt2QXFTbHdySTYtRmtoV3djYVZiTjJtSGpKc0pDeGV6eXFPbElXZkEzR3ItX24xcXlwX1pCSlo2Y0hodDBCNzUt",
+      "used_at": "2026-04-15T11:22:25.106105+00:00"
+    },
+    {
+      "title": "What AI means for the future of WWSP's World's Largest Trivia Contest - Wausau Daily Herald",
+      "url": "https://news.google.com/rss/articles/CBMi-wFBVV95cUxQdWJOemkwNUZxVkpTbE9fMmJXc0IwRmtSLTFlQzEzdlROSlJlZ084RjlGU2c4eVM5SkVSVHlVRlpIR0xyME1ndkFyQnU1dHlkZGVtVkstMF9fd3NTR29abWdNTmNFZzRhcVZTV3VuTVZQeFN1QWNMMXFacFVwYmdpWmpfUXlVeXFlamxROHJkOVljQU1XbW5XTGVFU0w5ZjU4cGFyNjI0YjZlSXgtMk9rUFBpSWFxelRxLW5yMUlsZ2Q0c1FLWEI0NmVtbUpHU25DNG1CN3NhcVZmY05nenhSUllEQVlwMUhlV3c0LTJhSjIxblZKN1BwekVpNA",
+      "used_at": "2026-04-15T11:22:25.106107+00:00"
+    },
+    {
+      "title": "NC Treasurer’s office expands use of AI throughout the agency - The Asheville Citizen Times",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNeFIxcWp1YXgzWUhfLXc1WWpXSEpHUVN6VnpjajNvSGF4UU9Qc0wwT1VYN1NNUVFlWmIzZjFEeFhHeDNuZmF4T3dtU2xwWXZ4RE5La2NWZUZJQi1DNmduWkd5cU5nbjdzWVFzT0RpVjhibVRIanhWb3NRZ3lOUTdPYmthTjBQY090MjJPVHNpMklfV0l0c25LNGp0NnAyLUtYZGtja3dOUFVvTFpQTVVFOUhoVURzb1V6N0sySXYtQW5lSTg",
+      "used_at": "2026-04-15T11:22:25.106110+00:00"
+    },
+    {
+      "title": "SwRI harnesses AI to find meaningful matches in solar data - EurekAlert!",
+      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1GOEVteGVKSm5DemNYaHlBWkZQRnNZMjY2Nkt0dlI5ckg1VGFEdmtkeE9NNGRPVlVwenA5TFNpc0ttTGxkUmU5ZkpWazE4WVhPWnRLN0pOYTF0TGVT",
+      "used_at": "2026-04-15T11:22:25.106112+00:00"
+    },
+    {
+      "title": "Attempted fire-bombing has tech titans worried about AI backlash - The Washington Post",
+      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNZWRIN2VsMjVTTF9QSHltdFRCbktNcG1FM2ZsWEZYYkQ3QzR0N3g1TENJLWk5WFdmWmtDcnZGZ3hYajFfOEdGVjJFU3E4WEJwQVAxSnlpTExhT3pOUG5sZlQ3b09GcURuYklfT0NDUjQ5NVRHX2xtUVZ2VnJPUkVTdDRuZHMza0RIWWRDWQ",
+      "used_at": "2026-04-15T11:22:25.106114+00:00"
+    },
+    {
       "title": "Want to understand the current state of AI? Check out these charts.",
       "url": "https://www.technologyreview.com/2026/04/13/1135675/want-to-understand-the-current-state-of-ai-check-out-these-charts/",
       "used_at": "2026-04-15T11:11:59.525210+00:00"
