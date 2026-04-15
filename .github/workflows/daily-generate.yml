@@ -1,6 +1,8 @@
 name: Daily Generate
 
-# Genere l'episode quotidien Lun-Ven a 6h Paris (4h UTC ete / 5h UTC hiver)
+# Genere l'episode quotidien Lun-Ven a 5h45 Paris (3h45 UTC ete / 4h45 UTC hiver)
+# Le podcast publie a 7h Paris — le run demarre a 5h45 pour laisser ~1h15
+# de marge avant le drop (debugging, re-run TTS, approbation manuelle si besoin).
 # Matrix: genere EN puis FR en serie (max-parallel: 1) pour eviter les races
 # sur git push. Chaque locale ecrit son propre state (episode_history_{en,fr}.json),
 # ses propres pages (docs/ vs docs/fr/) et son propre prefixe audio R2.
@@ -9,7 +11,7 @@ name: Daily Generate
 
 on:
   schedule:
-    - cron: '0 4 * * 1-5'   # 6h Paris CEST (ajuster a '0 5' en hiver si besoin)
+    - cron: '45 3 * * 1-5'   # 5h45 Paris CEST (ajuster a '45 4' en hiver si besoin)
   workflow_dispatch:
     inputs:
       run_date:
