@@ -21,6 +21,7 @@ long_description: >
   six pillars: AI News, Research & Breakthroughs, Use Cases, Tools & Practice,
   Weak Signals, and Education. Built for professionals who need signal, not noise.
   Every Saturday: a weekly recap of the five trends that defined the week.
+  Also available in French at podcast.aequitus.net/fr.
 feed_url: "https://podcast.aequitus.net/podcast-feed.xml"
 site_url: "https://podcast.aequitus.net"
 public_audio_base_url: "https://pub-bc812f72712b450fbb9d7f3455e007a0.r2.dev/pressreview"
@@ -82,6 +83,7 @@ locales:
       six pillars: AI News, Research & Breakthroughs, Use Cases, Tools & Practice,
       Weak Signals, and Education. Built for professionals who need signal, not noise.
       Every Saturday: a weekly recap of the five trends that defined the week.
+      Also available in French at podcast.aequitus.net/fr.
     feed_url: "https://podcast.aequitus.net/podcast-feed.xml"
     site_url: "https://podcast.aequitus.net"
     public_audio_base_url: "https://pub-bc812f72712b450fbb9d7f3455e007a0.r2.dev/pressreview"
