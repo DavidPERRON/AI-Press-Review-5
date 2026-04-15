@@ -1,6 +1,116 @@
 {
   "items": [
     {
+      "title": "SOLARIS: Speculative Offloading of Latent-bAsed Representation for Inference Scaling",
+      "url": "https://arxiv.org/abs/2604.12110",
+      "used_at": "2026-04-15T09:05:17.084076+00:00"
+    },
+    {
+      "title": "LLM-Enhanced Log Anomaly Detection: A Comprehensive Benchmark of Large Language Models for Automated System Diagnostics",
+      "url": "https://arxiv.org/abs/2604.12218",
+      "used_at": "2026-04-15T09:05:17.084090+00:00"
+    },
+    {
+      "title": "Vec-LUT: Vector Table Lookup for Parallel Ultra-Low-Bit LLM Inference on Edge Devices",
+      "url": "https://arxiv.org/abs/2512.06443",
+      "used_at": "2026-04-15T09:05:17.084095+00:00"
+    },
+    {
+      "title": "Latent-Condensed Transformer for Efficient Long Context Modeling",
+      "url": "https://arxiv.org/abs/2604.12452",
+      "used_at": "2026-04-15T09:05:17.084100+00:00"
+    },
+    {
+      "title": "Calibrated Confidence Estimation for Tabular Question Answering",
+      "url": "https://arxiv.org/abs/2604.12491",
+      "used_at": "2026-04-15T09:05:17.084104+00:00"
+    },
+    {
+      "title": "Growing Pains: Extensible and Efficient LLM Benchmarking Via Fixed Parameter Calibration",
+      "url": "https://arxiv.org/abs/2604.12843",
+      "used_at": "2026-04-15T09:05:17.084108+00:00"
+    },
+    {
+      "title": "RPRA: Predicting an LLM-Judge for Efficient but Performant Inference",
+      "url": "https://arxiv.org/abs/2604.12634",
+      "used_at": "2026-04-15T09:05:17.084113+00:00"
+    },
+    {
+      "title": "Foundation AI Models Market Research Report 2026: Microsoft, Meta, and Alibaba Lead the Charge in Model Customization and Global Deployment - Global Long-term Forecast to 2030 and 2035",
+      "url": "https://www.globenewswire.com/news-release/2026/04/14/3273082/28124/en/Foundation-AI-Models-Market-Research-Report-2026-Microsoft-Meta-and-Alibaba-Lead-the-Charge-in-Model-Customization-and-Global-Deployment-Global-Long-term-Forecast-to-2030-and-2035.html",
+      "used_at": "2026-04-15T09:05:17.084118+00:00"
+    },
+    {
+      "title": "Why some workers are embracing AI while others won't use it, according to a new Gallup poll",
+      "url": "https://roanoke.com/news/nation-world/business/article_2adbb382-8fe3-5213-a830-d1af78313582.html",
+      "used_at": "2026-04-15T09:05:17.084122+00:00"
+    },
+    {
+      "title": "Nvidia Has 74% of Its Portfolio Invested in 2 Artificial Intelligence (AI) Stocks - The Motley Fool",
+      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOeUl3SmJDeVZrWTRVdFM0dXRWN3l6b2ROa29Kamw5Y1gteU1pblMtdTc0SjNsSjdGYzJCdFNURjRBY2tXTEVIVzZibUl5c3hIYmZJcVZMLUNKdFRnclRkWEpqWFZvcjRLdk5JSmtmbTdtUXlCNUk4T1VObW44TmY1ODBGWmdzVzA0RFJ6MmlWWnpJS19E",
+      "used_at": "2026-04-15T09:05:17.084126+00:00"
+    },
+    {
+      "title": "Nvidia Has 74% of Its Portfolio Invested in 2 Artificial Intelligence (AI) Stocks - Yahoo Finance",
+      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQYWtXaXVTZEFuaHVRM1ZRTW1aRWgzWGFnaW56aHF2MGNxeXlOX3F4ZkZRT09EYWJEd0FuUE1tZ3V0U01GZkpkLVhNbEJuN1E1cF9sOVNlMHdrTzJYa2NIdGVWQkhOQzlDYmhxbk1rNjI3OHRtNG9RQnpNaHFHeEJHRnkyRkY1RlFPanMtcUhJUG5vTkR4Z2NLaV9vbw",
+      "used_at": "2026-04-15T09:05:17.084130+00:00"
+    },
+    {
+      "title": "Taiwan launches national robotics center with $629 million startup funding plan - Robotics & Automation News",
+      "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxNcFVKOS1aWkhBTWhNeEMzTUx6RjJDVlkwYkhDRmtwUllnSFlkM3VtSmtidkdwVFRvZDRDNFpOSWdtWFV5UzdJSU1MTFNZU2J2YnpJT1cxUHFfTHY3NUlGQjlZQW1qYUdfOHdlUUhiSWlyUEFLcU9SRkcxS1RGc2J1Zmc5UGhMOFdQeDNHNHF1T294OEUzWmdTa1FGZGw5Y0x5TE1ETldnYXMya0M1STBEWmxBSUxpZU92ZnFBRkdjUVN6TjRpOWZ6TFdqT2VuMW01",
+      "used_at": "2026-04-15T09:05:17.084133+00:00"
+    },
+    {
+      "title": "This Artificial Intelligence (AI) Stock Just Hit an All-Time Low, But Wall Street Says It's Time to Buy - The Motley Fool",
+      "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOVGNzWFpNdU0zM0g1NWRVbnVRT1VhSVpZS3JucWF4RzJRT1o1UnNQS0Z5clBpeWhRWFJLT1NvREJDZ2RHai1YLTBIdEhURDlBM3c1RG4xenlRSDJ0TDFNRDZISS11d29uTi1YX1lEUkdBeXFjMEp3cFVaQW02X1pSejdTamFoYnVneGs4cWF2cTNtb1dXcnU3QQ",
+      "used_at": "2026-04-15T09:05:17.084137+00:00"
+    },
+    {
+      "title": "Artificial Intelligence: Governance, Peace and Security in Africa - Amani Africa",
+      "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOMFB5bGJLbkI1RGp4bDlFMkFkT3BuVXRUR0pqZGNNWldhZGJscDVqRF93Y1liS2JmUU4tLU4zcWY4djdKdktxZDNGZUtOMjhFSGp0TTI2QXRMeEpmVU9oV1ZTQVpfWkRsRlZlR2RIZDB6ZG1xdW1JU19lbHNhRmdoM2d3SHo3MUMwYVVOWGFfWk5aZVZSZWc",
+      "used_at": "2026-04-15T09:05:17.084141+00:00"
+    },
+    {
+      "title": "Coupang Expands AI Investments with USD 84M Funding for Startups - World Business Outlook",
+      "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPSFV4Szk0OWRkTFdMVXlsdHJEczBFZXMyMVNTVlBLZ2JMR2dkZFF6WWJPbml3Wll6SzE4Q2VBRTk4NDh3Qlc4dEVzXzhUeVVkTGI5RURTaHlSTFJyMHpELV9OTVhRNDloSTIxbnNMU1NuVXFlQkd4eTNDenF0OFlfamRNNmlqYTIweHA0RU02NV9HcTZCVVYxN0tHMGxxQ0E",
+      "used_at": "2026-04-15T09:05:17.084144+00:00"
+    },
+    {
+      "title": "Nawgati in Talks to Raise Funding to Scale AI Mobility Solutions Globally - TICE News",
+      "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxOdUt2TGdkanpuM0oyN0MzYXlmbkk4Sy1idEpjMTRhbXV2M3JtNzJQZkl4YmxmZnd4ZWdvV1R3VVVVVHNjbzllZVJscGJFS0pxc3p0eGF4UkNvbVdpVFpTc0tYVWV6dkpkZzFMUVZzZUJSMnNtMDNvaWl0X2JBMW9JRjJ1NnZCV1E0a0xma0RQQ0k5TlFKd2F4SlNFb2ZEUzEtcHMyc0g0NHFsRGdLcW9KX1ZkYmZHWjhSMUHSAboBQVVfeXFMTnVLdkxnZGp6bjNKMjdDM2F5Zm5JOEstYnRKYzE0YW11djNybTcyUGZJeGJsZmZ3eGVnb1dUd1VVVVRzY285ZWVSbHBiRUtKcXN6dHhheFJDb21XaVRaU3NLWFVlenZKZGcxTFFWc2VCUjJzbTAzb2lpdF9iQTFvSUYydTZ2QldRNGtMZmtEUENJOU5RSndheEpTRW9mRFMxLXBzMnNINDRxbERnS3FvSl9WZGJmR1o4UjFB",
+      "used_at": "2026-04-15T09:05:17.084147+00:00"
+    },
+    {
+      "title": "N.C. Department of State Treasurer expands use of Artificial Intelligence across operations - WWAYTV3",
+      "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOblJqbzM3QU5abTdKdk1jTGJZeDhuUWNSbW83MkxVSS1SbEJuRHJrR3JqUllPV1Vpdjl0bVFKcnJYUFZwaHVfTU1XbVdLdFk3anQ5MHBncEd4VG52N2F3b1BGMzVQTmtEVllLa2pyclQ2eEp0LV9BdkEyQ05UOEhnX2tmVGMyNXNSQWthVWVrTzk1R1ptTzlSNU5mQXBLakdfd1FNRnZMNjIyS1NDNUpwakhHZjNkZw",
+      "used_at": "2026-04-15T09:05:17.084151+00:00"
+    },
+    {
+      "title": "Windfall Launches Market Insights to Give Executive Teams Always-On TAM Intelligence - AiThority",
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNVUJwQ3EwQmMzYnIxSTVxM0k0d2hYR2lHUTB4VTNMeXRPZmVNeUVHaEZzSnRVeUkxd21lQ0JkcW96WGFvZFBlNXpnNEhQMXpfYlFwbUJOTE83TG15WTY4TEhtdFFBQU42a3ZXNlA4X19Wc0NOSFN5OGNJRG5nblY2R0Rub3VDVlNqYWY4MGFxQWl5TDk0YWpWVE1RQm44RjBWU01MZ2t5bVVFbU5HdlpZSmVabGVleFBObDNKZUIxUGo5QQ",
+      "used_at": "2026-04-15T09:05:17.084154+00:00"
+    },
+    {
+      "title": "Coupang Invests $84 Million in AI Startups Including Robotic Arm Developer - Seoul Economic Daily",
+      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPcEdwd19pWmZjRzQ5dk5XdVdpNExRMFgxXzd1ZUY2U2piSzYzSXNieHhQVU1CVUJlUGNncHBVRWJyX1Q1cUNOX2R2R3pFcUNHTnRKZ1FmRjBfSnViZ2RVUkRuenlKbnFMa3NYa1dmaEhJU291Z2pyQWgwMTlITzQwb3RTXzRsc3pEWW5yM3NXMEczd1B1TDZNaTB1WHg3cHJkOTlB",
+      "used_at": "2026-04-15T09:05:17.084158+00:00"
+    },
+    {
+      "title": "AI could check millions of CT scans for heart risk. Who will pay for it? - statnews.com",
+      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPLWNlZ0JneVAwTW5hdFRZcXpaSGduTTdHMjJ4a2JYOGtBTTFSVktaZHBIVmpzYTBOOFNBckNOY216OEFmMFVERndCSjZSME9zLXZQTEhjeUpWUjZRdWR0TXcyWE5uLVBLbTYzcDBVU250ZHRTUFJZY2Z0Z0tQQjIwWFpXaE80cERsc0JMSEl4UXgwX3pNTi10TEpkTDI",
+      "used_at": "2026-04-15T09:05:17.084162+00:00"
+    },
+    {
+      "title": "AI Makes Securing Copyright Protection for Software Code Tricky Guide - Bloomberg Law News",
+      "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxQWjQxaGdONnZ1MDFxTVQ5LWxFS3JPU3owc2tqSXluTERfVlVlU1ZRTlJHQ2pNTDk0V1dZYmFSd0JQTVdqOF8yQWE4TU13MlQwOS13ZDB3YW1laHJrdVA0MTBCYzBQODgyMUlKLXNLQmxRNnZ2UGFrNFlaUC1kQ3NqOVl2T2NESXRHVHM5dEoza2NXY0ZScW43QVdzREo3aTJMMjZqdy1sOWZOSHNDNUowMnVjUk0wT2h5aW1BR3VKa3ROLWpsSFdtVXFqNmM2YTkyRGNvSQ",
+      "used_at": "2026-04-15T09:05:17.084166+00:00"
+    },
+    {
+      "title": "Korea’s internet giants Naver, Kakao falter as AI ambitions fall short - KED Global",
+      "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE0wTks1UUJZLXdndnNGYWZiMmdBQnJmdklkTnltektNcTBTYkM2WUF6dmVaVUlwN1VlRGxrS18yb3dmdGt3bl9UcmxkdmdtMG9kU05veTN3aFBOalc0eVFCLXY5Q19semRmYjhHOFp5ZE1nWDVjdWdQZmwzMEZPcFE",
+      "used_at": "2026-04-15T09:05:17.084170+00:00"
+    },
+    {
       "title": "Building trust in the AI era with privacy-led UX",
       "url": "https://www.technologyreview.com/2026/04/15/1135530/building-trust-in-the-ai-era-with-privacy-led-ux/",
       "used_at": "2026-04-15T07:37:59.505799+00:00"
