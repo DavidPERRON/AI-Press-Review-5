@@ -10,24 +10,97 @@ REQUIRED_SECTION_KEYS = [
     "education_and_pedagogy",
 ]
 
-CLOSING_SENTENCE = (
-    "This podcast has a daily production cost. If you'd like to support me, my latest book, The Last Heaven, is available on Amazon and at ashcroftedition.com — link on the podcast page. Thank you."
-)
+# Closing sentence appended to every script. Each locale has its own — both EN
+# and FR prompts tell the LLM NOT to include the closing, so the pipeline
+# appends the locale-appropriate text here. Passing an English closing into a
+# French TTS voice would make the voice drift mid-sentence (observed on
+# 2026-04-15 FR audio).
+CLOSING_SENTENCES_BY_LOCALE = {
+    'en': (
+        "This podcast has a daily production cost. If you'd like to support me, "
+        "my latest book, The Last Heaven, is available on Amazon and at "
+        "ashcroftedition.com — link on the podcast page. Thank you."
+    ),
+    'fr': (
+        "Ce podcast a un coût de production quotidien. Pour me soutenir, mon "
+        "dernier livre, The Last Heaven, est disponible sur Amazon et sur "
+        "ashcroftedition.com — le lien est sur la page du podcast. Merci."
+    ),
+}
+# Backward-compat alias for code / tests that imported the EN-only constant.
+CLOSING_SENTENCE = CLOSING_SENTENCES_BY_LOCALE['en']
 
-INTRO_PATTERNS = {
-    'daily': r"Your Daily AI Press Review — [A-Za-z]+ \d{2}, \d{4}: .+\.",
-    'weekly': r"Your Weekly AI Press Review — Week of [A-Za-z]+ \d{2}, \d{4}: .+\.",
+# Opening line prefixes per locale. The prompts for each locale reference the
+# exact string in their "INJECTÉE AUTOMATIQUEMENT" instruction so the LLM never
+# duplicates the opening. Keep these in sync with config/podcast.yaml
+# (locales.*.opening_line_daily / opening_line_weekly).
+OPENING_PREFIXES_BY_LOCALE = {
+    'en': {
+        'daily': 'Your Daily AI Press Review',
+        'weekly': 'Your Weekly AI Press Review',
+    },
+    'fr': {
+        'daily': 'Votre Revue de Presse IA du jour',
+        'weekly': 'Votre Revue de Presse IA hebdo',
+    },
 }
 
+# Month names in French (strftime('%B') depends on the runner locale, which
+# isn't guaranteed; inline table avoids a system-locale dependency).
+_MONTHS_FR = [
+    'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+    'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre',
+]
 
-def build_intro_line(run_date: str, highlights_label: str, intro_format: str = 'daily') -> str:
+
+def _format_date_for_locale(dt: datetime, intro_format: str, locale: str) -> str:
+    """Human-readable date for the intro line. FR → '15 avril 2026' / 'semaine du 15 avril 2026'."""
+    if locale == 'fr':
+        base = f"{dt.day} {_MONTHS_FR[dt.month - 1]} {dt.year}"
+        return f"semaine du {base}" if intro_format == 'weekly' else base
+    base = dt.strftime("%B %d, %Y")
+    return f"Week of {base}" if intro_format == 'weekly' else base
+
+
+def _intro_pattern(intro_format: str, locale: str) -> str:
+    """Regex matching a correctly-formed intro line for (format, locale)."""
+    prefix = re.escape(OPENING_PREFIXES_BY_LOCALE[locale][intro_format])
+    if locale == 'fr':
+        # '15 avril 2026' / 'semaine du 15 avril 2026'
+        months = '|'.join(_MONTHS_FR)
+        date_re = rf"(?:semaine du )?\d{{1,2}} (?:{months}) \d{{4}}"
+    else:
+        # 'April 15, 2026' / 'Week of April 15, 2026'
+        date_re = r"(?:Week of )?[A-Za-z]+ \d{1,2}, \d{4}"
+    return rf"{prefix} — {date_re}: .+\."
+
+
+def _normalize_locale(locale: str | None) -> str:
+    """Map empty/unknown locales to 'en' (default keeps legacy single-locale behavior)."""
+    if not locale:
+        return 'en'
+    loc = locale.strip().lower()
+    return loc if loc in OPENING_PREFIXES_BY_LOCALE else 'en'
+
+
+def build_intro_line(
+    run_date: str,
+    highlights_label: str,
+    intro_format: str = 'daily',
+    locale: str | None = None,
+) -> str:
+    """Build the opening sentence the pipeline injects as the first paragraph.
+
+    Locale drives both the prefix ('Your Daily…' vs 'Votre Revue de Presse IA…')
+    and the date wording. Passing the wrong locale here is how a FR TTS voice
+    ends up reading 'April fifteenth, two thousand twenty-six' in English.
+    """
+    loc = _normalize_locale(locale)
     dt = datetime.fromisoformat(run_date)
     label = " ".join((highlights_label or "").split())[:32].strip() or "Highlights"
-    if intro_format == 'weekly':
-        formatted = dt.strftime("Week of %B %d, %Y")
-        return f"Your Weekly AI Press Review — {formatted}: {label}."
-    formatted = dt.strftime("%B %d, %Y")
-    return f"Your Daily AI Press Review — {formatted}: {label}."
+    prefix = OPENING_PREFIXES_BY_LOCALE[loc][intro_format]
+    formatted = _format_date_for_locale(dt, intro_format, loc)
+    return f"{prefix} — {formatted}: {label}."
 
 
 def validate_section_payload(payload: dict) -> None:
@@ -49,41 +122,58 @@ def validate_section_payload(payload: dict) -> None:
         raise ValueError("Tomorrow pedagogical concept is too long")
 
 
-def assemble_script(run_date: str, payload: dict, intro_format: str = 'daily') -> str:
+def assemble_script(
+    run_date: str,
+    payload: dict,
+    intro_format: str = 'daily',
+    locale: str | None = None,
+) -> str:
+    """Assemble the final TTS-ready script with locale-aware intro & closing."""
     validate_section_payload(payload)
+    loc = _normalize_locale(locale)
 
-    intro = build_intro_line(run_date, payload.get("highlights_label", "Highlights"), intro_format)
+    intro = build_intro_line(
+        run_date, payload.get("highlights_label", "Highlights"), intro_format, locale=loc,
+    )
     sections = payload["sections"]
 
     ordered_paragraphs = [intro]
     for key in REQUIRED_SECTION_KEYS:
         ordered_paragraphs.extend([p.strip() for p in sections[key] if p.strip()])
 
-    ordered_paragraphs.append(CLOSING_SENTENCE)
+    ordered_paragraphs.append(CLOSING_SENTENCES_BY_LOCALE[loc])
     ordered_paragraphs.append(payload["tomorrow_pedagogical_concept"].strip().rstrip(".") + ".")
 
     script = "\n\n".join(ordered_paragraphs)
-    validate_final_script(script, intro_format)
+    validate_final_script(script, intro_format, locale=loc)
     return script
 
 
-def validate_final_script(script: str, intro_format: str = 'daily') -> None:
+def validate_final_script(
+    script: str,
+    intro_format: str = 'daily',
+    locale: str | None = None,
+) -> None:
+    loc = _normalize_locale(locale)
     lines = [line.strip() for line in script.splitlines() if line.strip()]
     if not lines:
         raise ValueError("Script is empty")
 
-    pattern = INTRO_PATTERNS.get(intro_format, INTRO_PATTERNS['daily'])
+    pattern = _intro_pattern(intro_format, loc)
     if not re.fullmatch(pattern, lines[0]):
-        raise ValueError("Opening line does not match the required format")
+        raise ValueError(f"Opening line does not match the required format for locale={loc!r}")
 
     if len(lines) < 4:
         raise ValueError("Script has too few paragraphs")
 
-    if lines[-2] != CLOSING_SENTENCE:
-        raise ValueError("Closing sentence does not exactly match the required line")
+    expected_closing = CLOSING_SENTENCES_BY_LOCALE[loc]
+    if lines[-2] != expected_closing:
+        raise ValueError(f"Closing sentence does not exactly match the required line for locale={loc!r}")
 
     tomorrow_line = lines[-1].lower()
-    if tomorrow_line.startswith("this podcast has"):
+    # Guard against the LLM leaking the closing prefix into the tomorrow line.
+    forbidden_prefixes = ("this podcast has", "ce podcast a un coût")
+    if any(tomorrow_line.startswith(p) for p in forbidden_prefixes):
         raise ValueError("Tomorrow pedagogical concept appears to be a duplicate of the closing sentence")
 
     for line in lines:

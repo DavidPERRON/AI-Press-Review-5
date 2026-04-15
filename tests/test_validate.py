@@ -2,6 +2,7 @@ import pytest
 
 from ai_press_review.editorial.validate import (
     CLOSING_SENTENCE,
+    CLOSING_SENTENCES_BY_LOCALE,
     REQUIRED_SECTION_KEYS,
     assemble_script,
     build_intro_line,
@@ -96,3 +97,45 @@ def test_validate_final_script_rejects_headings():
     script = f"{intro}\n\n{body}\n\n{heading}\n\n{CLOSING_SENTENCE}\n\nWhat is inference."
     with pytest.raises(ValueError, match="Heading-style"):
         validate_final_script(script)
+
+
+# --- FR locale tests -------------------------------------------------------
+# Regression coverage for the 2026-04-15 bug where FR episodes were generated
+# with an English opening ("Your Daily AI Press Review — April 15, 2026")
+# and an English closing paragraph. The TTS voice drifted mid-sentence because
+# a FR Cartesia voice was asked to read English prose.
+
+
+def test_build_intro_line_fr_daily():
+    line = build_intro_line("2026-04-15", "En bref", locale='fr')
+    assert line == "Votre Revue de Presse IA du jour — 15 avril 2026: En bref."
+
+
+def test_build_intro_line_fr_weekly():
+    line = build_intro_line("2026-04-15", "En bref", intro_format='weekly', locale='fr')
+    assert line == "Votre Revue de Presse IA hebdo — semaine du 15 avril 2026: En bref."
+
+
+def test_build_intro_line_unknown_locale_falls_back_to_en():
+    # Defensive: bad locale strings shouldn't crash the pipeline mid-publish.
+    line = build_intro_line("2026-04-15", "Highlights", locale='zz')
+    assert line.startswith("Your Daily AI Press Review")
+
+
+def test_assemble_script_fr_uses_french_closing():
+    script = assemble_script("2026-04-15", _make_payload(), locale='fr')
+    assert script.startswith("Votre Revue de Presse IA du jour")
+    assert CLOSING_SENTENCES_BY_LOCALE['fr'] in script
+    # And critically: the EN closing must NOT leak into a FR script.
+    assert CLOSING_SENTENCES_BY_LOCALE['en'] not in script
+
+
+def test_validate_final_script_rejects_en_closing_in_fr_script():
+    intro = "Votre Revue de Presse IA du jour — 15 avril 2026: Test."
+    body = "Un paragraphe de contenu narratif en français."
+    script = (
+        f"{intro}\n\n{body}\n\n{body}\n\n"
+        f"{CLOSING_SENTENCES_BY_LOCALE['en']}\n\nQu'est-ce que l'inférence."
+    )
+    with pytest.raises(ValueError, match="Closing sentence"):
+        validate_final_script(script, locale='fr')

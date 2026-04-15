@@ -320,7 +320,12 @@ def generate_episode_script(manifest: dict, local_preview: bool = False, profile
 
                 try:
                     payload = _generate_with_model(model, manifest, settings, force_length=force)
-                    script = assemble_script(manifest["run_date"], payload, intro_format=settings.intro_format)
+                    script = assemble_script(
+                        manifest["run_date"],
+                        payload,
+                        intro_format=settings.intro_format,
+                        locale=settings.locale,
+                    )
                     wc = _word_count(script)
                 except Exception as inner_exc:
                     logger.warning("Attempt %d failed: %s", attempt + 1, inner_exc)
