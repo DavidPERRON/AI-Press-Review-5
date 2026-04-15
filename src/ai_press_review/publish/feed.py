@@ -14,6 +14,7 @@ from ..state import load_episode_history, save_episode_history
 from ..storage.r2 import delete_key
 from ..utils import utcnow
 from .episode_brief import generate_episode_brief
+from .sitemap import write_sitemap
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +32,10 @@ def _build_brief_data(episode: PublishedEpisode, source_titles: list[str], episo
     pub_dt = datetime.fromisoformat(episode.published_at)
     dur = episode.duration_seconds or 0
     dur_str = f"{dur // 60}:{dur % 60:02d}"
+    # ISO 8601 duration for schema.org PodcastEpisode.duration. The previous
+    # schema used "PT{dur_str}" which emits "PT17:45" — not valid ISO 8601
+    # and rejected by Google's Rich Results validator.
+    dur_iso = f"PT{dur // 60}M{dur % 60:02d}S" if dur else "PT0S"
 
     # Build a simplified source manifest from source titles
     domain_counts: dict[str, int] = {}
@@ -45,6 +50,7 @@ def _build_brief_data(episode: PublishedEpisode, source_titles: list[str], episo
         'date_human': pub_dt.strftime('%B %d, %Y'),
         'number': episode_number,
         'duration': dur_str,
+        'duration_iso': dur_iso,
         'audio_url': episode.audio_url,
         'spotify_url': '',
         'apple_url': '',
@@ -99,6 +105,14 @@ def publish_episode(episode: PublishedEpisode, source_fingerprints: list[str], s
     save_episode_history(history)
     _write_feed(kept)
     _write_index(kept)
+    # Sitemap is site-wide (EN + FR) and scans the filesystem, so it runs
+    # AFTER _write_feed/_write_index so the freshly-published episode is
+    # visible. Failures here must not block publishing — sitemap staleness
+    # only delays crawler discovery by a day.
+    try:
+        write_sitemap()
+    except Exception as exc:
+        logger.warning("Failed to write sitemap: %s", exc)
 
 
 def _secondary_category_xml(settings) -> str:

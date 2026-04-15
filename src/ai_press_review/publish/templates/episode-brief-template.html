@@ -45,28 +45,50 @@
   <meta name="twitter:title" content="{{EPISODE_TITLE}}" />
   <meta name="twitter:description" content="{{EPISODE_SUMMARY}}" />
 
-  <!-- JSON-LD: PodcastEpisode -->
+  <!-- JSON-LD: PodcastEpisode (enriched — url, episodeNumber, image,
+       inLanguage, and valid ISO 8601 duration, so Google's Rich Results
+       validator accepts it). -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "PodcastEpisode",
+    "url": "https://podcast.aequitus.net/episodes/{{EPISODE_DATE_ISO}}.html",
     "name": "{{EPISODE_TITLE}}",
+    "episodeNumber": "{{EPISODE_NUMBER}}",
     "datePublished": "{{EPISODE_DATE_ISO}}",
     "description": "{{EPISODE_SUMMARY}}",
-    "timeRequired": "PT{{EPISODE_DURATION}}",
+    "duration": "{{EPISODE_DURATION_ISO}}",
+    "inLanguage": "en",
+    "image": "https://podcast.aequitus.net/assets/podcast-cover.png",
     "associatedMedia": {
       "@type": "MediaObject",
-      "contentUrl": "{{EPISODE_AUDIO_URL}}"
+      "contentUrl": "{{EPISODE_AUDIO_URL}}",
+      "encodingFormat": "audio/mpeg"
     },
     "partOfSeries": {
       "@type": "PodcastSeries",
       "name": "AI Press Review",
-      "url": "https://podcast.aequitus.net"
+      "url": "https://podcast.aequitus.net",
+      "webFeed": "https://podcast.aequitus.net/podcast-feed.xml"
     },
     "author": {
       "@type": "Person",
       "name": "David Perron"
     }
+  }
+  </script>
+
+  <!-- JSON-LD: BreadcrumbList — lets Google render a "Home > Episodes > …"
+       trail in SERPs and signals site hierarchy for crawl prioritization. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://podcast.aequitus.net/"},
+      {"@type": "ListItem", "position": 2, "name": "Episodes", "item": "https://podcast.aequitus.net/"},
+      {"@type": "ListItem", "position": 3, "name": "{{EPISODE_TITLE}}", "item": "https://podcast.aequitus.net/episodes/{{EPISODE_DATE_ISO}}.html"}
+    ]
   }
   </script>
 

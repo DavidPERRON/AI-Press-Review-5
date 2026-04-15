@@ -30,6 +30,7 @@ def generate_episode_brief(episode_data: dict) -> str:
         '{{EPISODE_DATE_HUMAN}}': escape(episode_data.get('date_human', '')),
         '{{EPISODE_NUMBER}}': escape(str(episode_data.get('number', ''))),
         '{{EPISODE_DURATION}}': escape(episode_data.get('duration', '')),
+        '{{EPISODE_DURATION_ISO}}': escape(episode_data.get('duration_iso', 'PT0S')),
         '{{EPISODE_AUDIO_URL}}': escape(episode_data.get('audio_url', '')),
         '{{EPISODE_SPOTIFY_URL}}': escape(episode_data.get('spotify_url', '')),
         '{{EPISODE_APPLE_URL}}': escape(episode_data.get('apple_url', '')),
