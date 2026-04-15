@@ -1,0 +1,9 @@
+# PROPOSED — to be copied into docs/robots.txt.
+# Current live file already allows all + points at the sitemap, so this is a
+# cosmetic upgrade (adds a header comment + documents the sitemap source).
+
+User-agent: *
+Allow: /
+
+# Sitemap — regenerated on every publish (see seo/tools/generate_sitemap.py)
+Sitemap: https://podcast.aequitus.net/sitemap.xml

@@ -1,0 +1,86 @@
+<!--
+  PROPOSED REPLACEMENT for the JSON-LD block in
+    src/ai_press_review/publish/templates/episode-brief-template.html
+    (currently lines 48–71 in the live template)
+
+  WHAT CHANGES vs. current:
+    • Adds `url` (explicit canonical URL in the graph)
+    • Adds `episodeNumber` (already in template context as {{EPISODE_NUMBER}})
+    • Adds `image` (podcast cover — enables episode thumbnails in rich results)
+    • Adds `inLanguage`
+    • Replaces `timeRequired: "PT{{EPISODE_DURATION}}"` (which emits invalid
+      ISO 8601 like "PT17:45") with a proper `duration` field that uses a
+      new placeholder {{EPISODE_DURATION_ISO}} (format: "PT17M45S").
+    • Enriches `partOfSeries` with `webFeed` pointing to the RSS feed.
+    • Adds `encodingFormat: "audio/mpeg"` to the MediaObject.
+    • Adds a second JSON-LD block with `BreadcrumbList` so Google can render
+      a "Home > Episodes > …" breadcrumb trail in SERPs.
+
+  REQUIRED PIPELINE CHANGE:
+    In src/ai_press_review/publish/feed.py::_build_brief_data(), after
+    computing `dur_str`, also compute the ISO 8601 form:
+
+        duration_iso = f"PT{dur // 60}M{dur % 60:02d}S" if dur else "PT0S"
+        # ...
+        return {
+            ...,
+            'duration': dur_str,
+            'duration_iso': duration_iso,
+            ...
+        }
+
+    And in src/ai_press_review/publish/episode_brief.py::generate_episode_brief(),
+    add to the `replacements` dict:
+
+        '{{EPISODE_DURATION_ISO}}': escape(episode_data.get('duration_iso', 'PT0S')),
+
+  Then copy the two <script> blocks below (starting at the comment marker)
+  into the template, replacing the current single JSON-LD block.
+-->
+
+<!-- JSON-LD: PodcastEpisode (richer schema — includes url, episodeNumber,
+     image, inLanguage, and ISO 8601 duration so Google can render rich
+     results for "podcast" queries). -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "PodcastEpisode",
+  "url": "https://podcast.aequitus.net/episodes/{{EPISODE_DATE_ISO}}.html",
+  "name": "{{EPISODE_TITLE}}",
+  "episodeNumber": "{{EPISODE_NUMBER}}",
+  "datePublished": "{{EPISODE_DATE_ISO}}",
+  "description": "{{EPISODE_SUMMARY}}",
+  "duration": "{{EPISODE_DURATION_ISO}}",
+  "inLanguage": "en",
+  "image": "https://podcast.aequitus.net/assets/podcast-cover.png",
+  "associatedMedia": {
+    "@type": "MediaObject",
+    "contentUrl": "{{EPISODE_AUDIO_URL}}",
+    "encodingFormat": "audio/mpeg"
+  },
+  "partOfSeries": {
+    "@type": "PodcastSeries",
+    "name": "AI Press Review",
+    "url": "https://podcast.aequitus.net",
+    "webFeed": "https://podcast.aequitus.net/podcast-feed.xml"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "David Perron"
+  }
+}
+</script>
+
+<!-- JSON-LD: BreadcrumbList — helps Google render a "Home > Episodes > …"
+     trail in SERPs and signals site hierarchy for crawl prioritization. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://podcast.aequitus.net/"},
+    {"@type": "ListItem", "position": 2, "name": "Episodes", "item": "https://podcast.aequitus.net/"},
+    {"@type": "ListItem", "position": 3, "name": "{{EPISODE_TITLE}}", "item": "https://podcast.aequitus.net/episodes/{{EPISODE_DATE_ISO}}.html"}
+  ]
+}
+</script>
