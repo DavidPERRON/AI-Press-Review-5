@@ -1,6 +1,86 @@
 {
   "items": [
     {
+      "title": "China’s edge over US in AI world models: abundant data, faster deployment, executive says",
+      "url": "https://www.scmp.com/tech/big-tech/article/3350062/chinas-edge-over-us-ai-world-models-abundant-data-faster-deployment-executive-says",
+      "used_at": "2026-04-15T09:15:57.270090+00:00"
+    },
+    {
+      "title": "RePAIR: Interactive Machine Unlearning through Prompt-Aware Model Repair",
+      "url": "https://arxiv.org/abs/2604.12820",
+      "used_at": "2026-04-15T09:15:57.270100+00:00"
+    },
+    {
+      "title": "Generation-Augmented Generation: A Plug-and-Play Framework for Private Knowledge Injection in Large Language Models",
+      "url": "https://arxiv.org/abs/2601.08209",
+      "used_at": "2026-04-15T09:15:57.270103+00:00"
+    },
+    {
+      "title": "Polynomial Expansion Rank Adaptation: Enhancing Low-Rank Fine-Tuning with High-Order Interactions",
+      "url": "https://arxiv.org/abs/2604.11841",
+      "used_at": "2026-04-15T09:15:57.270105+00:00"
+    },
+    {
+      "title": "AutoSurrogate: An LLM-Driven Multi-Agent Framework for Autonomous Construction of Deep Learning Surrogate Models in Subsurface Flow",
+      "url": "https://arxiv.org/abs/2604.11945",
+      "used_at": "2026-04-15T09:15:57.270107+00:00"
+    },
+    {
+      "title": "Models Know Their Shortcuts: Deployment-Time Shortcut Mitigation",
+      "url": "https://arxiv.org/abs/2604.12277",
+      "used_at": "2026-04-15T09:15:57.270109+00:00"
+    },
+    {
+      "title": "Token Encoding for Semantic Recovery",
+      "url": "https://arxiv.org/abs/2604.12931",
+      "used_at": "2026-04-15T09:15:57.270111+00:00"
+    },
+    {
+      "title": "QuarkMedSearch: A Long-Horizon Deep Search Agent for Exploring Medical Intelligence",
+      "url": "https://arxiv.org/abs/2604.12867",
+      "used_at": "2026-04-15T09:15:57.270114+00:00"
+    },
+    {
+      "title": "Chinese robotics firms focus on quadrupeds as major revenue drivers",
+      "url": "https://www.scmp.com/tech/tech-trends/article/3350071/chinese-robotics-firms-focus-quadrupeds-major-revenue-drivers",
+      "used_at": "2026-04-15T09:15:57.270116+00:00"
+    },
+    {
+      "title": "AGIBOT and Longcheer Technology Achieve World's First Embodied AI Deployment in Consumer Electronics Precision Manufacturing Mass-Production Line - Utusan Malaysia",
+      "url": "https://news.google.com/rss/articles/CBMinwJBVV95cUxPcW4xc0ZWVEY5VmNrUlhVRjE1VkZwSml3M2plY0RFeEZSRWRQVXBtcWVDSUo4TmpwYV9xSFhVMWttYnoxWFZjbEtTaW4yaFNULW5lNTlIWWFHbDgxcUh6WEM2czZSMER2MlpOVGVmd0VaNURFMU9VOVZqOGR1aEVyM0RIMGpyYlFOelg2b2dzeVhJZ2dNSHdLZGRtY2c1SXFNWERqWTRWOUFoVm56QkUzWUdqTXFVaS01QThxWGRGdnBIWkhwakVLWFZCbk15Y3VMMHVOd2ZteVBZMm9MdG9VUGxGTTBpY2lyZ1BVY2VucVJBdGZlRjlSeTFNQkdTcmdRM0kxZldNTlNQY2d4WE9XeDZDd2RTVkE1aFN0cmpzTQ",
+      "used_at": "2026-04-15T09:15:57.270118+00:00"
+    },
+    {
+      "title": "Fire Service Essay Competition returns with artificial intelligence prompt - International Fire & Safety Journal",
+      "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE91SmtST2luTER3eVc4NkFqZHdKaV9MNC1oa1FJMGNaNmRrdlJXRHoxdXc4cTc0SE1PV2NlRnpGQkFVcjA2WkE0VkpwNTlWUy1nUFM4S2RkbVVhaERGc2ZFemtIaU1vY2h5MVBLTVNrclpWdFBCa3c",
+      "used_at": "2026-04-15T09:15:57.270120+00:00"
+    },
+    {
+      "title": "Nvidia releases open AI models for quantum computing tasks — 'Ising' said to be 2.5x faster and 3x more accurate than existing tools for decoding - Tom's Hardware",
+      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPSFllNFUyaGdBXzkwZVFDMGh1anU0Qmw0dlNvMUJyd2lVaTRfRFFtZlAxU21MYjRneFhvNUhrV3BaYWstN0NOZmJfM255c3BRNVJjNG5Jd3dfcmhGd3JPRGpWWEY0NVRNeHAxTjVHWGhxc0FkSU9fN2JpTXlFT1dUdzFablVzVjRxQ1pkcjZYc0pMVS11WGFyVkQ2aFVvTEppaXV1Tkl3",
+      "used_at": "2026-04-15T09:15:57.270122+00:00"
+    },
+    {
+      "title": "Former Blinkit executives’ AI startup raises Rs 140 crore to expand globally - Indian Startup News",
+      "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQbk5mQWZ0TXhZNXU3MUExek44cEFIWktBakFOa1MyQ2UzM19kR0hSNTdsN1BlT21CUmZpYlFkZmMzVWpLUWRNdGNGOWpYVFN1dUMzYndSNkgydHhpSnhtSUQtbnEwNXd6RENsYngxQVF4alBIX1QwRThmRjRuWXVwUllkN1FSdE9tamNvU3RKaGJCcnI5VDVUQzJ5bjVqZk5jbGJfTEpvTjNJWFZkOUhqUklTZG9uMFpUaDctWmtVUdIBvwFBVV95cUxQbk5mQWZ0TXhZNXU3MUExek44cEFIWktBakFOa1MyQ2UzM19kR0hSNTdsN1BlT21CUmZpYlFkZmMzVWpLUWRNdGNGOWpYVFN1dUMzYndSNkgydHhpSnhtSUQtbnEwNXd6RENsYngxQVF4alBIX1QwRThmRjRuWXVwUllkN1FSdE9tamNvU3RKaGJCcnI5VDVUQzJ5bjVqZk5jbGJfTEpvTjNJWFZkOUhqUklTZG9uMFpUaDctWmtVUQ",
+      "used_at": "2026-04-15T09:15:57.270124+00:00"
+    },
+    {
+      "title": "‘There is no silver bullet’: How 2 colleges use AI to support nontraditional learners - Higher Ed Dive",
+      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQV3lpMkFxV0NWU3lDWDFoSElsdHU5SlE0dVJnODgxNHAtTlpycko1OElqVk5MZHdGbS1qRF9wOC10YnVQTnhpSGM0TXQ0Z1ZPQVFKREdJWTBFdmREcElfMDYxSUZjdzYwZHRvOThjM3R0aHVQMm9kZnhCeGRWZ21Id0RONzdfdkxOY1FPX2J5SkVBcDdOSUVlUngzV0taWlQ4WVBIVXlWdVN6T3h0VTE3b0ZWcks",
+      "used_at": "2026-04-15T09:15:57.270126+00:00"
+    },
+    {
+      "title": "Replace staff with AI before it gets too expensive - cio.com",
+      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxOeFlRQm9WU25hVkxSUk9UTDI1Z1p0NFkwdGJ4TWR3TUFhT3FXdDczSXdXTnhyZHMzd3NyeTk0V2lSY0FxNlBVNDFYZXVvemdqUnRnSDlrbHNZRm85ZDlxeU5Ib2lNcXNJUUNxQ2k0WEl2a3BNM1JZQU9RSjdhRTFvVlR6VjFReEJnRVc0TDlMMnRGYWVGZnF0UzJmdXE",
+      "used_at": "2026-04-15T09:15:57.270128+00:00"
+    },
+    {
+      "title": "How future CIOs may assess this period in AI history - cio.com",
+      "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPN3NBMVJNQUdBVWdGZWp4UDBhQmkwMm00QnVnbmx6aEFkbXdNckFvcDJ0XzJrdi13SUQxTWdiN24zbTdfRHVLSXJHbmEybmlCbzJNaVJQYklmWEZQRUxsNkdBNUFQbFBFaDV4QUszQ1AzbWNuSm9PbXV1MW8yYW9ROFFPT0RrREV1VzNIWjNONzJSRG10VnlwOA",
+      "used_at": "2026-04-15T09:15:57.270129+00:00"
+    },
+    {
       "title": "SOLARIS: Speculative Offloading of Latent-bAsed Representation for Inference Scaling",
       "url": "https://arxiv.org/abs/2604.12110",
       "used_at": "2026-04-15T09:05:17.084076+00:00"

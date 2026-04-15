@@ -1,161 +1,119 @@
 # Source manifest — 2026-04-15
 
-Generated at: 2026-04-15T09:05:17.085868+00:00
+Generated at: 2026-04-15T09:15:57.271273+00:00
 Profile: daily
-Relevant source count: 22
+Relevant source count: 16
 
-## 1. SOLARIS: Speculative Offloading of Latent-bAsed Representation for Inference Scaling
-- Domain: arxiv.org
-- URL: https://arxiv.org/abs/2604.12110
-- Relevance score: 14.0
-- Published: Wed, 15 Apr 2026 00:00:00 -0400
-- Summary: arXiv:2604.12110v1 Announce Type: new Abstract: Recent advances in recommendation scaling laws have led to foundation models of unprecedented complexity. While these models offer superior performance, their computational demands make real-time serving impractical, often forcing practitioners to rely on knowledge distillation-compromising serving quality for efficiency. To address this challenge, we present SOLARIS (Speculative Offloading of Latent-bAsed Representation for Inference Scaling), a novel framework inspired by speculative decoding. SOLARIS proactively precomputes user-item interaction embeddings by predicting which user-item pairs are likely to appear in future requests, and asynchronously generating their foundation model representations ahead of time. This approach decouples the costly foundation model inference from the latency-critical serving path, enabling real-time knowledge transfer from models previously considered too expensive for online use. Deployed across Meta's advertising system serving billions of daily requests, SOLARIS achieves 0.67% revenue-driving top-line metrics gain, demonstrating its effectiveness at scale.
+## 1. China’s edge over US in AI world models: abundant data, faster deployment, executive says
+- Domain: scmp.com
+- URL: https://www.scmp.com/tech/big-tech/article/3350062/chinas-edge-over-us-ai-world-models-abundant-data-faster-deployment-executive-says
+- Relevance score: 16.0
+- Published: Tue, 14 Apr 2026 12:00:10 +0000
+- Summary: China’s world models are benefiting from early integration with the country’s strong industrial base, which gives the domestic ecosystem greater momentum than that of the US, according to an executive at a leading Chinese world model start-up. World models simulate 3D environments and physical dynamics, and are expected to help train the next generation of physical artificial intelligence applications, including robots and autonomous vehicles. Wang Xiaofeng, an algorithm partner at GigaAI, said...
+- Extract: [](https://www.scmp.com/?module=masthead&pgtype=article) [](https://www.scmp.com/?module=masthead&pgtype=article) [](https://www.scmp.com/search?module=masthead&pgtype=article) [Big Tech](https://www.scmp.com/tech/big-tech) - All [Big Tech](https://www.scmp.com/tech/big-tech) China’s AI world model edge: abundant data and faster deployment, executive says [](https://www.scmp.com/?module=masthead&pgtype=article) SIGN IN Advertisement [Artificial intelligence](https://www.scmp.com/topics/artificial-intelligence?module=breadcrumb&pgtype=article) [Tech](https://www.scmp.com/tech?module=breadcrumb&pgtype=article)[Big Tech](https://www.scmp.com/tech/big-tech?module=breadcrumb&pgtype=article) # China’s edge over US in AI world models: abundant data, faster deployment, executive says China’s stron
 
-## 2. LLM-Enhanced Log Anomaly Detection: A Comprehensive Benchmark of Large Language Models for Automated System Diagnostics
+## 2. RePAIR: Interactive Machine Unlearning through Prompt-Aware Model Repair
 - Domain: arxiv.org
-- URL: https://arxiv.org/abs/2604.12218
-- Relevance score: 14.0
-- Published: Wed, 15 Apr 2026 00:00:00 -0400
-- Summary: arXiv:2604.12218v1 Announce Type: new Abstract: System log anomaly detection is critical for maintaining the reliability of large-scale software systems, yet traditional methods struggle with the heterogeneous and evolving nature of modern log data. Recent advances in Large Language Models (LLMs) offer promising new approaches to log understanding, but a systematic comparison of LLM-based methods against established techniques remains lacking. In this paper, we present a comprehensive benchmark study evaluating both LLM-based and traditional approaches for log anomaly detection across four widely-used public datasets: HDFS, BGL, Thunderbird, and Spirit. We evaluate three categories of methods: (1) classical log parsers (Drain, Spell, AEL) combined with machine learning classifiers, (2) fine-tuned transformer models (BERT, RoBERTa), and (3) prompt-based LLM approaches (GPT-3.5, GPT-4, LLaMA-3) in zero-shot and few-shot settings. Our experiments reveal that while fine-tuned transformers achieve the highest F1-scores (0.96-0.99), prompt-based LLMs demonstrate remarkablezero-shot capabilities (F1: 0.82-0.91) without requiring any labeled training data -- a significant advantage for rea
-
-## 3. Vec-LUT: Vector Table Lookup for Parallel Ultra-Low-Bit LLM Inference on Edge Devices
-- Domain: arxiv.org
-- URL: https://arxiv.org/abs/2512.06443
-- Relevance score: 14.0
-- Published: Wed, 15 Apr 2026 00:00:00 -0400
-- Summary: arXiv:2512.06443v2 Announce Type: replace-cross Abstract: Large language models (LLMs) are increasingly deployed on edge devices. To meet strict resource constraints, real-world deployment has pushed LLM quantization from 8-bit to 4-bit, 2-bit, and now 1.58-bit. Combined with lookup table (LUT)-based inference, CPUs run these ultra-low-bit LLMs even faster than NPUs, opening new opportunities for ubiquitous on-device intelligence. However, this paper identifies that LUT-based inference underutilizes memory bandwidth during parallel inference, which is required for prefilling, test-time scaling, and other multi-token scenarios. The root cause is the scalar LUT paradigm, which performs repetitive and non-contiguous memory accesses for each token. To solve the issue, we propose vector LUT, a new lookup paradigm that constructs a unified LUT across parallel tokens, and performs a single $1 \rightarrow N$ lookup per index. To realize it efficiently, we further introduce (1) Vector LUT-Centric Tensor Layout, and (2) Cache-Aware Streamed Lookup techniques. Evaluations on 5 edge devices across 3 LLMs show that Vec-LUT outperforms state-of-the-art baselines by up to $4.2\times$. Our impleme
-
-## 4. Latent-Condensed Transformer for Efficient Long Context Modeling
-- Domain: arxiv.org
-- URL: https://arxiv.org/abs/2604.12452
+- URL: https://arxiv.org/abs/2604.12820
 - Relevance score: 13.5
 - Published: Wed, 15 Apr 2026 00:00:00 -0400
-- Summary: arXiv:2604.12452v1 Announce Type: new Abstract: Large language models (LLMs) face significant challenges in processing long contexts due to the linear growth of the key-value (KV) cache and quadratic complexity of self-attention. Existing approaches address these bottlenecks separately: Multi-head Latent Attention (MLA) reduces the KV cache by projecting tokens into a low-dimensional latent space, while sparse attention reduces computation. However, sparse methods cannot operate natively on MLA's compressed latent structure, missing opportunities for joint optimization. In this paper, we propose Latent-Condensed Attention (LCA), which directly condenses context within MLA's latent space, where the representation is disentangled into semantic latent vectors and positional keys. LCA separately aggregates semantic vectors via query-aware pooling and preserves positional keys via anchor selection. This approach jointly reduces both computational cost and KV cache without adding parameters. Beyond MLA, LCA's design is architecture-agnostic and readily extends to other attention mechanisms such as GQA. Theoretically, we prove a length-independent error bound. Experiments show LCA achieve
+- Summary: arXiv:2604.12820v1 Announce Type: cross Abstract: Large language models (LLMs) inherently absorb harmful knowledge, misinformation, and personal data during pretraining on large-scale web corpora, with no native mechanism for selective removal. While machine unlearning offers a principled solution, existing approaches are provider-centric, requiring retraining pipelines, curated retain datasets, and direct intervention by model service providers (MSPs), thereby excluding end users from controlling their own data. We introduce Interactive Machine Unlearning (IMU), a new paradigm in which users can instruct LLMs to forget targeted knowledge through natural language at inference time. To realize IMU, we propose RePAIR, a prompt-aware model repair framework comprising (i) a watchdog model for unlearning intent detection, (ii) a surgeon model for generating repair procedures, and (iii) a patient model whose parameters are updated autonomously. At the core of RePAIR, we develop Steering Through Activation Manipulation with PseudoInverse (STAMP), a training-free, single-sample unlearning method that redirects MLP activations toward a refusal subspace via closed-form pseudoinverse updates.
 
-## 5. Calibrated Confidence Estimation for Tabular Question Answering
+## 3. Generation-Augmented Generation: A Plug-and-Play Framework for Private Knowledge Injection in Large Language Models
 - Domain: arxiv.org
-- URL: https://arxiv.org/abs/2604.12491
+- URL: https://arxiv.org/abs/2601.08209
 - Relevance score: 13.5
 - Published: Wed, 15 Apr 2026 00:00:00 -0400
-- Summary: arXiv:2604.12491v1 Announce Type: new Abstract: Large language models (LLMs) are increasingly deployed for tabular question answering, yet calibration on structured data is largely unstudied. This paper presents the first systematic comparison of five confidence estimation methods across five frontier LLMs and two tabular QA benchmarks. All models are severely overconfident (smooth ECE 0.35-0.64 versus 0.10-0.15 reported for textual QA). A consistent self-evaluation versus perturbation dichotomy replicates across both benchmarks and all four fully-covered models: self-evaluation methods (verbalized, P(True)) achieve AUROC 0.42-0.76, while perturbation methods (semantic entropy, self-consistency, and our Multi-Format Agreement) achieve AUROC 0.78-0.86. Per-model paired bootstrap tests reject the null at p<0.001 after Holm-Bonferroni correction, and a 3-seed check on GPT-4o-mini gives a per-seed standard deviation of only 0.006. The paper proposes Multi-Format Agreement (MFA), which exploits the lossless and deterministic serialization variation unique to structured data (Markdown, HTML, JSON, CSV) to estimate confidence at 20% lower API cost than sampling baselines. MFA reduces ECE 
+- Summary: arXiv:2601.08209v4 Announce Type: replace Abstract: In domains such as materials science, biomedicine, and finance, high-stakes deployment of large language models (LLMs) requires injecting private, domain-specific knowledge that is proprietary, fast-evolving, and under-represented in public pretraining. However, the two dominant paradigms for private knowledge injection each have clear drawbacks: fine-tuning is expensive to iterate under continual updates that can induce catastrophic forgetting and general-capability regression; retrieval-augmented generation (RAG) keeps the base model intact but remains brittle in specialized private corpora due to chunk-induced evidence fragmentation, retrieval mismatch, and long-context pressure. Inspired by how multimodal LLMs align heterogeneous modalities into a shared semantic space, we propose Generation-Augmented Generation (GAG), which treats private expertise as an auxiliary modality and injects it into a frozen base model through a compact, constant-budget latent interface. Concretely, GAG distills question-conditioned specialist knowledge from lightweight domain experts into multi-slot latent memories, integrates multi-layer expert si
 
-## 6. Growing Pains: Extensible and Efficient LLM Benchmarking Via Fixed Parameter Calibration
+## 4. Polynomial Expansion Rank Adaptation: Enhancing Low-Rank Fine-Tuning with High-Order Interactions
 - Domain: arxiv.org
-- URL: https://arxiv.org/abs/2604.12843
+- URL: https://arxiv.org/abs/2604.11841
 - Relevance score: 13.5
 - Published: Wed, 15 Apr 2026 00:00:00 -0400
-- Summary: arXiv:2604.12843v1 Announce Type: new Abstract: The rapid release of both language models and benchmarks makes it increasingly costly to evaluate every model on every dataset. In practice, models are often evaluated on different samples, making scores difficult to compare across studies. To address this, we propose a framework based on multidimensional Item Response Theory (IRT) that uses anchor items to calibrate new benchmarks to the evaluation suite while holding previously calibrated item parameters fixed. Our approach supports a realistic evaluation setting in which datasets are introduced over time and models are evaluated only on the datasets available at the time of evaluation, while a fixed anchor set for each dataset is used so that results from different evaluation periods can be compared directly. In large-scale experiments on more than $400$ models, our framework predicts full-evaluation performance within 2-3 percentage points using only $100$ anchor questions per dataset, with Spearman $\rho \geq 0.9$ for ranking preservation, showing that it is possible to extend benchmark suites over time while preserving score comparability, at a constant evaluation cost per new d
+- Summary: arXiv:2604.11841v1 Announce Type: new Abstract: Low-rank adaptation (LoRA) is a widely used strategy for efficient fine-tuning of large language models (LLMs), but its strictly linear structure fundamentally limits expressive capacity. The bilinear formulation of weight updates captures only first-order dependencies between low-rank factors, restricting the modeling of nonlinear and higher-order parameter interactions. In this paper, we propose Polynomial Expansion Rank Adaptation (PERA), a novel method that introduces structured polynomial expansion directly into the low-rank factor space. By expanding each low-rank factor to synthesize high-order interaction terms before composition, PERA transforms the adaptation space into a polynomial manifold capable of modeling richer nonlinear coupling without increasing rank or inference cost. We provide theoretical analysis demonstrating that PERA offers enhanced expressive capacity and more effective feature utilization compare to existing linear adaptation approaches. Empirically, PERA consistently outperforms state-of-the-art methods across diverse benchmarks. Notably, our experiments show that incorporating high-order nonlinear compon
 
-## 7. RPRA: Predicting an LLM-Judge for Efficient but Performant Inference
+## 5. AutoSurrogate: An LLM-Driven Multi-Agent Framework for Autonomous Construction of Deep Learning Surrogate Models in Subsurface Flow
 - Domain: arxiv.org
-- URL: https://arxiv.org/abs/2604.12634
+- URL: https://arxiv.org/abs/2604.11945
 - Relevance score: 13.5
 - Published: Wed, 15 Apr 2026 00:00:00 -0400
-- Summary: arXiv:2604.12634v1 Announce Type: cross Abstract: Large language models (LLMs) face a fundamental trade-off between computational efficiency (e.g., number of parameters) and output quality, especially when deployed on computationally limited devices such as phones or laptops. One way to address this challenge is by following the example of humans and have models ask for help when they believe they are incapable of solving a problem on their own; we can overcome this trade-off by allowing smaller models to respond to queries when they believe they can provide good responses, and deferring to larger models when they do not believe they can. To this end, in this paper, we investigate the viability of Predict-Answer/Act (PA) and Reason-Predict-Reason-Answer/Act (RPRA) paradigms where models predict -- prior to responding -- how an LLM judge would score their output. We evaluate three approaches: zero-shot prediction, prediction using an in-context report card, and supervised fine-tuning. Our results show that larger models (particularly reasoning models) perform well when predicting generic LLM judges zero-shot, while smaller models can reliably predict such judges well after being fin
+- Summary: arXiv:2604.11945v1 Announce Type: new Abstract: High-fidelity numerical simulation of subsurface flow is computationally intensive, especially for many-query tasks such as uncertainty quantification and data assimilation. Deep learning (DL) surrogates can significantly accelerate forward simulations, yet constructing them requires substantial machine learning (ML) expertise - from architecture design to hyperparameter tuning - that most domain scientists do not possess. Furthermore, the process is predominantly manual and relies heavily on heuristic choices. This expertise gap remains a key barrier to the broader adoption of DL surrogate techniques. For this reason, we present AutoSurrogate, a large-language-model-driven multi-agent framework that enables practitioners without ML expertise to build high-quality surrogates for subsurface flow problems through natural-language instructions. Given simulation data and optional preferences, four specialized agents collaboratively execute data profiling, architecture selection from a model zoo, Bayesian hyperparameter optimization, model training, and quality assessment against user-specified thresholds. The system also handles common fa
 
-## 8. Foundation AI Models Market Research Report 2026: Microsoft, Meta, and Alibaba Lead the Charge in Model Customization and Global Deployment - Global Long-term Forecast to 2030 and 2035
-- Domain: globenewswire.com
-- URL: https://www.globenewswire.com/news-release/2026/04/14/3273082/28124/en/Foundation-AI-Models-Market-Research-Report-2026-Microsoft-Meta-and-Alibaba-Lead-the-Charge-in-Model-Customization-and-Global-Deployment-Global-Long-term-Forecast-to-2030-and-2035.html
+## 6. Models Know Their Shortcuts: Deployment-Time Shortcut Mitigation
+- Domain: arxiv.org
+- URL: https://arxiv.org/abs/2604.12277
 - Relevance score: 13.5
-- Published: 2026-04-14T08:27:00Z
-- Summary: The foundation AI models market is booming, driven by advancements in multimodal AI, enterprise adoption for automation, and increased healthcare AI demand. Key trends include AI model customization, deployment services, and security. Major players focus on g…
-- Extract: [Accessibility: Skip TopNav](https://www.globenewswire.com/news-release/2026/04/14/3273082/28124/en/Foundation-AI-Models-Market-Research-Report-2026-Microsoft-Meta-and-Alibaba-Lead-the-Charge-in-Model-Customization-and-Global-Deployment-Global-Long-term-Forecast-to-2030-and-2035.html#maincontainer) [![GlobeNewswire](https://www.globenewswire.com/Home/assests/images/eq-notified-dark.svg)](https://www.globenewswire.com) * [Newsroom](https://www.globenewswire.com/newsroom) * [Services](https://www.globenewswire.com/services) * [Contact Us](https://insight.notified.com/globenewswire-contact-us?utm_medium=Website&utm_source=Contact%20Us&utm_campaign=Contact%20Us%20ENG) * [About Us](https://www.globenewswire.com/about) * English [Sign In](https://www.globenewswire.com/home/signin)[Register](http
+- Published: Wed, 15 Apr 2026 00:00:00 -0400
+- Summary: arXiv:2604.12277v1 Announce Type: new Abstract: Pretrained language models often rely on superficial features that appear predictive during training yet fail to generalize at test time, a phenomenon known as shortcut learning. Existing mitigation methods generally operate at training time and require heavy supervision such as access to the original training data or prior knowledge of shortcut type. We propose Shortcut Guardrail, a deployment-time framework that mitigates token-level shortcuts without access to the original training data or shortcut annotations. Our key insight is that gradient-based attribution on a biased model highlights shortcut tokens. Building on this finding, we train a lightweight LoRA-based debiasing module with a Masked Contrastive Learning (MaskCL) objective that encourages consistent representations with or without individual tokens. Across sentiment classification, toxicity detection, and natural language inference under both naturally occurring and controlled shortcuts, Shortcut Guardrail improves overall accuracy and worst-group accuracy over the unmitigated model under distribution shifts while preserving in-distribution performance.
 
-## 9. Why some workers are embracing AI while others won't use it, according to a new Gallup poll
-- Domain: roanoke.com
-- URL: https://roanoke.com/news/nation-world/business/article_2adbb382-8fe3-5213-a830-d1af78313582.html
-- Relevance score: 10.5
-- Published: 2026-04-13T18:30:00Z
-- Summary: More American workers are experimenting with artificial intelligence in their jobs, but skepticism is still widespread.
-- Extract: [Skip to main content](https://roanoke.com/news/nation-world/business/article_2adbb382-8fe3-5213-a830-d1af78313582.html#main-page-container)[Skip to main content](https://roanoke.com/news/nation-world/business/article_2adbb382-8fe3-5213-a830-d1af78313582.html#main-page-container) You have permission to edit this article. [](https://roanoke.com/tncms/admin/editorial-asset/?edit=2adbb382-8fe3-5213-a830-d1af78313582) Close [![Roanoke Times](https://bloximages.newyork1.vip.townnews.com/roanoke.com/content/tncms/custom/image/7865cd82-57c8-11ec-b63a-27f596243789.png)](https://roanoke.com/) [ 62° ](https://roanoke.com/weather/?weather_zip=24011) * [ ](https://roanoke.com/users/login/?referer_url=https%3A%2F%2Froanoke.com%2Fnews%2Fnation-world%2Fbusiness%2Farticle_2adbb382-8fe3-5213-a830-d1af78313
+## 7. Token Encoding for Semantic Recovery
+- Domain: arxiv.org
+- URL: https://arxiv.org/abs/2604.12931
+- Relevance score: 13.5
+- Published: Wed, 15 Apr 2026 00:00:00 -0400
+- Summary: arXiv:2604.12931v1 Announce Type: cross Abstract: Token-based semantic communication is promising for future wireless networks, as it can compact semantic tokens under very limited channel capacity. However, harsh wireless channels often cause missing tokens, leading to severe distortion that prevents reliable semantic recovery at the receiver. In this article, we propose a token encoding framework for robust semantic recovery (TokCode), which incurs no additional transmission overhead and supports plug-and-play deployment. For efficient token encoder optimization, we develop a sentence-semantic-guided foundation model adaptation algorithm (SFMA) that avoids costly end-to-end training. Based on simulation results on prompt-based generative image transmission, TokCode mitigates semantic distortion and can approach the performance upper-bound, even under harsh channels where 40% to 60% of tokens are randomly lost.
 
-## 10. Nvidia Has 74% of Its Portfolio Invested in 2 Artificial Intelligence (AI) Stocks - The Motley Fool
-- Domain: fool.com
-- URL: https://news.google.com/rss/articles/CBMilAFBVV95cUxOeUl3SmJDeVZrWTRVdFM0dXRWN3l6b2ROa29Kamw5Y1gteU1pblMtdTc0SjNsSjdGYzJCdFNURjRBY2tXTEVIVzZibUl5c3hIYmZJcVZMLUNKdFRnclRkWEpqWFZvcjRLdk5JSmtmbTdtUXlCNUk4T1VObW44TmY1ODBGWmdzVzA0RFJ6MmlWWnpJS19E
-- Relevance score: 7.5
-- Published: Wed, 15 Apr 2026 08:14:15 GMT
-- Summary: <a href="https://news.google.com/rss/articles/CBMilAFBVV95cUxOeUl3SmJDeVZrWTRVdFM0dXRWN3l6b2ROa29Kamw5Y1gteU1pblMtdTc0SjNsSjdGYzJCdFNURjRBY2tXTEVIVzZibUl5c3hIYmZJcVZMLUNKdFRnclRkWEpqWFZvcjRLdk5JSmtmbTdtUXlCNUk4T1VObW44TmY1ODBGWmdzVzA0RFJ6MmlWWnpJS19E?oc=5" target="_blank">Nvidia Has 74% of Its Portfolio Invested in 2 Artificial Intelligence (AI) Stocks</a>&nbsp;&nbsp;<font color="#6f6f6f">The Motley Fool</font>
+## 8. QuarkMedSearch: A Long-Horizon Deep Search Agent for Exploring Medical Intelligence
+- Domain: arxiv.org
+- URL: https://arxiv.org/abs/2604.12867
+- Relevance score: 13.5
+- Published: Wed, 15 Apr 2026 00:00:00 -0400
+- Summary: arXiv:2604.12867v1 Announce Type: new Abstract: As agentic foundation models continue to evolve, how to further improve their performance in vertical domains has become an important challenge. To this end, building upon Tongyi DeepResearch, a powerful agentic foundation model, we focus on the Chinese medical deep search scenario and propose QuarkMedSearch, systematically exploring a full-pipeline approach spanning medical multi-hop data construction, training strategies, and evaluation benchmarks to further push and assess its performance upper bound in vertical domains. Specifically, for data synthesis, to address the scarcity of deep search training data in the medical domain, we combine a large-scale medical knowledge graph with real-time online exploration to construct long-horizon medical deep search training data; for post-training, we adopt a two-stage SFT and RL training strategy that progressively enhances the model's planning, tool invocation, and reflection capabilities required for deep search, while maintaining search efficiency; for evaluation, we collaborate with medical experts to construct the QuarkMedSearch Benchmark through rigorous manual verification. Experimen
 
-## 11. Nvidia Has 74% of Its Portfolio Invested in 2 Artificial Intelligence (AI) Stocks - Yahoo Finance
-- Domain: finance.yahoo.com
-- URL: https://news.google.com/rss/articles/CBMimwFBVV95cUxQYWtXaXVTZEFuaHVRM1ZRTW1aRWgzWGFnaW56aHF2MGNxeXlOX3F4ZkZRT09EYWJEd0FuUE1tZ3V0U01GZkpkLVhNbEJuN1E1cF9sOVNlMHdrTzJYa2NIdGVWQkhOQzlDYmhxbk1rNjI3OHRtNG9RQnpNaHFHeEJHRnkyRkY1RlFPanMtcUhJUG5vTkR4Z2NLaV9vbw
-- Relevance score: 7.5
-- Published: Wed, 15 Apr 2026 08:08:00 GMT
-- Summary: <a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxQYWtXaXVTZEFuaHVRM1ZRTW1aRWgzWGFnaW56aHF2MGNxeXlOX3F4ZkZRT09EYWJEd0FuUE1tZ3V0U01GZkpkLVhNbEJuN1E1cF9sOVNlMHdrTzJYa2NIdGVWQkhOQzlDYmhxbk1rNjI3OHRtNG9RQnpNaHFHeEJHRnkyRkY1RlFPanMtcUhJUG5vTkR4Z2NLaV9vbw?oc=5" target="_blank">Nvidia Has 74% of Its Portfolio Invested in 2 Artificial Intelligence (AI) Stocks</a>&nbsp;&nbsp;<font color="#6f6f6f">Yahoo Finance</font>
+## 9. Chinese robotics firms focus on quadrupeds as major revenue drivers
+- Domain: scmp.com
+- URL: https://www.scmp.com/tech/tech-trends/article/3350071/chinese-robotics-firms-focus-quadrupeds-major-revenue-drivers
+- Relevance score: 11.0
+- Published: Tue, 14 Apr 2026 23:00:19 +0000
+- Summary: Chinese robotics companies are increasingly banking on quadruped robots as major revenue drivers, a trend highlighted by AgiBot’s recent decision to spin out its four-legged robotics unit into a new subsidiary called AgiQuad, and Amap’s coming launch of a quadruped model. The move by AgiBot was intended to drive large-scale growth so that the unit would not “live in the shadow of the humanoid robot giant”, Qiu Heng, chief operating officer of the new subsidiary, said at a media briefing last...
+- Extract: Edition: International [](https://www.scmp.com/mynews) [](https://www.scmp.com/?module=masthead&pgtype=article) [](https://www.scmp.com/?module=masthead&pgtype=article) [](https://www.scmp.com/search?module=masthead&pgtype=article) [Tech Trends](https://www.scmp.com/tech/tech-trends) - All [Tech Trends](https://www.scmp.com/tech/tech-trends) Chinese robotics firms focus on quadrupeds as major revenue drivers [](https://www.scmp.com/?module=masthead&pgtype=article) 1 SIGN IN Advertisement [Robotics](https://www.scmp.com/topics/robotics?module=breadcrumb&pgtype=article) [Tech](https://www.scmp.com/tech?module=breadcrumb&pgtype=article)[Tech Trends](https://www.scmp.com/tech/tech-trends?module=breadcrumb&pgtype=article) # Chinese robotics firms focus on quadrupeds as major revenue drivers The
 
-## 12. Taiwan launches national robotics center with $629 million startup funding plan - Robotics & Automation News
-- Domain: roboticsandautomationnews.com
-- URL: https://news.google.com/rss/articles/CBMi0AFBVV95cUxNcFVKOS1aWkhBTWhNeEMzTUx6RjJDVlkwYkhDRmtwUllnSFlkM3VtSmtidkdwVFRvZDRDNFpOSWdtWFV5UzdJSU1MTFNZU2J2YnpJT1cxUHFfTHY3NUlGQjlZQW1qYUdfOHdlUUhiSWlyUEFLcU9SRkcxS1RGc2J1Zmc5UGhMOFdQeDNHNHF1T294OEUzWmdTa1FGZGw5Y0x5TE1ETldnYXMya0M1STBEWmxBSUxpZU92ZnFBRkdjUVN6TjRpOWZ6TFdqT2VuMW01
-- Relevance score: 7.5
-- Published: Mon, 13 Apr 2026 11:19:31 GMT
-- Summary: <a href="https://news.google.com/rss/articles/CBMi0AFBVV95cUxNcFVKOS1aWkhBTWhNeEMzTUx6RjJDVlkwYkhDRmtwUllnSFlkM3VtSmtidkdwVFRvZDRDNFpOSWdtWFV5UzdJSU1MTFNZU2J2YnpJT1cxUHFfTHY3NUlGQjlZQW1qYUdfOHdlUUhiSWlyUEFLcU9SRkcxS1RGc2J1Zmc5UGhMOFdQeDNHNHF1T294OEUzWmdTa1FGZGw5Y0x5TE1ETldnYXMya0M1STBEWmxBSUxpZU92ZnFBRkdjUVN6TjRpOWZ6TFdqT2VuMW01?oc=5" target="_blank">Taiwan launches national robotics center with $629 million startup funding plan</a>&nbsp;&nbsp;<font color="#6f6f6f">Robotics & Automation News</font>
+## 10. AGIBOT and Longcheer Technology Achieve World's First Embodied AI Deployment in Consumer Electronics Precision Manufacturing Mass-Production Line - Utusan Malaysia
+- Domain: utusan.com.my
+- URL: https://news.google.com/rss/articles/CBMinwJBVV95cUxPcW4xc0ZWVEY5VmNrUlhVRjE1VkZwSml3M2plY0RFeEZSRWRQVXBtcWVDSUo4TmpwYV9xSFhVMWttYnoxWFZjbEtTaW4yaFNULW5lNTlIWWFHbDgxcUh6WEM2czZSMER2MlpOVGVmd0VaNURFMU9VOVZqOGR1aEVyM0RIMGpyYlFOelg2b2dzeVhJZ2dNSHdLZGRtY2c1SXFNWERqWTRWOUFoVm56QkUzWUdqTXFVaS01QThxWGRGdnBIWkhwakVLWFZCbk15Y3VMMHVOd2ZteVBZMm9MdG9VUGxGTTBpY2lyZ1BVY2VucVJBdGZlRjlSeTFNQkdTcmdRM0kxZldNTlNQY2d4WE9XeDZDd2RTVkE1aFN0cmpzTQ
+- Relevance score: 6.5
+- Published: Tue, 14 Apr 2026 23:09:00 GMT
+- Summary: <a href="https://news.google.com/rss/articles/CBMinwJBVV95cUxPcW4xc0ZWVEY5VmNrUlhVRjE1VkZwSml3M2plY0RFeEZSRWRQVXBtcWVDSUo4TmpwYV9xSFhVMWttYnoxWFZjbEtTaW4yaFNULW5lNTlIWWFHbDgxcUh6WEM2czZSMER2MlpOVGVmd0VaNURFMU9VOVZqOGR1aEVyM0RIMGpyYlFOelg2b2dzeVhJZ2dNSHdLZGRtY2c1SXFNWERqWTRWOUFoVm56QkUzWUdqTXFVaS01QThxWGRGdnBIWkhwakVLWFZCbk15Y3VMMHVOd2ZteVBZMm9MdG9VUGxGTTBpY2lyZ1BVY2VucVJBdGZlRjlSeTFNQkdTcmdRM0kxZldNTlNQY2d4WE9XeDZDd2RTVkE1aFN0cmpzTQ?oc=5" target="_blank">AGIBOT and Longcheer Technology Achieve World's First Embodied AI Deployment in Consumer Electronics Precision Manufacturing Mass-Production Line</a>&nbsp;&nbsp;<font color="#6f6f6f">Utusan Malaysia</font>
 
-## 13. This Artificial Intelligence (AI) Stock Just Hit an All-Time Low, But Wall Street Says It's Time to Buy - The Motley Fool
-- Domain: fool.com
-- URL: https://news.google.com/rss/articles/CBMimAFBVV95cUxOVGNzWFpNdU0zM0g1NWRVbnVRT1VhSVpZS3JucWF4RzJRT1o1UnNQS0Z5clBpeWhRWFJLT1NvREJDZ2RHai1YLTBIdEhURDlBM3c1RG4xenlRSDJ0TDFNRDZISS11d29uTi1YX1lEUkdBeXFjMEp3cFVaQW02X1pSejdTamFoYnVneGs4cWF2cTNtb1dXcnU3QQ
-- Relevance score: 7.5
-- Published: Mon, 13 Apr 2026 09:22:00 GMT
-- Summary: <a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxOVGNzWFpNdU0zM0g1NWRVbnVRT1VhSVpZS3JucWF4RzJRT1o1UnNQS0Z5clBpeWhRWFJLT1NvREJDZ2RHai1YLTBIdEhURDlBM3c1RG4xenlRSDJ0TDFNRDZISS11d29uTi1YX1lEUkdBeXFjMEp3cFVaQW02X1pSejdTamFoYnVneGs4cWF2cTNtb1dXcnU3QQ?oc=5" target="_blank">This Artificial Intelligence (AI) Stock Just Hit an All-Time Low, But Wall Street Says It's Time to Buy</a>&nbsp;&nbsp;<font color="#6f6f6f">The Motley Fool</font>
-
-## 14. Artificial Intelligence: Governance, Peace and Security in Africa - Amani Africa
-- Domain: amaniafrica-et.org
-- URL: https://news.google.com/rss/articles/CBMilgFBVV95cUxOMFB5bGJLbkI1RGp4bDlFMkFkT3BuVXRUR0pqZGNNWldhZGJscDVqRF93Y1liS2JmUU4tLU4zcWY4djdKdktxZDNGZUtOMjhFSGp0TTI2QXRMeEpmVU9oV1ZTQVpfWkRsRlZlR2RIZDB6ZG1xdW1JU19lbHNhRmdoM2d3SHo3MUMwYVVOWGFfWk5aZVZSZWc
+## 11. Fire Service Essay Competition returns with artificial intelligence prompt - International Fire & Safety Journal
+- Domain: internationalfireandsafetyjournal.com
+- URL: https://news.google.com/rss/articles/CBMidkFVX3lxTE91SmtST2luTER3eVc4NkFqZHdKaV9MNC1oa1FJMGNaNmRrdlJXRHoxdXc4cTc0SE1PV2NlRnpGQkFVcjA2WkE0VkpwNTlWUy1nUFM4S2RkbVVhaERGc2ZFemtIaU1vY2h5MVBLTVNrclpWdFBCa3c
 - Relevance score: 6.0
-- Published: Wed, 15 Apr 2026 08:26:19 GMT
-- Summary: <a href="https://news.google.com/rss/articles/CBMilgFBVV95cUxOMFB5bGJLbkI1RGp4bDlFMkFkT3BuVXRUR0pqZGNNWldhZGJscDVqRF93Y1liS2JmUU4tLU4zcWY4djdKdktxZDNGZUtOMjhFSGp0TTI2QXRMeEpmVU9oV1ZTQVpfWkRsRlZlR2RIZDB6ZG1xdW1JU19lbHNhRmdoM2d3SHo3MUMwYVVOWGFfWk5aZVZSZWc?oc=5" target="_blank">Artificial Intelligence: Governance, Peace and Security in Africa</a>&nbsp;&nbsp;<font color="#6f6f6f">Amani Africa</font>
+- Published: Wed, 15 Apr 2026 09:06:06 GMT
+- Summary: <a href="https://news.google.com/rss/articles/CBMidkFVX3lxTE91SmtST2luTER3eVc4NkFqZHdKaV9MNC1oa1FJMGNaNmRrdlJXRHoxdXc4cTc0SE1PV2NlRnpGQkFVcjA2WkE0VkpwNTlWUy1nUFM4S2RkbVVhaERGc2ZFemtIaU1vY2h5MVBLTVNrclpWdFBCa3c?oc=5" target="_blank">Fire Service Essay Competition returns with artificial intelligence prompt</a>&nbsp;&nbsp;<font color="#6f6f6f">International Fire & Safety Journal</font>
 
-## 15. Coupang Expands AI Investments with USD 84M Funding for Startups - World Business Outlook
-- Domain: worldbusinessoutlook.com
-- URL: https://news.google.com/rss/articles/CBMinwFBVV95cUxPSFV4Szk0OWRkTFdMVXlsdHJEczBFZXMyMVNTVlBLZ2JMR2dkZFF6WWJPbml3Wll6SzE4Q2VBRTk4NDh3Qlc4dEVzXzhUeVVkTGI5RURTaHlSTFJyMHpELV9OTVhRNDloSTIxbnNMU1NuVXFlQkd4eTNDenF0OFlfamRNNmlqYTIweHA0RU02NV9HcTZCVVYxN0tHMGxxQ0E
-- Relevance score: 6.0
-- Published: Wed, 15 Apr 2026 08:20:30 GMT
-- Summary: <a href="https://news.google.com/rss/articles/CBMinwFBVV95cUxPSFV4Szk0OWRkTFdMVXlsdHJEczBFZXMyMVNTVlBLZ2JMR2dkZFF6WWJPbml3Wll6SzE4Q2VBRTk4NDh3Qlc4dEVzXzhUeVVkTGI5RURTaHlSTFJyMHpELV9OTVhRNDloSTIxbnNMU1NuVXFlQkd4eTNDenF0OFlfamRNNmlqYTIweHA0RU02NV9HcTZCVVYxN0tHMGxxQ0E?oc=5" target="_blank">Coupang Expands AI Investments with USD 84M Funding for Startups</a>&nbsp;&nbsp;<font color="#6f6f6f">World Business Outlook</font>
-
-## 16. Nawgati in Talks to Raise Funding to Scale AI Mobility Solutions Globally - TICE News
-- Domain: tice.news
-- URL: https://news.google.com/rss/articles/CBMiugFBVV95cUxOdUt2TGdkanpuM0oyN0MzYXlmbkk4Sy1idEpjMTRhbXV2M3JtNzJQZkl4YmxmZnd4ZWdvV1R3VVVVVHNjbzllZVJscGJFS0pxc3p0eGF4UkNvbVdpVFpTc0tYVWV6dkpkZzFMUVZzZUJSMnNtMDNvaWl0X2JBMW9JRjJ1NnZCV1E0a0xma0RQQ0k5TlFKd2F4SlNFb2ZEUzEtcHMyc0g0NHFsRGdLcW9KX1ZkYmZHWjhSMUHSAboBQVVfeXFMTnVLdkxnZGp6bjNKMjdDM2F5Zm5JOEstYnRKYzE0YW11djNybTcyUGZJeGJsZmZ3eGVnb1dUd1VVVVRzY285ZWVSbHBiRUtKcXN6dHhheFJDb21XaVRaU3NLWFVlenZKZGcxTFFWc2VCUjJzbTAzb2lpdF9iQTFvSUYydTZ2QldRNGtMZmtEUENJOU5RSndheEpTRW9mRFMxLXBzMnNINDRxbERnS3FvSl9WZGJmR1o4UjFB
-- Relevance score: 6.0
-- Published: Wed, 15 Apr 2026 07:36:25 GMT
-- Summary: <a href="https://news.google.com/rss/articles/CBMiugFBVV95cUxOdUt2TGdkanpuM0oyN0MzYXlmbkk4Sy1idEpjMTRhbXV2M3JtNzJQZkl4YmxmZnd4ZWdvV1R3VVVVVHNjbzllZVJscGJFS0pxc3p0eGF4UkNvbVdpVFpTc0tYVWV6dkpkZzFMUVZzZUJSMnNtMDNvaWl0X2JBMW9JRjJ1NnZCV1E0a0xma0RQQ0k5TlFKd2F4SlNFb2ZEUzEtcHMyc0g0NHFsRGdLcW9KX1ZkYmZHWjhSMUHSAboBQVVfeXFMTnVLdkxnZGp6bjNKMjdDM2F5Zm5JOEstYnRKYzE0YW11djNybTcyUGZJeGJsZmZ3eGVnb1dUd1VVVVRzY285ZWVSbHBiRUtKcXN6dHhheFJDb21XaVRaU3NLWFVlenZKZGcxTFFWc2VCUjJzbTAzb2lpdF9iQTFvSUYydTZ2QldRNGtMZmtEUENJOU5RSndheEpTRW9mRFMxLXBzMnNINDRxbERnS3FvSl9WZGJmR1o4UjFB?oc=5" target="_blank">Nawgati in Talks to Raise Funding to Scale AI Mobility Solutions Globally</a>&nbsp;&nbsp;<font color="#6f6f6f">TICE News</font>
-
-## 17. N.C. Department of State Treasurer expands use of Artificial Intelligence across operations - WWAYTV3
-- Domain: wwaytv3.com
-- URL: https://news.google.com/rss/articles/CBMitgFBVV95cUxOblJqbzM3QU5abTdKdk1jTGJZeDhuUWNSbW83MkxVSS1SbEJuRHJrR3JqUllPV1Vpdjl0bVFKcnJYUFZwaHVfTU1XbVdLdFk3anQ5MHBncEd4VG52N2F3b1BGMzVQTmtEVllLa2pyclQ2eEp0LV9BdkEyQ05UOEhnX2tmVGMyNXNSQWthVWVrTzk1R1ptTzlSNU5mQXBLakdfd1FNRnZMNjIyS1NDNUpwakhHZjNkZw
-- Relevance score: 6.0
-- Published: Mon, 13 Apr 2026 18:01:31 GMT
-- Summary: <a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxOblJqbzM3QU5abTdKdk1jTGJZeDhuUWNSbW83MkxVSS1SbEJuRHJrR3JqUllPV1Vpdjl0bVFKcnJYUFZwaHVfTU1XbVdLdFk3anQ5MHBncEd4VG52N2F3b1BGMzVQTmtEVllLa2pyclQ2eEp0LV9BdkEyQ05UOEhnX2tmVGMyNXNSQWthVWVrTzk1R1ptTzlSNU5mQXBLakdfd1FNRnZMNjIyS1NDNUpwakhHZjNkZw?oc=5" target="_blank">N.C. Department of State Treasurer expands use of Artificial Intelligence across operations</a>&nbsp;&nbsp;<font color="#6f6f6f">WWAYTV3</font>
-
-## 18. Windfall Launches Market Insights to Give Executive Teams Always-On TAM Intelligence - AiThority
-- Domain: aithority.com
-- URL: https://news.google.com/rss/articles/CBMiwgFBVV95cUxNVUJwQ3EwQmMzYnIxSTVxM0k0d2hYR2lHUTB4VTNMeXRPZmVNeUVHaEZzSnRVeUkxd21lQ0JkcW96WGFvZFBlNXpnNEhQMXpfYlFwbUJOTE83TG15WTY4TEhtdFFBQU42a3ZXNlA4X19Wc0NOSFN5OGNJRG5nblY2R0Rub3VDVlNqYWY4MGFxQWl5TDk0YWpWVE1RQm44RjBWU01MZ2t5bVVFbU5HdlpZSmVabGVleFBObDNKZUIxUGo5QQ
+## 12. Nvidia releases open AI models for quantum computing tasks — 'Ising' said to be 2.5x faster and 3x more accurate than existing tools for decoding - Tom's Hardware
+- Domain: tomshardware.com
+- URL: https://news.google.com/rss/articles/CBMipgFBVV95cUxPSFllNFUyaGdBXzkwZVFDMGh1anU0Qmw0dlNvMUJyd2lVaTRfRFFtZlAxU21MYjRneFhvNUhrV3BaYWstN0NOZmJfM255c3BRNVJjNG5Jd3dfcmhGd3JPRGpWWEY0NVRNeHAxTjVHWGhxc0FkSU9fN2JpTXlFT1dUdzFablVzVjRxQ1pkcjZYc0pMVS11WGFyVkQ2aFVvTEppaXV1Tkl3
 - Relevance score: 5.5
-- Published: Wed, 15 Apr 2026 07:03:50 GMT
-- Summary: <a href="https://news.google.com/rss/articles/CBMiwgFBVV95cUxNVUJwQ3EwQmMzYnIxSTVxM0k0d2hYR2lHUTB4VTNMeXRPZmVNeUVHaEZzSnRVeUkxd21lQ0JkcW96WGFvZFBlNXpnNEhQMXpfYlFwbUJOTE83TG15WTY4TEhtdFFBQU42a3ZXNlA4X19Wc0NOSFN5OGNJRG5nblY2R0Rub3VDVlNqYWY4MGFxQWl5TDk0YWpWVE1RQm44RjBWU01MZ2t5bVVFbU5HdlpZSmVabGVleFBObDNKZUIxUGo5QQ?oc=5" target="_blank">Windfall Launches Market Insights to Give Executive Teams Always-On TAM Intelligence</a>&nbsp;&nbsp;<font color="#6f6f6f">AiThority</font>
+- Published: Wed, 15 Apr 2026 09:00:00 GMT
+- Summary: <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPSFllNFUyaGdBXzkwZVFDMGh1anU0Qmw0dlNvMUJyd2lVaTRfRFFtZlAxU21MYjRneFhvNUhrV3BaYWstN0NOZmJfM255c3BRNVJjNG5Jd3dfcmhGd3JPRGpWWEY0NVRNeHAxTjVHWGhxc0FkSU9fN2JpTXlFT1dUdzFablVzVjRxQ1pkcjZYc0pMVS11WGFyVkQ2aFVvTEppaXV1Tkl3?oc=5" target="_blank">Nvidia releases open AI models for quantum computing tasks — 'Ising' said to be 2.5x faster and 3x more accurate than existing tools for decoding</a>&nbsp;&nbsp;<font color="#6f6f6f">Tom's Hardware</font>
 
-## 19. Coupang Invests $84 Million in AI Startups Including Robotic Arm Developer - Seoul Economic Daily
-- Domain: en.sedaily.com
-- URL: https://news.google.com/rss/articles/CBMiowFBVV95cUxPcEdwd19pWmZjRzQ5dk5XdVdpNExRMFgxXzd1ZUY2U2piSzYzSXNieHhQVU1CVUJlUGNncHBVRWJyX1Q1cUNOX2R2R3pFcUNHTnRKZ1FmRjBfSnViZ2RVUkRuenlKbnFMa3NYa1dmaEhJU291Z2pyQWgwMTlITzQwb3RTXzRsc3pEWW5yM3NXMEczd1B1TDZNaTB1WHg3cHJkOTlB
+## 13. Former Blinkit executives’ AI startup raises Rs 140 crore to expand globally - Indian Startup News
+- Domain: indianstartupnews.com
+- URL: https://news.google.com/rss/articles/CBMivwFBVV95cUxQbk5mQWZ0TXhZNXU3MUExek44cEFIWktBakFOa1MyQ2UzM19kR0hSNTdsN1BlT21CUmZpYlFkZmMzVWpLUWRNdGNGOWpYVFN1dUMzYndSNkgydHhpSnhtSUQtbnEwNXd6RENsYngxQVF4alBIX1QwRThmRjRuWXVwUllkN1FSdE9tamNvU3RKaGJCcnI5VDVUQzJ5bjVqZk5jbGJfTEpvTjNJWFZkOUhqUklTZG9uMFpUaDctWmtVUdIBvwFBVV95cUxQbk5mQWZ0TXhZNXU3MUExek44cEFIWktBakFOa1MyQ2UzM19kR0hSNTdsN1BlT21CUmZpYlFkZmMzVWpLUWRNdGNGOWpYVFN1dUMzYndSNkgydHhpSnhtSUQtbnEwNXd6RENsYngxQVF4alBIX1QwRThmRjRuWXVwUllkN1FSdE9tamNvU3RKaGJCcnI5VDVUQzJ5bjVqZk5jbGJfTEpvTjNJWFZkOUhqUklTZG9uMFpUaDctWmtVUQ
 - Relevance score: 5.0
-- Published: Wed, 15 Apr 2026 01:38:09 GMT
-- Summary: <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxPcEdwd19pWmZjRzQ5dk5XdVdpNExRMFgxXzd1ZUY2U2piSzYzSXNieHhQVU1CVUJlUGNncHBVRWJyX1Q1cUNOX2R2R3pFcUNHTnRKZ1FmRjBfSnViZ2RVUkRuenlKbnFMa3NYa1dmaEhJU291Z2pyQWgwMTlITzQwb3RTXzRsc3pEWW5yM3NXMEczd1B1TDZNaTB1WHg3cHJkOTlB?oc=5" target="_blank">Coupang Invests $84 Million in AI Startups Including Robotic Arm Developer</a>&nbsp;&nbsp;<font color="#6f6f6f">Seoul Economic Daily</font>
+- Published: Wed, 15 Apr 2026 08:56:23 GMT
+- Summary: <a href="https://news.google.com/rss/articles/CBMivwFBVV95cUxQbk5mQWZ0TXhZNXU3MUExek44cEFIWktBakFOa1MyQ2UzM19kR0hSNTdsN1BlT21CUmZpYlFkZmMzVWpLUWRNdGNGOWpYVFN1dUMzYndSNkgydHhpSnhtSUQtbnEwNXd6RENsYngxQVF4alBIX1QwRThmRjRuWXVwUllkN1FSdE9tamNvU3RKaGJCcnI5VDVUQzJ5bjVqZk5jbGJfTEpvTjNJWFZkOUhqUklTZG9uMFpUaDctWmtVUdIBvwFBVV95cUxQbk5mQWZ0TXhZNXU3MUExek44cEFIWktBakFOa1MyQ2UzM19kR0hSNTdsN1BlT21CUmZpYlFkZmMzVWpLUWRNdGNGOWpYVFN1dUMzYndSNkgydHhpSnhtSUQtbnEwNXd6RENsYngxQVF4alBIX1QwRThmRjRuWXVwUllkN1FSdE9tamNvU3RKaGJCcnI5VDVUQzJ5bjVqZk5jbGJfTEpvTjNJWFZkOUhqUklTZG9uMFpUaDctWmtVUQ?oc=5" target="_blank">Former Blinkit executives’ AI startup raises Rs 140 crore to expand globally</a>&nbsp;&nbsp;<font color="#6f6f6f">Indian Startup News</font>
 
-## 20. AI could check millions of CT scans for heart risk. Who will pay for it? - statnews.com
-- Domain: statnews.com
-- URL: https://news.google.com/rss/articles/CBMinAFBVV95cUxPLWNlZ0JneVAwTW5hdFRZcXpaSGduTTdHMjJ4a2JYOGtBTTFSVktaZHBIVmpzYTBOOFNBckNOY216OEFmMFVERndCSjZSME9zLXZQTEhjeUpWUjZRdWR0TXcyWE5uLVBLbTYzcDBVU250ZHRTUFJZY2Z0Z0tQQjIwWFpXaE80cERsc0JMSEl4UXgwX3pNTi10TEpkTDI
+## 14. ‘There is no silver bullet’: How 2 colleges use AI to support nontraditional learners - Higher Ed Dive
+- Domain: highereddive.com
+- URL: https://news.google.com/rss/articles/CBMitAFBVV95cUxQV3lpMkFxV0NWU3lDWDFoSElsdHU5SlE0dVJnODgxNHAtTlpycko1OElqVk5MZHdGbS1qRF9wOC10YnVQTnhpSGM0TXQ0Z1ZPQVFKREdJWTBFdmREcElfMDYxSUZjdzYwZHRvOThjM3R0aHVQMm9kZnhCeGRWZ21Id0RONzdfdkxOY1FPX2J5SkVBcDdOSUVlUngzV0taWlQ4WVBIVXlWdVN6T3h0VTE3b0ZWcks
 - Relevance score: 4.5
-- Published: Wed, 15 Apr 2026 08:34:38 GMT
-- Summary: <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxPLWNlZ0JneVAwTW5hdFRZcXpaSGduTTdHMjJ4a2JYOGtBTTFSVktaZHBIVmpzYTBOOFNBckNOY216OEFmMFVERndCSjZSME9zLXZQTEhjeUpWUjZRdWR0TXcyWE5uLVBLbTYzcDBVU250ZHRTUFJZY2Z0Z0tQQjIwWFpXaE80cERsc0JMSEl4UXgwX3pNTi10TEpkTDI?oc=5" target="_blank">AI could check millions of CT scans for heart risk. Who will pay for it?</a>&nbsp;&nbsp;<font color="#6f6f6f">statnews.com</font>
+- Published: Wed, 15 Apr 2026 09:07:32 GMT
+- Summary: <a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxQV3lpMkFxV0NWU3lDWDFoSElsdHU5SlE0dVJnODgxNHAtTlpycko1OElqVk5MZHdGbS1qRF9wOC10YnVQTnhpSGM0TXQ0Z1ZPQVFKREdJWTBFdmREcElfMDYxSUZjdzYwZHRvOThjM3R0aHVQMm9kZnhCeGRWZ21Id0RONzdfdkxOY1FPX2J5SkVBcDdOSUVlUngzV0taWlQ4WVBIVXlWdVN6T3h0VTE3b0ZWcks?oc=5" target="_blank">‘There is no silver bullet’: How 2 colleges use AI to support nontraditional learners</a>&nbsp;&nbsp;<font color="#6f6f6f">Higher Ed Dive</font>
 
-## 21. AI Makes Securing Copyright Protection for Software Code Tricky Guide - Bloomberg Law News
-- Domain: news.bloomberglaw.com
-- URL: https://news.google.com/rss/articles/CBMi1AFBVV95cUxQWjQxaGdONnZ1MDFxTVQ5LWxFS3JPU3owc2tqSXluTERfVlVlU1ZRTlJHQ2pNTDk0V1dZYmFSd0JQTVdqOF8yQWE4TU13MlQwOS13ZDB3YW1laHJrdVA0MTBCYzBQODgyMUlKLXNLQmxRNnZ2UGFrNFlaUC1kQ3NqOVl2T2NESXRHVHM5dEoza2NXY0ZScW43QVdzREo3aTJMMjZqdy1sOWZOSHNDNUowMnVjUk0wT2h5aW1BR3VKa3ROLWpsSFdtVXFqNmM2YTkyRGNvSQ
+## 15. Replace staff with AI before it gets too expensive - cio.com
+- Domain: cio.com
+- URL: https://news.google.com/rss/articles/CBMinAFBVV95cUxOeFlRQm9WU25hVkxSUk9UTDI1Z1p0NFkwdGJ4TWR3TUFhT3FXdDczSXdXTnhyZHMzd3NyeTk0V2lSY0FxNlBVNDFYZXVvemdqUnRnSDlrbHNZRm85ZDlxeU5Ib2lNcXNJUUNxQ2k0WEl2a3BNM1JZQU9RSjdhRTFvVlR6VjFReEJnRVc0TDlMMnRGYWVGZnF0UzJmdXE
 - Relevance score: 4.5
-- Published: Wed, 15 Apr 2026 08:30:00 GMT
-- Summary: <a href="https://news.google.com/rss/articles/CBMi1AFBVV95cUxQWjQxaGdONnZ1MDFxTVQ5LWxFS3JPU3owc2tqSXluTERfVlVlU1ZRTlJHQ2pNTDk0V1dZYmFSd0JQTVdqOF8yQWE4TU13MlQwOS13ZDB3YW1laHJrdVA0MTBCYzBQODgyMUlKLXNLQmxRNnZ2UGFrNFlaUC1kQ3NqOVl2T2NESXRHVHM5dEoza2NXY0ZScW43QVdzREo3aTJMMjZqdy1sOWZOSHNDNUowMnVjUk0wT2h5aW1BR3VKa3ROLWpsSFdtVXFqNmM2YTkyRGNvSQ?oc=5" target="_blank">AI Makes Securing Copyright Protection for Software Code Tricky Guide</a>&nbsp;&nbsp;<font color="#6f6f6f">Bloomberg Law News</font>
+- Published: Wed, 15 Apr 2026 09:04:59 GMT
+- Summary: <a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxOeFlRQm9WU25hVkxSUk9UTDI1Z1p0NFkwdGJ4TWR3TUFhT3FXdDczSXdXTnhyZHMzd3NyeTk0V2lSY0FxNlBVNDFYZXVvemdqUnRnSDlrbHNZRm85ZDlxeU5Ib2lNcXNJUUNxQ2k0WEl2a3BNM1JZQU9RSjdhRTFvVlR6VjFReEJnRVc0TDlMMnRGYWVGZnF0UzJmdXE?oc=5" target="_blank">Replace staff with AI before it gets too expensive</a>&nbsp;&nbsp;<font color="#6f6f6f">cio.com</font>
 
-## 22. Korea’s internet giants Naver, Kakao falter as AI ambitions fall short - KED Global
-- Domain: kedglobal.com
-- URL: https://news.google.com/rss/articles/CBMif0FVX3lxTE0wTks1UUJZLXdndnNGYWZiMmdBQnJmdklkTnltektNcTBTYkM2WUF6dmVaVUlwN1VlRGxrS18yb3dmdGt3bl9UcmxkdmdtMG9kU05veTN3aFBOalc0eVFCLXY5Q19semRmYjhHOFp5ZE1nWDVjdWdQZmwzMEZPcFE
+## 16. How future CIOs may assess this period in AI history - cio.com
+- Domain: cio.com
+- URL: https://news.google.com/rss/articles/CBMimAFBVV95cUxPN3NBMVJNQUdBVWdGZWp4UDBhQmkwMm00QnVnbmx6aEFkbXdNckFvcDJ0XzJrdi13SUQxTWdiN24zbTdfRHVLSXJHbmEybmlCbzJNaVJQYklmWEZQRUxsNkdBNUFQbFBFaDV4QUszQ1AzbWNuSm9PbXV1MW8yYW9ROFFPT0RrREV1VzNIWjNONzJSRG10VnlwOA
 - Relevance score: 4.5
-- Published: Wed, 15 Apr 2026 07:52:58 GMT
-- Summary: <a href="https://news.google.com/rss/articles/CBMif0FVX3lxTE0wTks1UUJZLXdndnNGYWZiMmdBQnJmdklkTnltektNcTBTYkM2WUF6dmVaVUlwN1VlRGxrS18yb3dmdGt3bl9UcmxkdmdtMG9kU05veTN3aFBOalc0eVFCLXY5Q19semRmYjhHOFp5ZE1nWDVjdWdQZmwzMEZPcFE?oc=5" target="_blank">Korea’s internet giants Naver, Kakao falter as AI ambitions fall short</a>&nbsp;&nbsp;<font color="#6f6f6f">KED Global</font>
+- Published: Wed, 15 Apr 2026 09:03:40 GMT
+- Summary: <a href="https://news.google.com/rss/articles/CBMimAFBVV95cUxPN3NBMVJNQUdBVWdGZWp4UDBhQmkwMm00QnVnbmx6aEFkbXdNckFvcDJ0XzJrdi13SUQxTWdiN24zbTdfRHVLSXJHbmEybmlCbzJNaVJQYklmWEZQRUxsNkdBNUFQbFBFaDV4QUszQ1AzbWNuSm9PbXV1MW8yYW9ROFFPT0RrREV1VzNIWjNONzJSRG10VnlwOA?oc=5" target="_blank">How future CIOs may assess this period in AI history</a>&nbsp;&nbsp;<font color="#6f6f6f">cio.com</font>
