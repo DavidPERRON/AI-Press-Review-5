@@ -93,6 +93,11 @@ locales:
     category_secondary: "Artificial Intelligence"
     opening_line_daily: "Your Daily AI Press Review"
     opening_line_weekly: "Your Weekly AI Press Review"
+    # TTS locale-specific overrides (voice, speed, emotion, language)
+    voice_id_env: "CARTESIA_VOICE_ID"      # secret GitHub existant
+    cartesia_language: "en"
+    tts_speed: 0.9
+    tts_emotion: "serious"
 
   fr:
     enabled: true
@@ -119,6 +124,11 @@ locales:
     category_secondary: "Artificial Intelligence"
     opening_line_daily: "Votre Revue de Presse IA du jour"
     opening_line_weekly: "Votre Revue de Presse IA hebdo"
+    # TTS locale-specific overrides
+    voice_id_env: "CARTESIA_VOICE_ID_FR"   # nouveau secret GitHub
+    cartesia_language: "fr"                # CRITIQUE pour prosodie francaise
+    tts_speed: 0.95                        # a ajuster apres tests 0.95
+    tts_emotion: "serious"
 
 # ──────────────────────────────────────────────────────────────
 #  PROFILS EDITORIAUX
