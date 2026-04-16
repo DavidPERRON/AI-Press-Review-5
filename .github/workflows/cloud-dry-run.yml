@@ -11,6 +11,10 @@ on:
         description: Editorial profile (daily, weekly_recap)
         required: false
         default: 'daily'
+      locale:
+        description: Locale (en or fr) — picks the per-locale LLM model + voice
+        required: false
+        default: 'en'
 
 jobs:
   cloud_dry_run:
@@ -42,19 +46,60 @@ jobs:
 
       - name: Run cloud dry run
         env:
+          # Locale selector — drives settings._apply_locale() so the per-locale
+          # LLM model + Cartesia voice get picked up. Defaults to 'en' if the
+          # workflow is triggered without the input.
+          APR_LOCALE: ${{ github.event.inputs.locale || 'en' }}
           PODCAST_DESCRIPTION_LONG: ${{ vars.PODCAST_DESCRIPTION_LONG }}
           PUBLIC_AUDIO_BASE_URL: ${{ vars.PUBLIC_AUDIO_BASE_URL }}
           LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
+          # Generic model vars — fallback when no per-locale override is set.
+          # Can be empty if the repo has migrated entirely to per-locale vars;
+          # settings._apply_locale() reads _EN / _FR below first.
           LLM_EDITOR_MODEL: ${{ vars.LLM_EDITOR_MODEL }}
           LLM_FALLBACK_MODEL: ${{ vars.LLM_FALLBACK_MODEL }}
+          # Optional 3rd cascade tier, kicks in after editor + fallback both
+          # hit MAX_QUOTA_HITS. Unset to disable.
+          LLM_EMERGENCY_MODEL: ${{ vars.LLM_EMERGENCY_MODEL }}
+          # Per-locale overrides — MUST be passed explicitly even to dry-run,
+          # otherwise settings sees empty generic vars and the cascade has no
+          # model to try (observed failure mode: "All editorial generation
+          # attempts failed:" with an empty error list — because the cascade
+          # never iterated at all).
+          LLM_EDITOR_MODEL_EN: ${{ vars.LLM_EDITOR_MODEL_EN }}
+          LLM_FALLBACK_MODEL_EN: ${{ vars.LLM_FALLBACK_MODEL_EN }}
+          LLM_EMERGENCY_MODEL_EN: ${{ vars.LLM_EMERGENCY_MODEL_EN }}
+          LLM_EDITOR_MODEL_FR: ${{ vars.LLM_EDITOR_MODEL_FR }}
+          LLM_FALLBACK_MODEL_FR: ${{ vars.LLM_FALLBACK_MODEL_FR }}
+          LLM_EMERGENCY_MODEL_FR: ${{ vars.LLM_EMERGENCY_MODEL_FR }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
+          # Both voice IDs — settings._apply_locale picks the right one via
+          # voice_id_env in podcast.yaml.
           CARTESIA_VOICE_ID: ${{ vars.CARTESIA_VOICE_ID }}
+          CARTESIA_VOICE_ID_FR: ${{ vars.CARTESIA_VOICE_ID_FR }}
           NEWSAPI_API_KEY: ${{ secrets.NEWSAPI_API_KEY }}
         run: |
           set -e
           RUN_DATE=${{ github.event.inputs.run_date }}
           if [ -z "$RUN_DATE" ]; then RUN_DATE=$(date +%F); fi
+          echo "Locale: $APR_LOCALE"
+          # Fail fast with a clear message if no model is resolvable for this
+          # locale — avoids the 9-minute-crawl-then-empty-error surprise.
+          python -c "
+          import os, sys
+          loc = os.environ.get('APR_LOCALE', 'en').upper()
+          candidates = [
+              os.environ.get(f'LLM_EDITOR_MODEL_{loc}', ''),
+              os.environ.get('LLM_EDITOR_MODEL', ''),
+          ]
+          if not any(c.strip() for c in candidates):
+              sys.exit(
+                  f'ERROR: no editor model set for locale {loc}. '
+                  f'Set repo Variable LLM_EDITOR_MODEL_{loc} or LLM_EDITOR_MODEL.'
+              )
+          print(f'Editor model resolved for {loc}: ' + next(c for c in candidates if c.strip()))
+          "
           python scripts/cloud_dry_run.py --date "$RUN_DATE" --profile "${{ github.event.inputs.profile }}"
 
       - uses: actions/upload-artifact@v4
