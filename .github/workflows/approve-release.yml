@@ -1,7 +1,13 @@
 name: Approve & Release Now
 
 # Declenchement manuel pour publier le draft immediatement
-# (sans attendre l'auto-release de 10h)
+# (sans attendre l'auto-release de 10h).
+#
+# Second job `social-feed` rebuilds docs/social-feed.xml (EN+FR merged
+# RSS for the external LinkedIn auto-poster) after every release.
+# Runs after `approve` so the newly-released episode shows up in the
+# social feed immediately. `if: always()` keeps the rebuild running
+# even when approve has nothing to publish (no-op path).
 
 on:
   workflow_dispatch:
@@ -59,4 +65,48 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/state/ docs/
           git diff --cached --quiet || git commit -m "release: manually approved episode [skip ci]"
+          git push
+
+  # Rebuild the merged bilingual LinkedIn-oriented feed from both locales'
+  # episode histories on main, after the approve job has (possibly) pushed
+  # a newly-published episode. `if: always()` keeps this running even if
+  # approve skipped (no pending draft for that locale).
+  social-feed:
+    needs: approve
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          set -e
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Pull latest (approve may have pushed a release commit)
+        run: git pull --rebase origin main
+
+      - name: Build social-feed.xml (EN+FR merged)
+        run: |
+          set -e
+          python -c "from ai_press_review.publish.feed import build_social_feed; print(f'Social feed written: {build_social_feed()}')"
+
+      - name: Commit social feed
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/social-feed.xml
+          git diff --cached --quiet || git commit -m "social: refresh EN+FR LinkedIn feed [skip ci]"
           git push
