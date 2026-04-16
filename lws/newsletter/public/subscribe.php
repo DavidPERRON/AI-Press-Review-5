@@ -128,13 +128,29 @@ if (!$consent) {
 }
 
 // ── Build evidence fields ──────────────────────────────────────────
+// LWS Perso sits behind a reverse proxy: the real client IP arrives
+// in HTTP_X_REAL_IP (single value, set by the proxy — hard to spoof
+// unless the proxy is mis-configured). We check that FIRST.
+//
+// HTTP_X_FORWARDED_FOR is also popular but is a comma-separated chain
+// the client can prepend to. The ONLY trustworthy entry is the last
+// one (added by our trusted edge proxy); the first is attacker-
+// controlled. We read the last entry to avoid that spoofing vector.
+//
+// CF_CONNECTING_IP is kept for future portability if the site ever
+// moves behind Cloudflare. Harmless on LWS (header not present).
+// REMOTE_ADDR is the final fallback — on LWS it's usually the proxy's
+// internal IP, so we'd rather not land there, but it beats an empty
+// string for hashing.
 $rawIp = $_SERVER['HTTP_CF_CONNECTING_IP']
+      ?? $_SERVER['HTTP_X_REAL_IP']
       ?? $_SERVER['HTTP_X_FORWARDED_FOR']
       ?? $_SERVER['REMOTE_ADDR']
       ?? '';
-// If X-Forwarded-For has a chain, the client is the first entry.
 if (str_contains($rawIp, ',')) {
-    $rawIp = trim(explode(',', $rawIp, 2)[0]);
+    // X-Forwarded-For chain: last entry = trusted proxy's view of peer.
+    $parts  = explode(',', $rawIp);
+    $rawIp  = trim($parts[count($parts) - 1]);
 }
 $ipHash = substr(
     hash('sha256', ($config['ip_hash_salt'] ?? '') . '|' . $rawIp),

@@ -81,8 +81,11 @@ need later to download the subscriber CSV.
 
 1. In the LWS panel → **"Gestionnaire de fichiers"** (or open FTP with
    your favourite client).
-2. Navigate to `/public_html/`.
-3. Create a folder `api`.
+2. Navigate to the web root of your site. Depending on the plan vintage,
+   that's either `/public_html/` OR `/htdocs/` (newer Perso plans use
+   `htdocs`). A quick way to check: whatever folder contains your
+   current `index.html` — that's the web root.
+3. Create a folder `api` inside the web root.
 4. Upload all six files from `public/`:
    - `subscribe.php`
    - `export.php`

@@ -17,11 +17,18 @@
  * Returns an associative array (picked up via `require` in subscribe.php).
  */
 return [
-    // MySQL connection (from LWS panel → phpMyAdmin → "Paramètres de
-    // connexion" or the welcome email you got after creating the DB).
-    'db_host' => 'localhost',     // usually 'localhost' on LWS Perso
-    'db_name' => 'lwsXXXXXX_newsletter',
-    'db_user' => 'lwsXXXXXX',
+    // MySQL connection (from LWS panel → "Bases de données MySQL" or
+    // the welcome email you got after creating the DB).
+    //   - Newer LWS Perso plans: host = '127.0.0.1' (LWS's own panel
+    //     spells out "utilisez 127.0.0.1 et pas localhost"). Older
+    //     plans still accept 'localhost'. If in doubt, try both.
+    //   - LWS gives you a single DB whose name usually equals the
+    //     account handle (e.g. 'aequi2763377' or 'lwsXXXXXX'). No
+    //     separate 'newsletter' suffix.
+    //   - User is typically the same handle.
+    'db_host' => '127.0.0.1',
+    'db_name' => 'aequiXXXXXXX',
+    'db_user' => 'aequiXXXXXXX',
     'db_pass' => 'REPLACE-ME',
 
     // A long random string used to hash IPs before storing them (so
