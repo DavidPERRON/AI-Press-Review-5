@@ -89,8 +89,8 @@ def discover_urls(docs_root: Path) -> list[str]:
             for f in sorted(ep_dir.glob("*.html")):
                 if _ISO_DATE_RE.match(f.name):
                     urls.append(f"{BASE_URL}{locale_prefix}/episodes/{f.name}")
-        # how-it-works + about
-        for page in ("how-it-works.html", "about.html"):
+        # how-it-works (about.html was retired 2026-04-16)
+        for page in ("how-it-works.html",):
             if (loc_dir / page).exists():
                 urls.append(f"{BASE_URL}{locale_prefix}/{page}")
 

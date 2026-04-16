@@ -46,7 +46,8 @@ _ISO_DATE_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})\.html$")
 _STATIC_PAGES: tuple[tuple[str, str, str], ...] = (
     ("",                   "1.0", "daily"),    # index (trailing slash URL)
     ("how-it-works.html",  "0.7", "monthly"),
-    ("about.html",         "0.5", "yearly"),
+    # NOTE: about.html removed 2026-04-16 — replaced by how-it-works.html
+    # which serves the same purpose with cleaner copy.
 )
 
 
