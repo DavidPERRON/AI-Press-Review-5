@@ -85,7 +85,27 @@ def safe_slug(text: str) -> str:
 def read_json(path: Path, default):
     if not path.exists():
         return default
-    return json.loads(path.read_text(encoding='utf-8'))
+    # Corrupt state files (conflict markers, truncated writes) must not crash
+    # the whole pipeline. We log-and-quarantine the bad file, then return the
+    # default so the caller can rebuild state from scratch. The release blocker
+    # on 2026-04-16 was caused by committed `<<<<<<< Updated upstream` markers
+    # in data/state/used_sources_{en,fr}.json — a crash here stopped every
+    # daily run that reused that state.
+    try:
+        return json.loads(path.read_text(encoding='utf-8'))
+    except json.JSONDecodeError as exc:
+        quarantine = path.with_suffix(path.suffix + '.corrupt')
+        try:
+            path.replace(quarantine)
+        except OSError:
+            pass  # best-effort; even if quarantine fails we must not crash
+        import sys
+        print(
+            f'WARN: {path} is not valid JSON ({exc}); quarantined to '
+            f'{quarantine} and returning default state.',
+            file=sys.stderr,
+        )
+        return default
 
 
 def write_json(path: Path, data) -> None:

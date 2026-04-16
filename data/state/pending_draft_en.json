@@ -1,7 +1,6 @@
 {
   "date": "2026-04-16",
   "profile": "daily",
-<<<<<<< Updated upstream
   "title": "Nemotron 3 Super: open-source agentic AI — Apr 16",
   "slug": "nemotron-3-super-open-source-agentic-ai-apr-16",
   "summary": "Today, we cover NVIDIA's open-source Nemotron 3 Super model, Google's new Chrome 'Skills' for AI workflows, and OpenAI's acquisition of Hiro Finance. We also examine companies like Allbirds pivoting to AI and new research in optical computing and LLM reasoning.",
@@ -14,45 +13,23 @@
     "0e1f99dbf0cbea871c4784fcf976f1d1c6f1c77ebb17d042ce1e49dfced4a2b0",
     "e65c4bbafe64f976007d0fdd2301ec77f3af04371e98450aa92a00c979e8ecf1",
     "11f8532310948ec0f69a3a1e31e7c9f273a4b9bb2054182a94d5c2a289f76af8",
-=======
-  "title": "Anthropic's $800B Valuation: AI Funding Surge — Apr 16",
-  "slug": "anthropic-s-800b-valuation-ai-funding-surge-apr-16",
-  "summary": "Anthropic is reportedly seeking an $800 billion valuation, signaling robust investor confidence in generative AI. Meanwhile, OpenAI expands its financial intelligence capabilities with a new acquisition, and Nissan commits to integrating AI into 90% of its future vehicles. Deployments range from police non-emergency systems to advanced driver-assistance in India, while new research pushes the boundaries of LLM efficiency and optical computing.",
-  "audio_url": "https://pub-bc812f72712b450fbb9d7f3455e007a0.r2.dev/pressreview/episodes/2026-04-16-anthropic-s-800b-valuation-ai-funding-surge-apr-16.mp3",
-  "audio_name": "2026-04-16-anthropic-s-800b-valuation-ai-funding-surge-apr-16.mp3",
-  "audio_bytes": 10525093,
-  "duration_seconds": 878,
-  "source_fingerprints": [
-    "0e1f99dbf0cbea871c4784fcf976f1d1c6f1c77ebb17d042ce1e49dfced4a2b0",
->>>>>>> Stashed changes
     "f267dc857213deb83bb5d323a3991de7396db335fa6a06bcbb83c7289fc0c30d",
     "30f1b76f73a6dfe44e5ba3b6e5d03fb953233b21419e93ad52acc1b3e4764115",
     "41540dbcf602ef42cb94f5ffec2b5af8785235895cae11c995fed395e8fdf215",
     "784bcf2a482d142d03a4180237d0d99ffe37af668032e978c94a48c51c23bf9d",
-<<<<<<< Updated upstream
     "88303e91bedda6f7fb33412e807d180ae3c9bbd69ec93663101eaf07d310f8d7",
     "94004afd9dd41c34ea51c9beba17d38ef2627658808851a2ab4e9353f6e33e82",
     "d7a942f7215cef76d5ea7d21518837bdd2025c87994043e60d9e970efc0e5067",
     "94ada8b79988edc56870ce51fa75301362e87daec738fd94b352d5b697b35dc8",
     "e8196370ef1ed4d897cc151ab68bf5df1eb3404642113dbfe17925c3687566b2",
     "36d7aa6732fe9fa5754622cf6709cbcfa9b718aa9ba25e3a9ecbad9e841d2d1f",
-=======
-    "e65c4bbafe64f976007d0fdd2301ec77f3af04371e98450aa92a00c979e8ecf1",
-    "11f8532310948ec0f69a3a1e31e7c9f273a4b9bb2054182a94d5c2a289f76af8",
-    "d7a942f7215cef76d5ea7d21518837bdd2025c87994043e60d9e970efc0e5067",
-    "94ada8b79988edc56870ce51fa75301362e87daec738fd94b352d5b697b35dc8",
-    "e8196370ef1ed4d897cc151ab68bf5df1eb3404642113dbfe17925c3687566b2",
->>>>>>> Stashed changes
     "42e7d508a8ca3ed7c5c1c9e828952689f041073be0a607416241e7e87d873dda",
     "683128e1655d6021fbeeea2dcb3e0b35d0325a78e15ca29e03e78cbdc81482ec",
     "80ef2bea28da2401dca79337e77d9325feeaffd28673a26bb188e0934c393b50",
     "67941b2dda9caf031974fa024b907869dfe1feddfa599f9bff171d08c3e8e56c",
     "6bc5ca9fd02f4390cfb572ff6966722e7b06d74fb3f969be685260fbf533f6ce",
     "6267dc7a4011f85a708a34aa4ba8ee58e9d175bccf78610d2f0fabf71aa3d97e",
-<<<<<<< Updated upstream
     "34caaf21d613f634215da4ff2f7f8d307ba3c4fcdee4caa8cb025ad9172dad06",
-=======
->>>>>>> Stashed changes
     "6f11c30f0683cdda5f182a1d7ae9644e61cdd1b6dfa30f42de7cef18622a126a",
     "272da48bb5a85b5b0938f2aa8a0592463ac8cef94ff5f46b44253a0b4e89eaa1",
     "ebae01bb6a47e506d71ac4e04f571f110ee3823fe80bac872b13e8b8a59fe083",
@@ -63,10 +40,6 @@
     "682bb072f8c298a7fe27f267dae2b58e42f8202628f2f70af129c901eeae4cfa",
     "142314a97faab3f3594fe3c6f6321058557111904addc7f8851bfccf9718d601",
     "04cc688b4554e769fb06326fc63434231680e1be7c1ba87d0311cb6ff5434520",
-<<<<<<< Updated upstream
-=======
-    "bcb39d2ddd1017a8510a67476ec902acbd15119b951924106cd39f308565561c",
->>>>>>> Stashed changes
     "563c328e799882592a6e4f84f31097aedbe191bce5f1037a85828abd6e9484c1",
     "2dcb1b700e3c000f5b05819cae192ec47a830a1df1bdfee3b0246847215db036",
     "70847343daba0beb6242c696ce58c5c636ede8bd31e65b2b2f3946ba9eed0ed0",
@@ -102,7 +75,6 @@
     "2dae1c2be50f1deb3b7a50bfe4dbc7497e904c4892135adcdddd901037196b3e",
     "fc678a34e8d0013e49031bc729d00dcb321f1dcc67e4dc4e2fba87b3f588fd93",
     "1bc96ed6d89c944fe14908f832dc80de014c9f2aea669fb493626fa8c6defaac",
-    "5a699c54400e82e887d4c249d2fc1ce880425ea904fcb602ea55df0c2d811443",
     "77800f727168ac4505b4831ba623a853c47719ce543e0be637264f971c381277",
     "7909a37cb7587c32cf3aa0194f1940e97491c31eca82f7bc3051f05bc94225b5",
     "489bd20fa3e25018aa0db95201520a8b75e5b7b17521f25720b8653a537ec60f",
@@ -110,6 +82,7 @@
     "b5e17838a867e6de99dd3d747613bbf66532772649c4e1d3d431fffc16506d71",
     "c599812a9d9114955a4406b687a55980cb452ba356356f3a9656d8f24b7b6ffd",
     "05b88dbd057b5c4da0c22e5606b72ab05bc7b867655ed32020024e5e7228cbfc",
+    "05d197194c3487bb2419a005804b662f66c53b548d6fb3d6c91ccfe753255a55",
     "81b18d9a6a10089045a7a9768f216ab273adeb9b48f179390f9df58c4505a49d",
     "8b5d6c2038695812d69af830a6d60e1009a3b0a2212ebeda109a7b3ca9db8cf7",
     "dcf2c4769b7dc53fc77b21059a916e933980543e35305c404da18b4986f5898f",
@@ -126,80 +99,55 @@
     "392925e39ad8a851454c90e0d36cc14abb592713e4592a89eed57932c15af271",
     "395319887f52acc78eeaeadc5c8c7a34adc2498d34d15c4d806dd0cdcba2c712",
     "a525706fe30ed66b30a304033deca0d6b3e85a732b7947b6386e7405d63502f1",
+    "5f9c45562603f5961230189dc54697079cfc77dfd396973dd7e7dd58e0160df0",
     "85ed231287cb7acc0274c4b3167ab8aa08c3c0fbd5a3032e7001c44c39864424",
     "5dce12b5be094060d6471331dc9a90d345e3395dda116f480a77ac18618fa029",
     "c7957b444122d27d25abf115c5ac33b6833a28d4c99a066f7dced943ca42d72f",
     "4137637eea335ac60a759981b958b59da99bf053af9b1ed7772ecf35d05c5bdb",
-    "d6297fe19ecf529c7c2042643cbbbe97e29d7a9f2983c6204c558b6d8bd18024",
     "a85d15b2854157cd681ebdbbbf40dd542e457b9fe2ad12a0dea96fdd04369c7a",
     "514e8251c4693b49a02b53f846869d70cddf24678f38aedbd9e3153602ea0057",
+    "76ffb8cc6dfd1b55b6e66659b73de5888475de0b822d742f77905c0d33c4e79d",
     "571ddd30b593150b5c17c43d4688ef5309bc012c7dc334a9f4e692119fd2c62a",
     "37434d9760429da8277cad80b67e1b077fa946c16aad7b3850a2a190b5ff555c",
     "b182d74789030a739459b2b1b7d46c3eed0f709926474034028382f308aa7b18",
+    "c8392127a2e770be61fbabb585d779b4fdb242252b24dd6efba95f87103b1137",
     "9dfe407b0a7b3cecd8228cadd513ccf148c5a236fb3d815eadef37ad48dad647",
+    "35c88adf7d053c9bd06f4b0d875fa51004b840ea3c5252d6e3cc1010b3756474",
     "211bb15e3c9b210346ea1a867fcc21037d84248380afc904a0e0e2c59cfd181e",
     "eb09d1c169f44491c72b39b5116d2d32822244a01123b4c4f3ae154f320ae190",
     "3b1b77cea112a106f74d48c8273cecf951b58cb17da4abf11de599190c0f10ca",
     "64087422f97c541d7301ee0bbcd2aba700424d370e54734a25d56d6c263b6c3e",
-    "3d73211ce6183c20c0f91774c4c932a3e5223b626b185abd10f72970ec014e03",
-    "61e6edbce08e8f64aa9b9355ca7c2e6980b9366bc303f140ea7d07b3bd5bdabf",
-    "6efbdd149e99c8b090a0aea56303253dc748dca3d39fe9e47bd904889dc1f5bb",
-    "840452dd9f26128277e4cd25b31f2e96086697f369f2004e2f53ec63a079db8f",
-    "e2d65c412a2c84250970588f42364de94524ff1329a71bb0fdfa1e8c8cd8cd25",
-    "a5074e5f50fff592c216c86a050711d893d9b8990189a6f3d56a8794501a9dab",
-    "456371a3066afc1019b851e54dce85b7ea9cae620e35e616c1203ed095c8d4d2",
-    "a30c5d0a84813af44a18a8fe5ec2e2460ab75222e3ce0d3430cc8301f7b5f633",
-    "9cd0b7aec49cc9a792b396bef8c3585200769967835d552785c5c96b2994a391",
-    "951deeebd87d97e8cf2d6f9d9b093eef8a65a3c19f408f86c9069ce45f38f041",
     "05b23f2b76df7bb7d7ba4bd8139c09577efcadd0e82edca9b8850fdd437f90ac",
     "8d40da4080ac8bfe4cb41d6935c93701bcf9e986fd24559e0ed7cd8b9b788c02",
     "3917fce8ae6a72fee0d3aaf89aa5ce2a5f7a892181e793d1a007266b115bcc97",
     "1dc8813df17e45b29c665d584fa6447a35b996a92d7c8cfbc29a6b0ae07f471d",
-<<<<<<< Updated upstream
     "1fbd84d45198e572bd6d1e22fd0a765160500f7bfed231768b75b0336d83c94a",
-=======
->>>>>>> Stashed changes
     "caae18a671d97ed349e273cc25a3af0856c3c8e4ee1e4989db59212aaa4ad529",
     "d994ea52c31b9ebedd10e904e762047715fc8da986ac0682df9a9e1792b3347a",
     "fae8c2b4b8272922d9b1c711c5508fc49c7660e000c30baf9e197ec23d9b5d3a"
   ],
   "source_titles": [
-<<<<<<< Updated upstream
     "How to Build a Universal Long-Term Memory Layer for AI Agents Using Mem0 and OpenAI",
     "Saber: An Efficient Sampling with Adaptive Acceleration and Backtracking Enhanced Remasking for Diffusion Language Model",
     "Analog Optical Inference on Million-Record Mortgage Data",
     "SHARe-KAN: Post-Training Vector Quantization for Cache-Resident KAN Inference",
-=======
-    "Saber: An Efficient Sampling with Adaptive Acceleration and Backtracking Enhanced Remasking for Diffusion Language Model",
->>>>>>> Stashed changes
     "Aethon: A Reference-Based Replication Primitive for Constant-Time Instantiation of Stateful AI Agents",
     "KnowRL: Boosting LLM Reasoning via Reinforcement Learning with Minimal-Sufficient Knowledge Guidance",
     "Nemotron 3 Super: Open, Efficient Mixture-of-Experts Hybrid Mamba-Transformer Model for Agentic Reasoning",
     "MGA: Memory-Driven GUI Agent for Observation-Centric Interaction",
-<<<<<<< Updated upstream
     "Google Launches ‘Skills’ in Chrome: Turning Reusable AI Prompts into One-Click Browser Workflows",
     "Google DeepMind Releases Gemini Robotics-ER 1.6: Bringing Enhanced Embodied Reasoning and Instrument Reading to Physical AI",
     "Zig 0.16.0 release notes: \"Juicy Main\"",
     "Quoting Kyle Kingsbury",
     "datasette-ports 0.3",
     "ASML boosts 2026 sales forecast despite shrinking China sales",
-=======
-    "Analog Optical Inference on Million-Record Mortgage Data",
-    "SHARe-KAN: Post-Training Vector Quantization for Cache-Resident KAN Inference",
-    "Zig 0.16.0 release notes: \"Juicy Main\"",
-    "Quoting Kyle Kingsbury",
-    "datasette-ports 0.3",
->>>>>>> Stashed changes
     "Quoting John Gruber",
     "Create rich, custom tooltips in Amazon Quick Sight",
     "The Guardian view on social science research: embracing uncertainty | Editorial",
     "The Pitt and Game of Thrones spinoff given age ratings as BBFC deploys new AI tool",
     "Nissan turnaround plan pins hopes on ‘AI-defined vehicles’",
     "AI companies make powerful tech – but they’re also savvy marketers",
-<<<<<<< Updated upstream
     "How PayMe’s 3.3 million users and Hong Kong firms could start using stablecoins",
-=======
->>>>>>> Stashed changes
     "When Sorrows Come in Battalions: War, AI and the Feedback Loop That Will Eat Itself — Part 1",
     "ChatGPT’s latest stylistic quirk is sinister, infuriating – and absolutely everywhere | Stuart Heritage",
     "‘Misogyny with a marketing budget’: UK AI firm accused of sexist advert",
@@ -210,10 +158,6 @@
     "Client Alert: Artificial Intelligence (AI) Is Supposed to Reduce Risk. Why Does It Feel Like the Opposite? - JD Supra",
     "Avec l’IA, « Mark Zuckerberg réfléchit à donner naissance à une nouvelle créature : un PDG augmenté, un PDG jamais fatigué »",
     "Many filmmakers fear the existential threat of artificial intelligence, but in India the race is on to produce the first hit Bollywood feature generated by the technology - IslanderNews.com",
-<<<<<<< Updated upstream
-=======
-    "How to Build a Universal Long-Term Memory Layer for AI Agents Using Mem0 and OpenAI",
->>>>>>> Stashed changes
     "XMax Inc. Reports 73% Revenue Growth and Strategic Expansion into Artificial Intelligence for Fiscal Year 2025 - Quiver Quantitative",
     "STT GDC and SuperX open AI Innovation Centre to support enterprise AI deployment - Tech Edition",
     "Sparks Police launch artificial intelligence system to assist with non-emergency calls - KTVN",
@@ -249,7 +193,6 @@
     "Can artificial intelligence match medical interview assessments by clinicians? - EurekAlert!",
     "2026 AGILE To Address Artificial Intelligence and Growing Complexity Facing Care at Home Leaders - PR Newswire",
     "This hotel AI startup wasn’t trying to raise. It still closed a €2.8M round led Playfair - Tech Funding News",
-    "Student starts petition against school district's plan to use AI at graduation - Atlanta News First",
     "2026 Changzhou Artificial Intelligence Terminal Trendy Products Conference Unveils Latest Innovations - Fidelity",
     "2026 Changzhou Artificial Intelligence Terminal Trendy Products Conference Unveils Latest Innovations - PR Newswire",
     "Artificial Intelligence is not Information Technology - The Statesman",
@@ -257,6 +200,7 @@
     "‘Pragmata’, an artificial intelligence revolt on the moon - MVNU",
     "The AlleyWatch Startup Daily Funding Report: 4/15/2026 - AlleyWatch",
     "Show HN: Get Hired with AI, a free book I wrote on using LLMs for a job search",
+    "Paperclip CEO on Building Zero-Human Companies - StartupHub.ai",
     "Snapchat CEO lays off 1,000, citing ‘rapid advancements’ in AI - San Francisco Chronicle",
     "China’s Embodied AI Sector Sees Funding Surge as Investors Race Not to Miss Out - Yicai Global",
     "AI Drives Europe’s Second Straight Quarter Of Funding Gain As Deal Volume Falls Sharply - Crunchbase News",
@@ -273,51 +217,35 @@
     "OpenAI acquires Hiro, an AI personal finance startup - The Next Web",
     "Industrial AI startup Intellithink raises Rs 17 crore in round led by Pentathlon Ventures - The Economic Times",
     "AI firms scout for startup buyouts to boost full-stack tech capabilities - The Economic Times",
+    "UN Calls for Inputs to Global Dialogue on AI Governance - SDG Knowledge Hub",
     "DeSantis delays redistricting special session, expands it to AI, vaccines - Florida Phoenix",
     "Jeremy Renner invests in AI public safety company following Tahoe accident - San Francisco Chronicle",
     "Millions Of Americans Now Consult AI Before, After — And Sometimes Instead Of — Seeing A Doctor - Eurasia Review",
     "Snapchat parent company slashes workforce, turns to AI - upi.com",
-    "AI-generated images behind increase in insurance fraud - BBC",
     "Getting instantly rejected from jobs? AI might be scanning your resume. Here’s how to fix it up - KFOR.com",
     "Big Tech and AI look to bring on the dealmaking under Trump - Reuters",
+    "Trump AI framework puts ball in Congress’s court. Time to act is running out - Colorado Politics",
     "CESER, Lawrence Livermore National Lab Unveil AI Cybersecurity Testbed - ExecutiveGov",
     "Lawyer's use of AI was ‘perilous shortcut’ in Walmart case, US judge says - Reuters",
     "When AI goes rogue: Lessons from the Alibaba incident - cio.com",
+    "TIFIN Updates AI Platform for Advisors - Wealth Management",
     "Stocks take flight after Allbirds makes surprise move to AI - upi.com",
+    "New book reveals the steps workers can take to navigate shift to AI and stay competitive - KOMO",
     "What Is ‘Jagged Intelligence’ and How Can It Reframe the AI Debate? - The New York Times",
     "The AI threat undercutting the White House’s FISA push - Politico",
     "Struggling shoe retailer Allbirds makes bizarre pivot to AI, adds $127 million in value - CNBC",
     "The secure intelligence framework: Architecting AI systems for a data-driven world - cio.com",
-    "Seniors torn over district’s plan to use AI to announce names at high school graduation - WAFB",
-    "Student starts petition against school district's plan to use AI at graduation - WGEM",
-    "Student starts petition against school district's plan to use AI at graduation - WDBJ7",
-    "Student starts petition against school district's plan to use AI at graduation - KOLN | Nebraska Local News, Weather, Sports | Lincoln, NE",
-    "Student starts petition against school district's plan to use AI at graduation - WCAX",
-    "Student starts petition against school district's plan to use AI at graduation - WAFB",
-    "Student starts petition against school district's plan to use AI at graduation - FOX Carolina",
-    "Student starts petition against school district's plan to use AI at graduation - WCJB",
-    "Student starts petition against school district's plan to use AI at graduation - KPTV",
-    "Student starts petition against school district's plan to use AI at graduation - WTVM.com",
     "Design Your Company for AI, Not AI for Your Company. - Boston Consulting Group",
     "Australian federal court warns lawyers over ‘unacceptable’ use of AI - The Guardian",
     "Cyberwar’s New Frontier - Foreign Affairs",
     "What to know about AI in the medical field and when to trust it - KXII",
-<<<<<<< Updated upstream
     "That Movie with AI Val Kilmer as a Priest Has a Trailer Now - Gizmodo",
-=======
->>>>>>> Stashed changes
     "Allbirds shares soar after pivot from shoes to AI - BBC",
     "Understanding LLM Limitations in Clinical Laboratory Reasoning - Lab Manager",
     "Douglas County approves AI system for sheriff’s investigations - Colorado Politics"
   ],
-<<<<<<< Updated upstream
   "source_count": 116,
   "script_words": 2131,
   "generated_at": "2026-04-16T06:04:00.530330+00:00",
-=======
-  "source_count": 119,
-  "script_words": 2033,
-  "generated_at": "2026-04-16T06:13:09.542188+00:00",
->>>>>>> Stashed changes
   "status": "pending"
 }
