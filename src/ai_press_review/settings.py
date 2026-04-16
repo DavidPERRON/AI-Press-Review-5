@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import difflib
 import logging
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 import yaml
 from dotenv import load_dotenv
@@ -419,7 +421,74 @@ def load_settings(
     if not settings.r2_endpoint:
         logger.warning("R2_ENDPOINT is not set — audio upload will fail")
 
+    # Hostname whitelist for LLM_BASE_URL — fails fast on typos like
+    # "openrouteur.ai" (real incident 2026-04-16: a French autocorrect added
+    # an extra 'u' to the var, the cron burned 8 minutes of retries on a
+    # NXDOMAIN before giving up). Validating up-front turns that into a
+    # 2-second exit with an actionable message.
+    _validate_llm_base_url(settings.llm_base_url)
+
     return settings
+
+
+# ─── LLM_BASE_URL hostname validation ───────────────────────────────────────
+# Whitelist of providers we know we route through. Add new ones here as they
+# come online (Together, DeepInfra, Groq, etc.) — pipelines that point at an
+# unknown host fail at startup with "did you mean...?" instead of burning a
+# full retry budget against a non-existent domain.
+_ALLOWED_LLM_HOSTS: frozenset[str] = frozenset({
+    'openrouter.ai',
+    'api.openai.com',
+    'api.anthropic.com',
+    'api.mistral.ai',
+    'api.together.xyz',
+    'api.deepinfra.com',
+    'api.groq.com',
+    'generativelanguage.googleapis.com',
+    # Local / dev — Ollama and friends listen on loopback.
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
+})
+
+
+def _validate_llm_base_url(url: str) -> None:
+    """Fail fast if LLM_BASE_URL points at an unknown host.
+
+    Empty / unset is tolerated — pipelines that don't run editorial generation
+    (e.g. tests, draft-only profiles) shouldn't be forced to set this var. The
+    LLM client itself surfaces a clearer "API key missing" error in those cases.
+
+    Raises ValueError with a "did you mean ...?" hint when the host looks like
+    a typo of a known provider (e.g. openrouteur.ai → openrouter.ai).
+    """
+    if not url:
+        return
+    try:
+        parsed = urlparse(url)
+    except (ValueError, AttributeError) as exc:
+        raise ValueError(f"LLM_BASE_URL is not a valid URL: {url!r}") from exc
+    host = (parsed.hostname or '').lower()
+    if not host:
+        raise ValueError(
+            f"LLM_BASE_URL has no hostname: {url!r} — expected something like "
+            f"'https://openrouter.ai/api/v1'"
+        )
+    if host in _ALLOWED_LLM_HOSTS:
+        return
+    # Unknown host — try to surface a typo suggestion. cutoff=0.6 catches
+    # common 1-2 character edits (insertion, deletion, substitution) like
+    # openrouteur → openrouter, opnerouter → openrouter, anthropc → anthropic.
+    suggestions = difflib.get_close_matches(host, _ALLOWED_LLM_HOSTS, n=1, cutoff=0.6)
+    hint = f" — did you mean {suggestions[0]!r}?" if suggestions else ''
+    allowed = ', '.join(sorted(_ALLOWED_LLM_HOSTS))
+    raise ValueError(
+        f"LLM_BASE_URL host {host!r} is not in the allowed-providers list{hint}\n"
+        f"  Configured: {url!r}\n"
+        f"  Allowed hosts: {allowed}\n"
+        f"  If you really need to add a new provider, edit "
+        f"_ALLOWED_LLM_HOSTS in src/ai_press_review/settings.py"
+    )
 
 
 def load_sources_config() -> dict:
