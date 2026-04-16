@@ -123,6 +123,31 @@ def _secondary_category_xml(settings) -> str:
     return f'<itunes:category text="{escape(settings.category_secondary)}" />'
 
 
+def _cover_image_url(settings) -> str:
+    """Return a fully-qualified URL that actually serves the cover image.
+
+    The cover file lives at `docs/assets/podcast-cover.png` and is only
+    published under the ROOT host (podcast.aequitus.net/assets/...).
+    Concatenating locale-aware `site_base_url` (which is
+    `podcast.aequitus.net/fr` for FR) with `cover_image_path` yielded
+    `podcast.aequitus.net/fr/assets/podcast-cover.png` which 404s —
+    Apple Podcasts rejected the FR submission ("cover must be 3000x3000
+    PNG") and YouTube Music refused to ingest the feed, both because
+    the referenced cover URL returned 404. Strip the locale suffix
+    (docs_subdir) from site_base_url so the URL resolves. Also accept
+    absolute `http(s)://` paths in `cover_image_path` as a pass-through.
+    """
+    path = settings.cover_image_path
+    if path.startswith(('http://', 'https://')):
+        return path
+    base = settings.site_base_url.rstrip('/')
+    if settings.docs_subdir:
+        suffix = '/' + settings.docs_subdir.strip('/')
+        if base.endswith(suffix):
+            base = base[: -len(suffix)]
+    return f"{base}/{path.lstrip('/')}"
+
+
 def _write_feed(episodes: list[dict]) -> None:
     settings = load_settings()
     items = []
@@ -187,7 +212,7 @@ def _write_feed(episodes: list[dict]) -> None:
         f"<itunes:name>{escape(settings.podcast_author)}</itunes:name>"
         f"<itunes:email>{escape(settings.podcast_email)}</itunes:email>"
         '</itunes:owner>'
-        f'<itunes:image href="{escape(settings.site_base_url)}/{escape(settings.cover_image_path)}" />'
+        f'<itunes:image href="{escape(_cover_image_url(settings))}" />'
         f'<itunes:category text="{escape(settings.category_primary)}" />'
         f'{_secondary_category_xml(settings)}'
         f"{''.join(items)}"
