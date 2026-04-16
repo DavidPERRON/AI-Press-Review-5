@@ -79,6 +79,12 @@ jobs:
           LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
           LLM_EDITOR_MODEL: ${{ vars.LLM_EDITOR_MODEL }}
           LLM_FALLBACK_MODEL: ${{ vars.LLM_FALLBACK_MODEL }}
+          # Optional 3rd cascade tier — leave the repo var unset to disable.
+          # Set this to a non-Gemini model (e.g. an OpenRouter Anthropic or
+          # OpenAI route) so a Google-side quota exhaustion doesn't bring the
+          # whole daily run down. See generator.py: cascade kicks in after
+          # MAX_QUOTA_HITS (2) on the editor model, then again on fallback.
+          LLM_EMERGENCY_MODEL: ${{ vars.LLM_EMERGENCY_MODEL }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
           # Both voice IDs are passed — settings._apply_locale picks the right

@@ -2,18 +2,66 @@ from __future__ import annotations
 
 import json
 import logging
+import random
 import re
 import time
 from typing import Any
 
 import requests
-from tenacity import retry, stop_after_attempt, wait_fixed
 
 from ..models import EpisodeDraft
 from ..settings import load_settings
 from .validate import assemble_script
 
 logger = logging.getLogger(__name__)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Typed exception hierarchy
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# 2026-04-16: production crashed because the retry loop treated every failure
+# the same. Quota exhaustion (HTTP 429) burned all 4 attempts in ~5 seconds
+# because we used `wait_fixed(3)` instead of respecting `Retry-After`. Then
+# the misleading message "Script too short: 0 words" hid the real cause.
+#
+# Splitting the failure modes lets the loop:
+#   • Pause appropriately on quota — long, jittered, capped wait.
+#   • Pause briefly on transient 5xx — exponential backoff.
+#   • Switch model immediately on quota that won't recover within budget.
+#   • Skip retry entirely on validation errors that will never get better
+#     by waiting (malformed JSON from same prompt, etc.).
+class LLMError(Exception):
+    """Base class for editorial LLM call failures."""
+
+
+class LLMQuotaError(LLMError):
+    """HTTP 429 / explicit quota signal. Carries Retry-After hint when present."""
+
+    def __init__(self, message: str, retry_after_s: float | None = None) -> None:
+        super().__init__(message)
+        self.retry_after_s = retry_after_s
+
+
+class LLMTransientError(LLMError):
+    """HTTP 5xx, connection drop, or timeout. Worth a backed-off retry."""
+
+
+class LLMInvalidResponseError(LLMError):
+    """Model returned malformed JSON or empty content. A single retry only."""
+
+
+class LLMShortScriptError(LLMError):
+    """Script came back under min_script_words. Retry with force_length=True."""
+
+    def __init__(self, message: str, word_count: int) -> None:
+        super().__init__(message)
+        self.word_count = word_count
+
+
+# HTTP status code groups
+_QUOTA_HTTP_CODES = (429,)
+_TRANSIENT_HTTP_CODES = (500, 502, 503, 504)
 
 
 def _word_count(text: str) -> int:
@@ -128,12 +176,10 @@ def _build_user_prompt(manifest: dict, settings, force_length: bool = False) -> 
             "in the education section, never elsewhere. "
             "NUMBERS: Round aggressively ('about 1.2 billion' not '1,247,000,000'). Skip model version "
             "numbers ('the latest GPT' not 'GPT-4o-2024-05-13'). "
-            "ACRONYMS: Write them so the TTS reads them naturally. If the acronym is pronounced as a word "
-            "in its native language (SOLARIS, NASA, RADAR, LASER), keep it uppercase as-is. If it is spelled "
-            "out letter by letter (GPU, CPU, API, LLM, LCA, RPRA, IA), keep it uppercase as-is — the voice "
-            "will read the letters. NEVER expand an acronym mid-sentence ('les unités de traitement graphique "
-            "— ou GPU'); introduce it once at first occurrence with a short parenthetical only if strictly "
-            "needed for comprehension, then reuse the bare acronym. "
+            "ACRONYMS: Write them in their canonical uppercase form (TSMC, GPT, API, LLM, IA, PDG, IPO, USA). "
+            "The TTS layer normalizes them to the correct spoken form, so DO NOT pre-spell them out, DO NOT "
+            "expand them mid-sentence ('graphics processing units — or GPUs'), and DO NOT add letter-by-letter "
+            "hints. Just write the acronym once in its canonical form and reuse it. "
             "FLOW: Within a pillar, no transitions between stories — end one paragraph, start the next with "
             "the next story's subject. "
             "PILLAR SIGNPOSTS: The first paragraph of every pillar after AI News opens with a SHORT factual "
@@ -165,11 +211,31 @@ def _response_error_text(response: requests.Response) -> str:
     return response.text.strip()[:500]
 
 
+def _parse_retry_after(response: requests.Response) -> float | None:
+    """Parse Retry-After header. Returns seconds-to-wait, or None if absent/invalid.
+
+    Per RFC 7231 the value is either delta-seconds (an integer) or an HTTP-date.
+    Most LLM gateways send seconds; we cap at 120s so a stuck retry doesn't
+    block a daily run forever.
+    """
+    raw = response.headers.get('Retry-After') or response.headers.get('retry-after')
+    if not raw:
+        return None
+    try:
+        seconds = float(raw.strip())
+    except (TypeError, ValueError):
+        # HTTP-date format — rare from LLM APIs; treat as "no hint"
+        return None
+    if seconds < 0:
+        return None
+    return min(seconds, 120.0)
+
+
 def _extract_message_content(data: dict[str, Any]) -> str:
     try:
         message = data["choices"][0]["message"]["content"]
     except Exception as exc:
-        raise ValueError(f"Malformed LLM response: {data}") from exc
+        raise LLMInvalidResponseError(f"Malformed LLM response: {data}") from exc
 
     if isinstance(message, str):
         return message
@@ -207,15 +273,29 @@ def _post_chat_completion(settings, payload: dict[str, Any]) -> dict[str, Any]:
             timeout=max(settings.llm_timeout_seconds, 180),
         )
     except requests.RequestException as exc:
-        raise ValueError(f"LLM connection error to {parsed.hostname}") from exc
+        raise LLMTransientError(f"LLM connection error to {parsed.hostname}: {exc}") from exc
 
-    if response.status_code >= 400:
-        raise ValueError(f"LLM HTTP {response.status_code}: {_response_error_text(response)}")
+    status = response.status_code
+    if status in _QUOTA_HTTP_CODES:
+        retry_after = _parse_retry_after(response)
+        raise LLMQuotaError(
+            f"LLM HTTP {status} (quota exhausted): {_response_error_text(response)}",
+            retry_after_s=retry_after,
+        )
+    if status in _TRANSIENT_HTTP_CODES:
+        raise LLMTransientError(
+            f"LLM HTTP {status} (transient): {_response_error_text(response)}"
+        )
+    if status >= 400:
+        # Permanent client error (400/401/403/404/422/etc.) — do not retry
+        raise ValueError(f"LLM HTTP {status}: {_response_error_text(response)}")
 
     try:
         return response.json()
     except Exception as exc:
-        raise ValueError(f"LLM returned non-JSON response: {response.text[:500]}") from exc
+        raise LLMInvalidResponseError(
+            f"LLM returned non-JSON response: {response.text[:500]}"
+        ) from exc
 
 
 def _create_completion_data(
@@ -235,7 +315,10 @@ def _create_completion_data(
 
     try:
         return _post_chat_completion(settings, payload)
-    except Exception as exc:
+    except ValueError as exc:
+        # Permanent client errors only — re-attempt without response_format
+        # if the model rejects that field (common with older OpenAI-compatible
+        # endpoints). LLMQuota / Transient / Invalid errors fall through.
         message = str(exc).lower()
         if "json_object" in message or "response format" in message or "405" in message:
             logger.info("Model does not support response_format, retrying without it")
@@ -255,7 +338,9 @@ def _extract_json(content: str) -> dict[str, Any]:
         # Find the outermost JSON object by matching braces
         start = cleaned.find("{")
         if start == -1:
-            raise ValueError(f"Model did not return valid JSON. First 500 chars: {content[:500]}")
+            raise LLMInvalidResponseError(
+                f"Model did not return valid JSON. First 500 chars: {content[:500]}"
+            )
         depth = 0
         for i, ch in enumerate(cleaned[start:], start):
             if ch == "{":
@@ -267,7 +352,9 @@ def _extract_json(content: str) -> dict[str, Any]:
                         return json.loads(cleaned[start:i + 1])
                     except json.JSONDecodeError:
                         break
-        raise ValueError(f"Model did not return valid JSON. First 500 chars: {content[:500]}")
+        raise LLMInvalidResponseError(
+            f"Model did not return valid JSON. First 500 chars: {content[:500]}"
+        )
 
 
 def _generate_with_model(model: str, manifest: dict, settings, force_length: bool) -> dict[str, Any]:
@@ -288,7 +375,7 @@ def _generate_with_model(model: str, manifest: dict, settings, force_length: boo
 
     content = _extract_message_content(data)
     if not content.strip():
-        raise ValueError("Model returned empty content")
+        raise LLMInvalidResponseError("Model returned empty content")
 
     usage = data.get("usage", {})
     logger.info(
@@ -301,8 +388,192 @@ def _generate_with_model(model: str, manifest: dict, settings, force_length: boo
     return _extract_json(content)
 
 
-@retry(wait=wait_fixed(3), stop=stop_after_attempt(2))
+# ─────────────────────────────────────────────────────────────────────────────
+# Backoff helpers
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _sleep_with_backoff(attempt: int, base: float = 2.0, cap: float = 60.0) -> None:
+    """Sleep for `min(cap, base * 2^attempt) + jitter` seconds.
+
+    Used between transient-error retries within the same model. Jitter avoids
+    synchronized thundering-herd across parallel matrix jobs that share a
+    free-tier quota.
+    """
+    delay = min(cap, base * (2 ** attempt))
+    delay += random.uniform(0, min(delay * 0.25, 2.0))
+    logger.info("Backing off %.1fs before retry (attempt=%d)", delay, attempt)
+    time.sleep(delay)
+
+
+def _sleep_for_quota(retry_after_s: float | None, attempt: int) -> None:
+    """Honor server-supplied Retry-After when present, else exponential.
+
+    Floors at 8s because free-tier quotas typically reset on minute boundaries
+    and a 1s wait is just going to bounce off 429 again.
+    """
+    floor = 8.0
+    if retry_after_s is not None and retry_after_s > 0:
+        delay = max(retry_after_s + random.uniform(0, 2.0), floor)
+    else:
+        delay = max(min(60.0, 5.0 * (2 ** attempt)) + random.uniform(0, 3.0), floor)
+    logger.warning("Quota hit — sleeping %.1fs before next attempt", delay)
+    time.sleep(delay)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Per-model attempt loop
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Per-model budget:
+#   • Up to MAX_LENGTH_RETRIES content attempts (force_length on retry).
+#   • MAX_QUOTA_HITS quota errors before we stop wasting time and cascade to
+#     the next model — quota usually doesn't recover within one daily run.
+#   • MAX_TRANSIENT_RETRIES backed-off retries on 5xx / connection errors.
+#   • One retry on malformed JSON (might be a transient glitch, never worth
+#     more than one extra spin).
+
+MAX_LENGTH_RETRIES = 3
+MAX_QUOTA_HITS = 2
+MAX_TRANSIENT_RETRIES = 3
+MAX_INVALID_JSON_RETRIES = 1
+
+
+def _try_generate_one(
+    model: str,
+    manifest: dict,
+    settings,
+    force_length: bool,
+) -> tuple[dict[str, Any], str, int]:
+    """One outer attempt: generate, assemble script, count words.
+
+    Internally retries on transient/quota/JSON failures with appropriate
+    backoff. Raises LLMQuotaError or LLMTransientError if the per-attempt
+    budgets for those classes are exhausted, so the outer caller can decide
+    to cascade to the next model.
+    """
+    quota_hits = 0
+    transient_hits = 0
+    invalid_json_hits = 0
+
+    while True:
+        try:
+            payload = _generate_with_model(model, manifest, settings, force_length=force_length)
+            script = assemble_script(
+                manifest["run_date"],
+                payload,
+                intro_format=settings.intro_format,
+                locale=settings.locale,
+            )
+            wc = _word_count(script)
+            return payload, script, wc
+
+        except LLMQuotaError as exc:
+            quota_hits += 1
+            if quota_hits > MAX_QUOTA_HITS:
+                logger.warning(
+                    "Quota budget exhausted for model %s (%d hits) — cascading",
+                    model, quota_hits,
+                )
+                raise
+            _sleep_for_quota(exc.retry_after_s, quota_hits)
+
+        except LLMTransientError as exc:
+            transient_hits += 1
+            if transient_hits > MAX_TRANSIENT_RETRIES:
+                logger.warning(
+                    "Transient budget exhausted for model %s (%d hits): %s — cascading",
+                    model, transient_hits, exc,
+                )
+                raise
+            _sleep_with_backoff(transient_hits)
+
+        except LLMInvalidResponseError as exc:
+            invalid_json_hits += 1
+            if invalid_json_hits > MAX_INVALID_JSON_RETRIES:
+                logger.warning(
+                    "Invalid-JSON budget exhausted for model %s — cascading: %s",
+                    model, exc,
+                )
+                # Re-raise as transient so the outer caller treats this as a
+                # cascade trigger rather than a hard stop.
+                raise LLMTransientError(str(exc)) from exc
+            # Brief pause on JSON glitch — usually a sampling artefact.
+            time.sleep(2.0)
+
+
+def _generate_for_model(
+    model: str,
+    manifest: dict,
+    settings,
+) -> tuple[dict[str, Any] | None, str | None, int]:
+    """Multi-attempt loop for a single model: get the longest script under budget.
+
+    Returns (best_payload, best_script, best_wc). Caller decides whether
+    best_wc >= min_script_words is acceptable or it's time to cascade.
+    Raises if the model itself is unusable (quota / transient budget).
+    """
+    best_payload = None
+    best_script = None
+    best_wc = 0
+
+    last_exc: Exception | None = None
+
+    for attempt in range(MAX_LENGTH_RETRIES):
+        force = attempt > 0
+        logger.info(
+            "Model %s, attempt %d/%d (force_length=%s)",
+            model, attempt + 1, MAX_LENGTH_RETRIES, force,
+        )
+        try:
+            payload, script, wc = _try_generate_one(model, manifest, settings, force_length=force)
+        except (LLMQuotaError, LLMTransientError) as exc:
+            # Per-attempt budget for retryable errors blew up — give up on this model.
+            last_exc = exc
+            break
+
+        logger.info("Model %s attempt %d produced %d words", model, attempt + 1, wc)
+
+        if wc > best_wc:
+            best_payload = payload
+            best_script = script
+            best_wc = wc
+
+        if wc >= settings.min_script_words:
+            return best_payload, best_script, best_wc
+
+        logger.warning(
+            "Script too short on model %s: %d words < %d minimum, retrying with force_length",
+            model, wc, settings.min_script_words,
+        )
+
+    if last_exc is not None and best_wc == 0:
+        # Model produced nothing usable AND blew its retryable budget. Surface
+        # the underlying class so the cascade caller can log it cleanly.
+        raise last_exc
+
+    return best_payload, best_script, best_wc
+
+
 def generate_episode_script(manifest: dict, local_preview: bool = False, profile: str | None = None) -> EpisodeDraft:
+    """Generate the daily/weekly episode script with model cascade and graceful retry.
+
+    Cascade order (configured via env / settings):
+        1. settings.llm_editor_model      (LLM_EDITOR_MODEL)
+        2. settings.llm_fallback_model    (LLM_FALLBACK_MODEL)   — optional
+        3. settings.llm_emergency_model   (LLM_EMERGENCY_MODEL)  — optional
+
+    A model is dropped from cascade as soon as it exhausts its quota or
+    transient-retry budget. This is what saves the daily run from the
+    2026-04-16 incident: previously a single 429 on Gemini 2.5 Pro burned
+    every retry slot in 5 seconds, the misleading 'Script too short: 0 words'
+    error was raised, and the FR run cascaded to the same exhausted quota
+    on Flash and crashed the same way.
+
+    Raises ValueError if every cascade slot fails. The caller (the daily
+    pipeline) will surface that as a workflow-level failure, which is the
+    correct outcome — better to skip the day cleanly than ship a broken
+    or empty episode.
+    """
     settings = load_settings(local_preview=local_preview, profile=profile)
 
     source_count = manifest.get("source_count", 0)
@@ -311,71 +582,70 @@ def generate_episode_script(manifest: dict, local_preview: bool = False, profile
             f"Not enough relevant sources: {source_count} < {settings.min_source_count}"
         )
 
-    errors: list[str] = []
-
-    models = [settings.llm_editor_model]
+    models: list[str] = [settings.llm_editor_model]
     if settings.llm_fallback_model:
         models.append(settings.llm_fallback_model)
+    if settings.llm_emergency_model:
+        models.append(settings.llm_emergency_model)
+    # De-dup while preserving order in case the caller misconfigures emergency=editor
+    seen: set[str] = set()
+    cascade = [m for m in models if m and not (m in seen or seen.add(m))]
 
-    max_length_retries = 4  # nombre de tentatives par modele si trop court
+    errors: list[str] = []
+    best_overall_payload: dict[str, Any] | None = None
+    best_overall_script: str | None = None
+    best_overall_wc = 0
+    best_overall_model: str | None = None
 
-    for model in models:
+    for model in cascade:
+        logger.info("Generating script with model: %s (profile=%s)", model, settings.profile_name)
         try:
-            logger.info("Generating script with model: %s (profile=%s)", model, settings.profile_name)
-
-            best_payload = None
-            best_script = None
-            best_wc = 0
-
-            for attempt in range(max_length_retries):
-                force = attempt > 0
-                logger.info("Attempt %d/%d (force_length=%s)", attempt + 1, max_length_retries, force)
-
-                try:
-                    payload = _generate_with_model(model, manifest, settings, force_length=force)
-                    script = assemble_script(
-                        manifest["run_date"],
-                        payload,
-                        intro_format=settings.intro_format,
-                        locale=settings.locale,
-                    )
-                    wc = _word_count(script)
-                except Exception as inner_exc:
-                    logger.warning("Attempt %d failed: %s", attempt + 1, inner_exc)
-                    continue
-
-                logger.info("Attempt %d produced %d words", attempt + 1, wc)
-
-                if wc > best_wc:
-                    best_payload = payload
-                    best_script = script
-                    best_wc = wc
-
-                if wc >= settings.min_script_words:
-                    break
-
-                logger.warning(
-                    "Script too short: %d words < %d minimum, retrying...",
-                    wc, settings.min_script_words,
-                )
-
-            if best_wc < settings.min_script_words:
-                raise ValueError(
-                    f"Script too short after {max_length_retries} attempts: "
-                    f"{best_wc} words < {settings.min_script_words} minimum"
-                )
-
-            logger.info("Script generated successfully: %d words, model=%s", best_wc, model)
-            return EpisodeDraft(
-                episode_title=best_payload.get("episode_title", settings.podcast_title),
-                episode_summary=best_payload.get("episode_summary", settings.podcast_description_short),
-                opening_news_title=best_payload.get("opening_news_title", ""),
-                script=best_script,
-                tomorrow_concept=best_payload.get("tomorrow_pedagogical_concept", ""),
-                highlights_label=best_payload.get("highlights_label", "Highlights"),
-            )
-        except Exception as exc:
-            logger.error("Model %s failed: %s", model, exc)
+            payload, script, wc = _generate_for_model(model, manifest, settings)
+        except LLMError as exc:
+            logger.error("Model %s exhausted retry budget: %s", model, exc)
             errors.append(f"{model}: {exc}")
+            continue
+        except Exception as exc:
+            # Any non-LLM exception (assemble_script validation error, etc.)
+            # is permanent — the same prompt won't suddenly produce a valid
+            # schema. Skip cascade silently for the model, log loudly.
+            logger.error("Model %s failed with permanent error: %s", model, exc)
+            errors.append(f"{model}: {exc}")
+            continue
 
+        if wc > best_overall_wc:
+            best_overall_payload = payload
+            best_overall_script = script
+            best_overall_wc = wc
+            best_overall_model = model
+
+        if wc >= settings.min_script_words and payload is not None and script is not None:
+            logger.info(
+                "Script generated successfully: %d words, model=%s", wc, model,
+            )
+            return EpisodeDraft(
+                episode_title=payload.get("episode_title", settings.podcast_title),
+                episode_summary=payload.get("episode_summary", settings.podcast_description_short),
+                opening_news_title=payload.get("opening_news_title", ""),
+                script=script,
+                tomorrow_concept=payload.get("tomorrow_pedagogical_concept", ""),
+                highlights_label=payload.get("highlights_label", "Highlights"),
+            )
+
+        # Did produce something, but under the minimum — record and move on
+        # to the next model in the cascade. We never silently ship a too-short
+        # script, but we DO keep the best draft for the error report so an
+        # operator can re-run manually with the partial output if they choose.
+        if payload is not None:
+            errors.append(
+                f"{model}: short script ({wc} < {settings.min_script_words})"
+            )
+
+    if best_overall_payload is not None and best_overall_script is not None:
+        logger.error(
+            "All models exhausted — best draft was %d words from %s "
+            "(min %d). Errors: %s",
+            best_overall_wc, best_overall_model, settings.min_script_words,
+            " | ".join(errors),
+        )
     raise ValueError("All editorial generation attempts failed: " + " | ".join(errors))

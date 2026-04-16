@@ -64,6 +64,7 @@ class Settings:
     llm_api_key: str
     llm_editor_model: str
     llm_fallback_model: str
+    llm_emergency_model: str
     llm_timeout_seconds: int
     llm_max_tokens: int
     llm_temperature: float
@@ -353,6 +354,11 @@ def load_settings(
         llm_api_key=_env('LLM_API_KEY', 'unused' if local_preview else ''),
         llm_editor_model=llm_model_default,
         llm_fallback_model=_env('LLM_FALLBACK_MODEL'),
+        # Emergency model: 3rd cascade slot, used after editor + fallback both
+        # exhaust their per-run quota/transient budgets. Default is empty —
+        # set LLM_EMERGENCY_MODEL in repo vars to enable (e.g. a non-Gemini
+        # provider so a Google-side outage doesn't take the whole pipeline down).
+        llm_emergency_model=_env('LLM_EMERGENCY_MODEL'),
         llm_timeout_seconds=int(_env('LLM_TIMEOUT_SECONDS', str(_yaml_get(config, 'llm.timeout_seconds', 180)))),
         llm_max_tokens=int(_yaml_get(config, 'llm.max_tokens', 12000)),
         llm_temperature=_safe_float(str(_yaml_get(config, 'llm.temperature', 0.2)), 0.2, 'llm.temperature'),

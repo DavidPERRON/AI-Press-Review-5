@@ -70,6 +70,8 @@ jobs:
           LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
           LLM_EDITOR_MODEL: ${{ vars.LLM_EDITOR_MODEL }}
           LLM_FALLBACK_MODEL: ${{ vars.LLM_FALLBACK_MODEL }}
+          # Optional 3rd cascade tier — see daily-generate.yml for rationale.
+          LLM_EMERGENCY_MODEL: ${{ vars.LLM_EMERGENCY_MODEL }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
           CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
           CARTESIA_VOICE_ID: ${{ vars.CARTESIA_VOICE_ID }}
