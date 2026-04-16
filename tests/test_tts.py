@@ -1,6 +1,11 @@
 import pytest
 
-from ai_press_review.tts.cartesia import normalize_pronunciations, split_script
+from ai_press_review.tts.cartesia import (
+    _normalize_tts_whitespace,
+    _strip_trailing_pause_tokens,
+    normalize_pronunciations,
+    split_script,
+)
 
 
 def test_split_script_single_short():
@@ -38,7 +43,9 @@ def test_split_script_single_long_paragraph():
     assert chunks[0] == long_para.strip()
 
 
-def test_normalize_pronunciations_en_rewrites_known_acronyms():
+# ─── Acronym normalization (EN) ───────────────────────────────────────────────
+
+def test_normalize_pronunciations_en_rewrites_legacy_acronyms():
     text = "Transformers like BERT beat LaTeX on arXiv benchmarks."
     out = normalize_pronunciations(text, 'en')
     assert 'BERT' not in out
@@ -49,21 +56,83 @@ def test_normalize_pronunciations_en_rewrites_known_acronyms():
     assert 'ar-kive' in out
 
 
+def test_normalize_pronunciations_en_spells_initialisms_with_dots():
+    # Letter-by-letter acronyms get spaced-and-dotted form so Cartesia treats
+    # each letter as its own beat instead of slurring them into a pseudo-word.
+    text = "TSMC reported strong demand from CEO and CTO."
+    out = normalize_pronunciations(text, 'en')
+    assert 'TSMC' not in out
+    assert 'T. S. M. C.' in out
+    assert 'C. E. O.' in out
+    assert 'C. T. O.' in out
+
+
+def test_normalize_pronunciations_en_handles_gpt_and_api_and_llm():
+    text = "GPT and the API for an LLM cost a lot of GPU time."
+    out = normalize_pronunciations(text, 'en')
+    assert 'G. P. T.' in out
+    assert 'A. P. I.' in out
+    assert 'L. L. M.' in out
+    assert 'G. P. U.' in out
+
+
+def test_normalize_pronunciations_en_handles_word_form_acronyms():
+    text = "NVIDIA shipped chips to NASA for the OpenAI cluster."
+    out = normalize_pronunciations(text, 'en')
+    assert 'NVIDIA' not in out
+    assert 'en-vidia' in out
+    # NASA stays as 'NASA' (pronounced as a word natively)
+    assert 'NASA' in out
+    assert 'OpenAI' not in out
+    assert 'Open A. I.' in out
+
+
+def test_normalize_pronunciations_en_handles_ipo_usa_uk():
+    text = "The IPO closed in the USA, with secondary listing in the UK."
+    out = normalize_pronunciations(text, 'en')
+    assert 'I. P. O.' in out
+    assert 'U. S. A.' in out
+    assert 'U. K.' in out
+
+
+def test_normalize_pronunciations_en_handles_plural_s():
+    # Plural forms (GPUs, APIs, LLMs, URLs, PDFs) keep their trailing s but the
+    # letters are still spelled.
+    text = "Compare the GPUs, APIs, and LLMs in those PDFs."
+    out = normalize_pronunciations(text, 'en')
+    assert 'G. P. U. s' in out
+    assert 'A. P. I. s' in out
+    assert 'L. L. M. s' in out
+    assert 'P. D. F. s' in out
+
+
 def test_normalize_pronunciations_preserves_unrelated_text():
-    text = "OpenAI released GPT-5.4 alongside SOLARIS and GPU upgrades."
-    out = normalize_pronunciations(text, 'en')
-    # SOLARIS/GPU are not in the dictionary → stay untouched
-    assert out == text
-
-
-def test_normalize_pronunciations_word_boundary():
-    # A token that merely *contains* BERT must stay untouched (no false hit).
-    text = "ROBERTA and ALBERT are related models."
+    # Unknown acronyms and tokens that merely contain a known acronym must
+    # stay untouched. The \b boundary prevents NASAQ → "NASAQ" from matching
+    # NASA, and "GPU-friendly" from matching the GPU rule incorrectly.
+    text = "SOLARIS launched after Meta's announcement."
     out = normalize_pronunciations(text, 'en')
     assert out == text
 
 
-def test_normalize_pronunciations_fr_uses_french_table():
+def test_normalize_pronunciations_word_boundary_no_false_hits():
+    # ROBERTA / ALBERT / BERTHA contain BERT as a substring but must not match
+    text = "ROBERTA and ALBERT and BERTHA are unrelated."
+    out = normalize_pronunciations(text, 'en')
+    assert out == text
+
+
+def test_normalize_pronunciations_word_boundary_hyphenated_token():
+    # GPU-friendly: ripgrep-style \b lets the GPU rule fire here, which is
+    # what we want — the engine should still spell "G. P. U." inside compounds.
+    text = "A GPU-friendly architecture."
+    out = normalize_pronunciations(text, 'en')
+    assert 'G. P. U.' in out
+
+
+# ─── Acronym normalization (FR) ───────────────────────────────────────────────
+
+def test_normalize_pronunciations_fr_rewrites_legacy_acronyms():
     text = "Les transformeurs comme BERT utilisent LaTeX."
     out = normalize_pronunciations(text, 'fr')
     assert 'BERT' not in out
@@ -72,76 +141,90 @@ def test_normalize_pronunciations_fr_uses_french_table():
     assert 'La-Tek' in out
 
 
+def test_normalize_pronunciations_fr_handles_french_acronyms():
+    text = "Le PDG de la PME annonce une IA pour l'UE."
+    out = normalize_pronunciations(text, 'fr')
+    assert 'P. D. G.' in out
+    assert 'P. M. E.' in out
+    assert 'I. A.' in out
+    assert 'U. E.' in out
+
+
+def test_normalize_pronunciations_fr_handles_shared_acronyms():
+    # Common acronyms (TSMC, GPT, CEO) must use the same dotted form in FR.
+    text = "TSMC fournit des puces, le CEO d'OpenAI le confirme via GPT."
+    out = normalize_pronunciations(text, 'fr')
+    assert 'T. S. M. C.' in out
+    assert 'C. E. O.' in out
+    assert 'Open A. I.' in out
+    assert 'G. P. T.' in out
+
+
 def test_normalize_pronunciations_default_locale_is_english():
     text = "BERT model."
     assert normalize_pronunciations(text, '') == "Burt model."
     assert normalize_pronunciations(text, 'en') == normalize_pronunciations(text, '')
 
 
-# FR pause hints: Cartesia's native sentence-end pauses were compressing to
-# near-imperceptible on full episodes, so we insert an ellipsis at sentence
-# boundaries. These tests lock the regex against common false positives —
-# French abbreviations and alternate sentence-end punctuation.
-
-
-def test_fr_pause_hints_basic_sentence_boundary():
+def test_normalize_pronunciations_no_longer_inserts_fr_pause_hints():
+    # 2026-04-16 regression guard: previously every ". " in FR became "... "
+    # which produced an audible drum-roll of pauses. Now the FR text passes
+    # through unchanged at sentence boundaries — Cartesia's native prosody
+    # at speed 0.82 carries the breath without manual hints.
     text = "C'est vrai. Le modele est solide."
     out = normalize_pronunciations(text, 'fr')
-    assert out == "C'est vrai... Le modele est solide."
+    assert "..." not in out
+    assert out == "C'est vrai. Le modele est solide."
 
 
-def test_fr_pause_hints_skip_monsieur_abbreviation():
-    # "M. Dupont" must NOT be split — single uppercase before the period
-    # signals an abbreviation, not a sentence end.
+def test_normalize_pronunciations_fr_does_not_break_abbreviations():
     text = "L'annonce de M. Dupont concerne Paris."
     out = normalize_pronunciations(text, 'fr')
-    assert "M... Dupont" not in out
     assert "M. Dupont" in out
+    assert "M..." not in out
 
 
-def test_fr_pause_hints_apply_after_abbreviation_at_sentence_end():
-    # Sentence ends with lowercase word before the period → should be split
-    # even when the prior sentence contains an abbreviation.
-    text = "L'annonce de M. Dupont est confirmee. Le ministre reagit."
-    out = normalize_pronunciations(text, 'fr')
-    assert "M. Dupont" in out  # abbreviation preserved
-    assert "confirmee... Le ministre" in out  # true sentence boundary hit
+# ─── Whitespace normalization ─────────────────────────────────────────────────
+
+def test_normalize_tts_whitespace_collapses_double_spaces():
+    assert _normalize_tts_whitespace("a  b") == "a b"
+    assert _normalize_tts_whitespace("a   b   c") == "a b c"
 
 
-def test_fr_pause_hints_preserve_question_and_exclamation():
-    text = "Est-ce vrai? Le benchmark confirme. Excellent! Le resultat tient."
-    out = normalize_pronunciations(text, 'fr')
-    # ? and ! carry their own prosody — we do not add ellipsis there
-    assert "vrai? Le" in out
-    assert "Excellent! Le" in out
-    # But the "confirme. Excellent" boundary gets the hint
-    assert "confirme... Excellent" in out
+def test_normalize_tts_whitespace_strips_trailing_line_whitespace():
+    assert _normalize_tts_whitespace("line a   \nline b") == "line a\nline b"
 
 
-def test_fr_pause_hints_digit_ending_sentence():
-    text = "Le score atteint 95.5. La difference est reelle."
-    out = normalize_pronunciations(text, 'fr')
-    # Decimal "95.5" must stay intact; only the terminal "5. L" splits
-    assert "95.5" in out
-    assert "95.5... La difference" in out
+def test_normalize_tts_whitespace_caps_blank_lines():
+    text = "para 1\n\n\n\npara 2\n\n\n\n\npara 3"
+    out = _normalize_tts_whitespace(text)
+    assert "\n\n\n" not in out
+    assert "para 1\n\npara 2\n\npara 3" == out
 
 
-def test_fr_pause_hints_accented_word_ending():
-    text = "Le projet est acheve. Ensuite, on pivote."
-    out = normalize_pronunciations(text, 'fr')
-    assert "acheve... Ensuite" in out
+def test_normalize_tts_whitespace_trims_overall():
+    assert _normalize_tts_whitespace("  hello\n\n") == "hello"
 
 
-def test_fr_pause_hints_composes_with_pronunciation_rewrite():
-    # "arXiv" → "ar-kive", and the sentence boundary after it should still fire
-    text = "Le papier arXiv. Le laboratoire confirme."
-    out = normalize_pronunciations(text, 'fr')
-    assert "ar-kive... Le laboratoire" in out
+# ─── Trailing pause cleanup ───────────────────────────────────────────────────
+
+def test_strip_trailing_pause_tokens_removes_ellipsis():
+    assert _strip_trailing_pause_tokens("Done...") == "Done."
+    assert _strip_trailing_pause_tokens("Done.....") == "Done."
 
 
-def test_fr_pause_hints_do_not_apply_to_en():
-    # EN path must remain unchanged — this is the regression guard for users
-    # who never touch FR content.
-    text = "Sentence one. Sentence two."
-    out = normalize_pronunciations(text, 'en')
-    assert out == text
+def test_strip_trailing_pause_tokens_removes_dangling_dot():
+    assert _strip_trailing_pause_tokens("Done . ") == "Done."
+    assert _strip_trailing_pause_tokens("Done.\n") == "Done."
+
+
+def test_strip_trailing_pause_tokens_preserves_clean_ending():
+    assert _strip_trailing_pause_tokens("Done.") == "Done."
+    assert _strip_trailing_pause_tokens("Are we done?") == "Are we done?"
+    assert _strip_trailing_pause_tokens("Excellent!") == "Excellent!"
+
+
+def test_strip_trailing_pause_tokens_internal_ellipsis_untouched():
+    # An ellipsis inside the text (not at the very end) is left alone — only
+    # the final-position run gets normalized to a single period.
+    assert _strip_trailing_pause_tokens("Wait... here we go.") == "Wait... here we go."

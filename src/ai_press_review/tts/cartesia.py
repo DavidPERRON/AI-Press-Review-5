@@ -25,50 +25,169 @@ CARTESIA_WEBSOCKET_URL = 'wss://api.cartesia.ai/tts/websocket'
 WEBSOCKET_SAMPLE_RATE = 44100
 
 
-# Phonetic respelling applied ONLY to the text sent to the TTS engine. The
-# stored script.txt stays readable ("BERT", "LaTeX") while the audio says
-# the expected pronunciation. Order matters: longer keys first would collide
-# with shorter ones otherwise — the regex \b word-boundaries handle that.
+# ─────────────────────────────────────────────────────────────────────────────
+# Pronunciation normalization
+# ─────────────────────────────────────────────────────────────────────────────
 #
-# Add entries as TTS mispronunciations surface. Keep the list tight: each
-# entry is a liability if the underlying voice model's pronunciation of the
-# raw form changes over time.
-_PRONUNCIATIONS_EN: dict[str, str] = {
-    r'\bLaTeX\b': 'Lay-Tech',
-    r'\barXiv\b': 'ar-kive',
-    r'\bBERT\b': 'Burt',
+# Phonetic respelling is applied ONLY to the text sent to the TTS engine. The
+# stored script.txt stays canonical ("BERT", "GPT", "TSMC") so transcripts and
+# captions remain readable. Tables are SHARED across locales for acronyms that
+# share a spelling (GPT, API, TSMC) and EN/FR-specific only when the locales
+# pronounce the letters differently (FR "I. A." vs EN "A. I.").
+#
+# Rules of thumb when adding entries:
+#   • An ALL-CAPS acronym pronounced letter-by-letter → use spaced letters with
+#     dots ("T. S. M. C.") so Cartesia's prosody respects each letter as its
+#     own beat. Without dots the engine often slurs ("teesemsee").
+#   • An acronym pronounced as a word (NASA, NVIDIA) → respell phonetically.
+#   • Mixed case (iOS, OpenAI) → respell with the camel-case word breaks made
+#     explicit ("Open A. I.").
+#   • Word boundaries are enforced via \b so "BERTHA" / "ROBERTA" are safe.
+#
+# 2026-04-16 expansion driven by listener feedback that TSMC, GPT, IPO, USA
+# were being spelled letter by letter as if they were words ("tee-ess-em-see"
+# instead of "T. S. M. C."). The earlier prompt instruction telling the LLM
+# the voice would "read the letters" was misleading — the voice DOES read
+# letters but only when they are spaced and dotted. We now do that here at
+# normalization time so the LLM doesn't have to think about it.
+
+
+_SPELL_OUT_COMMON: dict[str, str] = {
+    # Companies / chip houses
+    'TSMC': 'T. S. M. C.',
+    'AMD': 'A. M. D.',
+    'IBM': 'I. B. M.',
+    'AWS': 'A. W. S.',
+    'GCP': 'G. C. P.',
+    'HPE': 'H. P. E.',
+    # Models / families
+    'GPT': 'G. P. T.',
+    'BERT': 'Burt',  # pronounced as a word in EN
+    'LLM': 'L. L. M.',
+    'LLMs': 'L. L. M. s',
+    'LLaMA': 'lama',
+    'LoRA': 'lora',
+    # Compute / infra
+    'GPU': 'G. P. U.',
+    'GPUs': 'G. P. U. s',
+    'CPU': 'C. P. U.',
+    'CPUs': 'C. P. U. s',
+    'TPU': 'T. P. U.',
+    'TPUs': 'T. P. U. s',
+    'NPU': 'N. P. U.',
+    'API': 'A. P. I.',
+    'APIs': 'A. P. I. s',
+    'SDK': 'S. D. K.',
+    'SDKs': 'S. D. K. s',
+    'SaaS': 'sass',
+    'PaaS': 'pass',
+    'IaaS': 'eye-ass',
+    # Org titles / business
+    'CEO': 'C. E. O.',
+    'CTO': 'C. T. O.',
+    'CFO': 'C. F. O.',
+    'COO': 'C. O. O.',
+    'CIO': 'C. I. O.',
+    'CISO': 'C. I. S. O.',
+    'IPO': 'I. P. O.',
+    'M&A': 'M. and A.',
+    # Geographies / institutions
+    'USA': 'U. S. A.',
+    'EU': 'E. U.',
+    'UK': 'U. K.',
+    'UAE': 'U. A. E.',
+    'NATO': 'NATO',  # already pronounced as a word
+    'UN': 'U. N.',
+    # Tech / formats
+    'iOS': 'eye-O. S.',
+    'macOS': 'mac-O. S.',
+    'PDF': 'P. D. F.',
+    'PDFs': 'P. D. F. s',
+    'HTML': 'H. T. M. L.',
+    'CSS': 'C. S. S.',
+    'JSON': 'jay-son',
+    'YAML': 'yamel',
+    'XML': 'X. M. L.',
+    'URL': 'U. R. L.',
+    'URLs': 'U. R. L. s',
+    'HTTP': 'H. T. T. P.',
+    'HTTPS': 'H. T. T. P. S.',
+    'AI': 'A. I.',  # English: ay-eye
+    # Brands / camelCase
+    'OpenAI': 'Open A. I.',
+    'NVIDIA': 'en-vidia',
+    'NASA': 'NASA',
+    # Research jargon
+    'arXiv': 'ar-kive',
+    'LaTeX': 'Lay-Tech',
+    'NeurIPS': 'noor-ips',
+    'ICML': 'I. C. M. L.',
+    'ACL': 'A. C. L.',
 }
 
-_PRONUNCIATIONS_FR: dict[str, str] = {
-    r'\bLaTeX\b': 'La-Tek',
-    r'\barXiv\b': 'ar-kive',
-    r'\bBERT\b': 'Beurt',
+_SPELL_OUT_FR_OVERRIDES: dict[str, str] = {
+    # FR-specific letter pronunciations and very common French acronyms.
+    'AI': 'A. I.',          # FR keeps the English form when it appears in source quotes
+    'IA': 'I. A.',          # FR for "intelligence artificielle"
+    'PDG': 'P. D. G.',
+    'DG': 'D. G.',
+    'PME': 'P. M. E.',
+    'PMI': 'P. M. I.',
+    'TPE': 'T. P. E.',
+    'UE': 'U. E.',
+    'OTAN': 'OTAN',
+    'ONU': 'O. N. U.',
+    # FR letter names differ from EN — explicit dotted spacing keeps both safe
+    # because Cartesia respects the locale flag for individual letter prosody.
+    'BERT': 'Beurt',
+    'LaTeX': 'La-Tek',
 }
 
+# Build the per-locale lookup tables once at import time. Patterns use \b so
+# token boundaries are enforced (no false-hit on ROBERTA, BERTHA, NASAQ, etc.).
+def _compile_pronunciation_table(table: dict[str, str]) -> dict[str, str]:
+    return {rf'\b{re.escape(key)}\b': value for key, value in table.items()}
 
-# Insert a longer pause hint at sentence boundaries for FR TTS.
-#
-# Cartesia Sonic's native sentence-end pauses can compress to near-imperceptible
-# at speeds that otherwise sound fine — observed 2026-04-15 on full 15-minute FR
-# episodes where single-dot sentence breaks ran into each other with no breath.
-# Replacing ". " with "... " before a capital letter cues Cartesia to insert
-# a clearer pause without touching the stored script.txt (which humans read).
-#
-# Lookbehind [a-z...0-9] avoids matching French abbreviations like "M. Dupont",
-# "Mme.", "Dr." — those end in uppercase letters or short cap+dot patterns and
-# we don't want "M... Dupont". Digits before the period are fine ("GPT-5. Le…"
-# is a real sentence boundary).
-#
-# We deliberately do NOT touch "? " or "! " — those already carry strong
-# prosodic endings; adding ellipsis there sounds dramatic or hesitant.
-_FR_SENTENCE_BOUNDARY = re.compile(
-    r'(?<=[a-zàâéèêëîïôùûüÿ0-9])\. (?=[A-ZÀÂÉÈÊËÎÏÔÙÛÜŸ])'
+
+_PRONUNCIATIONS_EN: dict[str, str] = _compile_pronunciation_table(_SPELL_OUT_COMMON)
+
+_PRONUNCIATIONS_FR: dict[str, str] = _compile_pronunciation_table(
+    {**_SPELL_OUT_COMMON, **_SPELL_OUT_FR_OVERRIDES}
 )
 
 
-def _insert_fr_pause_hints(text: str) -> str:
-    """Add breath cues at FR sentence boundaries. See _FR_SENTENCE_BOUNDARY."""
-    return _FR_SENTENCE_BOUNDARY.sub('... ', text)
+# ─────────────────────────────────────────────────────────────────────────────
+# Whitespace normalization & trailing-pause cleanup
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# 2026-04-16: a final-paragraph "pause bizarre" (~1 second of dead air at the
+# very end of FR episodes) was traced to the tomorrow_concept paragraph being
+# preceded by stray whitespace from earlier normalization passes, plus optional
+# trailing ellipsis tokens that the engine extends into a long unfilled tail.
+
+_MULTISPACE = re.compile(r'[ \t]{2,}')
+_SPACE_BEFORE_NEWLINE = re.compile(r'[ \t]+\n')
+_TRIPLE_NEWLINE = re.compile(r'\n{3,}')
+_TRAILING_PAUSE_TOKENS = re.compile(r'(?:\.{2,}|\s+\.\s*)+$')
+
+
+def _normalize_tts_whitespace(text: str) -> str:
+    """Collapse double-spaces, strip trailing whitespace per line, cap blank lines."""
+    text = _MULTISPACE.sub(' ', text)
+    text = _SPACE_BEFORE_NEWLINE.sub('\n', text)
+    text = _TRIPLE_NEWLINE.sub('\n\n', text)
+    return text.strip()
+
+
+def _strip_trailing_pause_tokens(text: str) -> str:
+    """Remove any trailing ellipsis or floating-period tokens at the very end.
+
+    Cartesia treats a final ellipsis as a long awaited-continuation cue and
+    stretches the closing silence well past the natural sentence end. The very
+    last character we hand the engine should be a single '.', '?' or '!' with
+    no whitespace after.
+    """
+    return _TRAILING_PAUSE_TOKENS.sub('.', text.rstrip())
 
 
 def normalize_pronunciations(text: str, locale: str) -> str:
@@ -78,15 +197,16 @@ def normalize_pronunciations(text: str, locale: str) -> str:
     while `script.txt` (read by humans, used for transcripts) keeps the
     canonical uppercase/camelcase spelling.
 
-    For FR, also inserts sentence-boundary pause hints — Cartesia's default
-    sentence-end prosody collapses to unnatural runs otherwise.
+    The 2026-04-16 cleanup also strips the FR sentence-boundary ellipsis
+    insertion that previously over-fired (one ellipsis per sentence × ~60
+    sentences per episode) and produced an audible drum-roll of pauses.
+    Cartesia's native FR prosody at speed 0.82 carries the breath without
+    the manual hints.
     """
     is_fr = (locale or '').lower().startswith('fr')
     table = _PRONUNCIATIONS_FR if is_fr else _PRONUNCIATIONS_EN
     for pattern, phon in table.items():
         text = re.sub(pattern, phon, text)
-    if is_fr:
-        text = _insert_fr_pause_hints(text)
     return text
 
 
@@ -134,9 +254,14 @@ def synthesize_script(script: str, output_path: Path, local_preview: bool = Fals
     # letter (LaTeX → "L-A-T-E-X" instead of "Lay-Tech", etc.). Only affects
     # what the TTS hears; script.txt stays canonical.
     spoken_script = normalize_pronunciations(script, settings.locale or 'en')
+    spoken_script = _normalize_tts_whitespace(spoken_script)
+    spoken_script = _strip_trailing_pause_tokens(spoken_script)
     chunks = split_script(spoken_script, max_chars=settings.tts_chunk_max_chars)
     if not chunks:
         raise ValueError('Script is empty — cannot synthesize audio')
+
+    # Final guard: the last chunk should not end on a pause token either.
+    chunks[-1] = _strip_trailing_pause_tokens(chunks[-1])
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
 

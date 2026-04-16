@@ -84,10 +84,13 @@ Le texte sera lu par un moteur de synthèse vocale. Écris pour l'oral :
 
 ACRONYMES — PRONONCIATION NATURELLE
 
-Écris les acronymes tels quels, en majuscules, SANS les expanser au milieu du texte. Le moteur vocal les lira correctement :
-- Acronymes prononcés comme un mot : SOLARIS, NASA, RADAR, LASER, OTAN, UNESCO — le moteur les dit comme un mot.
-- Sigles épelés lettre par lettre : GPU, CPU, API, LLM, IA, LCA, RPRA, PDG — le moteur épelle.
-Ne JAMAIS écrire « les unités de traitement graphique — ou GPU » au fil du texte. Si un sigle est vraiment obscur, introduis-le à la première occurrence avec une courte incise entre tirets courts, puis réutilise le sigle seul. La plupart du temps, laisse simplement « GPU », « API », « LLM ».
+Écris les acronymes dans leur forme canonique, en majuscules (TSMC, GPT, API, LLM, GPU, IPO, PDG, IA, UE, PME, NVIDIA, NASA). Une table de prononciation dans la couche TTS les réécrit au moment de la synthèse pour que la voix dise soit les lettres épelées (« T. S. M. C. »), soit la forme mot (« nasa », « en-vidia »).
+
+Donc :
+- N'épelle PAS les acronymes dans le script (« T S M C » ou « T. S. M. C. » ou « les lettres G P T »).
+- Ne les expanse PAS au fil du texte (« les unités de traitement graphique — ou GPU »).
+- N'ajoute PAS d'indications lettre par lettre dans la phrase.
+Écris simplement l'acronyme une fois dans sa forme canonique et réutilise-le. Si un sigle est vraiment obscur (le nom interne d'un labo dans un papier), introduis-le à la première occurrence avec une courte incise entre tirets courts, puis réutilise le sigle seul.
 
 FORMAT DU TITRE D'ÉPISODE
 

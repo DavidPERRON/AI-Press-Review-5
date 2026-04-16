@@ -77,10 +77,13 @@ This will be read by a TTS engine. Write for spoken delivery:
 
 ACRONYMS — NATURAL PRONUNCIATION
 
-Write acronyms in uppercase as-is, WITHOUT expanding them mid-sentence. The TTS engine handles them correctly:
-- Acronyms pronounced as a single word: SOLARIS, NASA, RADAR, LASER — the engine says them as words.
-- Initialisms spelled letter by letter: GPU, CPU, API, LLM, LCA, RPRA — the engine spells them out.
-NEVER write "graphics processing units — or GPUs" inline. If a specific acronym is genuinely obscure, introduce it on first mention with a short em-dash aside, then reuse the bare acronym. Most of the time, just write "GPU", "API", "LLM".
+Write acronyms in their canonical uppercase form (TSMC, GPT, API, LLM, GPU, IPO, CEO, USA, NVIDIA, NASA). A pronunciation table in the TTS layer rewrites them at synthesis time so the voice says either the spelled-out letters ("T. S. M. C.") or the natural word form ("nasa", "en-vidia") as appropriate.
+
+Therefore:
+- Do NOT pre-spell acronyms in the script ("T S M C" or "T. S. M. C." or "the letters G P T").
+- Do NOT expand them mid-sentence ("graphics processing units — or GPUs").
+- Do NOT add letter-by-letter hints inline.
+Just write the acronym once in its canonical form and reuse it. If a specific acronym is genuinely obscure (a paper's lab-internal codename), introduce it on first mention with a short em-dash aside, then reuse the bare acronym.
 
 EPISODE TITLE FORMAT
 
