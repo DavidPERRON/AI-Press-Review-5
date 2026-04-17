@@ -1,6 +1,111 @@
 {
   "items": [
     {
+      "title": "Qwen Team Open-Sources Qwen3.6-35B-A3B: A Sparse MoE Vision-Language Model with 3B Active Parameters and Agentic Coding Capabilities",
+      "url": "https://www.marktechpost.com/2026/04/16/qwen-team-open-sources-qwen3-6-35b-a3b-a-sparse-moe-vision-language-model-with-3b-active-parameters-and-agentic-coding-capabilities/",
+      "used_at": "2026-04-17T07:30:39.746820+00:00"
+    },
+    {
+      "title": "Revisiting Compositionality in Dual-Encoder Vision-Language Models: The Role of Inference",
+      "url": "https://arxiv.org/abs/2604.11496",
+      "used_at": "2026-04-17T07:30:39.746851+00:00"
+    },
+    {
+      "title": "The Cognitive Circuit Breaker: A Systems Engineering Framework for Intrinsic AI Reliability",
+      "url": "https://arxiv.org/abs/2604.13417",
+      "used_at": "2026-04-17T07:30:39.746854+00:00"
+    },
+    {
+      "title": "A KL Lens on Quantization: Fast, Forward-Only Sensitivity for Mixed-Precision SSM-Transformer Models",
+      "url": "https://arxiv.org/abs/2604.13440",
+      "used_at": "2026-04-17T07:30:39.746857+00:00"
+    },
+    {
+      "title": "Bayesian-LoRA: Probabilistic Low-Rank Adaptation of Large Language Models",
+      "url": "https://arxiv.org/abs/2601.21003",
+      "used_at": "2026-04-17T07:30:39.746860+00:00"
+    },
+    {
+      "title": "Visual Self-Fulfilling Alignment: Shaping Safety-Oriented Personas via Threat-Related Images",
+      "url": "https://arxiv.org/abs/2603.08486",
+      "used_at": "2026-04-17T07:30:39.746862+00:00"
+    },
+    {
+      "title": "UNBOX: Unveiling Black-box visual models with Natural-language",
+      "url": "https://arxiv.org/abs/2603.08639",
+      "used_at": "2026-04-17T07:30:39.746865+00:00"
+    },
+    {
+      "title": "Compressed-Sensing-Guided, Inference-Aware Structured Reduction for Large Language Models",
+      "url": "https://arxiv.org/abs/2604.14156",
+      "used_at": "2026-04-17T07:30:39.746868+00:00"
+    },
+    {
+      "title": "Amazon bets on Shenzhen smart warehouse to cut merchant storage costs by 45%",
+      "url": "https://www.scmp.com/tech/article/3350199/amazon-bets-shenzhen-smart-warehouse-cut-merchant-storage-costs-45-cent",
+      "used_at": "2026-04-17T07:30:39.746871+00:00"
+    },
+    {
+      "title": "Google to punish sites that trap people in with back button tricks",
+      "url": "https://www.bbc.com/news/articles/c05dd2yj3z3o",
+      "used_at": "2026-04-17T07:30:39.746873+00:00"
+    },
+    {
+      "title": "« Les géants de la tech constituent les plus vastes agrégations privées de données de santé jamais envisagées »",
+      "url": "https://www.lemonde.fr/idees/article/2026/04/15/les-geants-de-la-tech-constituent-les-plus-vastes-agregations-privees-de-donnees-de-sante-jamais-envisagees_6680263_3232.html",
+      "used_at": "2026-04-17T07:30:39.746876+00:00"
+    },
+    {
+      "title": "Nvidia Has 74% of Its Portfolio Invested in 2 Artificial Intelligence (AI) Stocks - The Motley Fool",
+      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOeUl3SmJDeVZrWTRVdFM0dXRWN3l6b2ROa29Kamw5Y1gteU1pblMtdTc0SjNsSjdGYzJCdFNURjRBY2tXTEVIVzZibUl5c3hIYmZJcVZMLUNKdFRnclRkWEpqWFZvcjRLdk5JSmtmbTdtUXlCNUk4T1VObW44TmY1ODBGWmdzVzA0RFJ6MmlWWnpJS19E",
+      "used_at": "2026-04-17T07:30:39.746878+00:00"
+    },
+    {
+      "title": "Forbes 2026 AI 50 List | Top Artificial Intelligence Companies - Forbes",
+      "url": "https://news.google.com/rss/articles/CBMiSkFVX3lxTE5uUGIzcFRTdFZwdkxZTnpHdUpfVmhCQ21iczlSQjJrMnlSa19sYzB4S2JuVC1wSWo1UFhRWnlpVWtrb0NIN1RmS2Nn",
+      "used_at": "2026-04-17T07:30:39.746880+00:00"
+    },
+    {
+      "title": "Siaivo and the state: Why Ukraine is building its own national artificial intelligence program - The Ukrainian Weekly",
+      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNbXFtWTd6bk1ESjR5cHAtTzFiajYtM2VmbzlWNjU2UGJBa1ZzT3RGaERDeTJ3V1k5Q0NhZ3hGNGdhYXYtbWVrOWh1SFU3OXlBTGxLTm1CYmFIQXhXTDh4TGVKTUQ2bnh0M1dTNU9PVElaMmd4c3VxVWVLN1ZwcS1DU0Q3bjJQT0Z2MDdZT1pfQTNHZkRzU2pLaWJMOEdLRnRSLTJXd1I0R1I5V3cyTUxibVVCamRXaEd5aFRMVmlqa0RxUmpjVTl3VQ",
+      "used_at": "2026-04-17T07:30:39.746882+00:00"
+    },
+    {
+      "title": "Nvidia rival tells CNBC it's seeking at least $100 million in funding as European AI chip market booms - CNBC",
+      "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxNeG9yWHNfUVZJUW9Rd19PbnE5elVSXzY2WFhvd2ZWYTRlN1k5QUlLRmk5XzNyOEhfYjFwazRVSXVBTEE1R2ZQZHNtTVhDTmwxZjkyMmU1bzRsSnY0a3diOTUtSFJMeGNENkpXd0U1N3dLU1dmc002NGtnTUFuaV8yYUM0bndFR3I5U2lOY2JB0gGTAUFVX3lxTE9SU0hXMzN2YVpuVXRLajdsWF9faFdRS2tvMllhTXE2U2hzZkNNU1JtNEFCTFhWdm1wQllQM1VqVGZtRkVpdHJSZnI4d2txSUx6bHR0U3pYRTc1cVBhbVZkS2lOMDc3TWJmdDF6WkpWM3ZEMG9uTGJyVjh5azlOY0d4TFFnUl9uN2N6T2tCVkItQi1Jaw",
+      "used_at": "2026-04-17T07:30:39.746885+00:00"
+    },
+    {
+      "title": "Coupang Expands AI Investments with USD 84M Funding for Startups - World Business Outlook",
+      "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPSFV4Szk0OWRkTFdMVXlsdHJEczBFZXMyMVNTVlBLZ2JMR2dkZFF6WWJPbml3Wll6SzE4Q2VBRTk4NDh3Qlc4dEVzXzhUeVVkTGI5RURTaHlSTFJyMHpELV9OTVhRNDloSTIxbnNMU1NuVXFlQkd4eTNDenF0OFlfamRNNmlqYTIweHA0RU02NV9HcTZCVVYxN0tHMGxxQ0E",
+      "used_at": "2026-04-17T07:30:39.746887+00:00"
+    },
+    {
+      "title": "New guidelines recommend AI-based breast cancer risk assessments - Radiology Business",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQVnBCa1ZyT2loSVZ2d0tUZkhkR1J4SW5YbWxNbmlSYW8yVHhhUGU4Y3FuSnEzYVFraTZkQlliRUtUWnVoMnA2eDVycFQxTFFVUS1MeEhmd3NTdGx5aHIwYXRfemhXSm1VRDVpLWpPNXZzdVJOTUdET2FXSVUwRFRKT3NpX1FzQUE3Z3lzdWxKUG9NdXctd1hvR0hzd2I5Ymd2TjQtQlIxRlhOODNfQzVOelNPemQ2ZmU1dFIzaUI2ZF9GbmM",
+      "used_at": "2026-04-17T07:30:39.746889+00:00"
+    },
+    {
+      "title": "The AI 50 Brink List - Forbes",
+      "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxNSDZncGhKekhWUEpKT0dRZFREb2JQdW9wOUcwY3ppdU9TOWZoY3lfUVJtdnhWVlFwQkVPRFVJeFhuYXZ3UjRyRFRtd0tIU2MyNmtZRkJYcHFmQWVrSkVmd2ZyMjFjZGVqTGU3UFMwTkx1WW0tTzZFQWhLbG8zSFh1R3F3",
+      "used_at": "2026-04-17T07:30:39.746892+00:00"
+    },
+    {
+      "title": "AI is finally delivering productivity — for remote employees - Computerworld",
+      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxNYkRFVEVqRklRTW9HVnBOUWxBa19YVmRUaHh0azcyclVSd2pNUktSc1poTHBzTmI5OTJJN0oxUjhiWkxaZmJ3anZDV2JMVjhadHVxZTBnSXhFZ2hKRXZHWDFWWl9iQzZHQ0pUNDdiei1OemtYc1p4MG1Xb3o1YzNob2czaXFjNkVpVW5iaGtmRFFIQ05nMzhQcXh6LWNXenpxOS1wVk5FWFFxdzh6U3c",
+      "used_at": "2026-04-17T07:30:39.746894+00:00"
+    },
+    {
+      "title": "‘AI shamans’ tell the fortunes of curious South Koreans - Digital Journal",
+      "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPZ19tMHJUVFI2dDdZZFlFTGdDYXowZmJDeTY1aTFMUmhZODZaNThUd2tmc3UyNDZ3OUN0d05WN2xrd24tV1FmcTJBeUMyWjlCVkItOGMzcTJuYXdOZVNtNWtHNzQ5QmhPdlRLS0JBOGlxLVRaVVlUWl9CRXcwRDlmZ3QwYmVBZkJtQS1ZelVBQU50RWlqdWdoN04xUjFLYVU",
+      "used_at": "2026-04-17T07:30:39.746896+00:00"
+    },
+    {
+      "title": "Australian Design Startup Canva Avoiding Tech-Sector Layoffs",
+      "url": "https://www.wsj.com/tech/australian-design-startup-canva-avoiding-tech-sector-layoffs-f94cec0e",
+      "used_at": "2026-04-17T07:30:39.746898+00:00"
+    },
+    {
       "title": "BitFlipScope: Scalable Fault Localization and Recovery for Bit-Flip Corruptions in LLMs",
       "url": "https://arxiv.org/abs/2512.22174",
       "used_at": "2026-04-17T06:15:13.104677+00:00"
@@ -1894,111 +1999,6 @@
       "title": "How Guidesly built AI-generated trip reports for outdoor guides on AWS",
       "url": "https://aws.amazon.com/blogs/machine-learning/how-guidesly-built-ai-generated-trip-reports-for-outdoor-guides-on-aws/",
       "used_at": "2026-04-15T11:11:59.525302+00:00"
-    },
-    {
-      "title": "Google Chrome's new \"Skills\" feature lets you save AI prompts and reuse them with a single click",
-      "url": "https://the-decoder.com/google-chromes-new-skills-feature-lets-you-save-ai-prompts-and-reuse-them-with-a-single-click/",
-      "used_at": "2026-04-15T11:11:59.525304+00:00"
-    },
-    {
-      "title": "How AI technology supports conservation of endangered species",
-      "url": "https://www.scmp.com/native/tech/topics/technological-game-changers/article/3349898/how-ai-technology-supports-conservation-endangered-species",
-      "used_at": "2026-04-15T11:11:59.525306+00:00"
-    },
-    {
-      "title": "China quietly profits from US AI boom despite Washington’s tech curbs: research",
-      "url": "https://www.scmp.com/tech/tech-trends/article/3350010/china-quietly-profits-us-ai-boom-despite-washingtons-tech-curbs-research",
-      "used_at": "2026-04-15T11:11:59.525308+00:00"
-    },
-    {
-      "title": "OpenAI releases GPT-5.4-Cyber, a model built specifically for defensive cybersecurity",
-      "url": "https://the-decoder.com/openai-releases-gpt-5-4-cyber-a-model-built-specifically-for-defensive-cybersecurity/",
-      "used_at": "2026-04-15T11:11:59.525311+00:00"
-    },
-    {
-      "title": "Claude Mythos can autonomously compromise weakly defended enterprise networks end-to-end",
-      "url": "https://the-decoder.com/claude-mythos-can-autonomously-compromise-weakly-defended-enterprise-networks-end-to-end/",
-      "used_at": "2026-04-15T11:11:59.525313+00:00"
-    },
-    {
-      "title": "Spring AI SDK for Amazon Bedrock AgentCore is now Generally Available",
-      "url": "https://aws.amazon.com/blogs/machine-learning/spring-ai-sdk-for-amazon-bedrock-agentcore-is-now-generally-available/",
-      "used_at": "2026-04-15T11:11:59.525315+00:00"
-    },
-    {
-      "title": "The problem with thinking you’re part Neanderthal",
-      "url": "https://www.technologyreview.com/2026/04/14/1135169/problem-thinking-part-neanderthal-human-evolution/",
-      "used_at": "2026-04-15T11:11:59.525317+00:00"
-    },
-    {
-      "title": "Goldman Sachs chief ‘hyper-aware’ of risks from Anthropic’s Mythos AI",
-      "url": "https://www.theguardian.com/business/2026/apr/13/goldman-sachs-chief-hyper-aware-risks-anthropics-mythos-ai-david-solomon",
-      "used_at": "2026-04-15T11:11:59.525319+00:00"
-    },
-    {
-      "title": "Steve Yegge",
-      "url": "https://simonwillison.net/2026/Apr/13/steve-yegge/",
-      "used_at": "2026-04-15T11:11:59.525321+00:00"
-    },
-    {
-      "title": "AI learns language from skewed sources. That could change how we humans speak – and think | Bruce Schneier",
-      "url": "https://www.theguardian.com/commentisfree/2026/apr/14/ai-language-human-speech",
-      "used_at": "2026-04-15T11:11:59.525323+00:00"
-    },
-    {
-      "title": "NAACP lawsuit accuses Elon Musk’s xAI of polluting Black neighborhoods near Memphis",
-      "url": "https://www.theguardian.com/technology/2026/apr/14/naacp-lawsuit-elon-musk-xai-memphis",
-      "used_at": "2026-04-15T11:11:59.525326+00:00"
-    },
-    {
-      "title": "Turn your best AI prompts into one-click tools in Chrome",
-      "url": "https://blog.google/products-and-platforms/products/chrome/skills-in-chrome/",
-      "used_at": "2026-04-15T11:11:59.525328+00:00"
-    },
-    {
-      "title": "The Download: the state of AI, and protecting bears with drones",
-      "url": "https://www.technologyreview.com/2026/04/14/1135847/the-download-state-of-ai-drones-protecting-bears/",
-      "used_at": "2026-04-15T11:11:59.525331+00:00"
-    },
-    {
-      "title": "Bringing people together at AI for the Economy Forum",
-      "url": "https://blog.google/company-news/outreach-and-initiatives/creating-opportunity/ai-economy-forum/",
-      "used_at": "2026-04-15T11:11:59.525333+00:00"
-    },
-    {
-      "title": "Navigating the generative AI journey: The Path-to-Value framework from AWS",
-      "url": "https://aws.amazon.com/blogs/machine-learning/navigating-the-generative-ai-journey-the-path-to-value-framework-from-aws/",
-      "used_at": "2026-04-15T11:11:59.525335+00:00"
-    },
-    {
-      "title": "Don’t make Marshal Foch’s mistake on AI | Letters",
-      "url": "https://www.theguardian.com/technology/2026/apr/13/dont-make-marshal-fochs-mistake-on-ai",
-      "used_at": "2026-04-15T11:11:59.525338+00:00"
-    },
-    {
-      "title": "Meet HoloTab by HCompany. Your AI browser companion.",
-      "url": "https://huggingface.co/blog/Hcompany/holotab",
-      "used_at": "2026-04-15T11:11:59.525340+00:00"
-    },
-    {
-      "title": "OpenAI et Anthropic, en quête de rentabilité, envisagent d’entrer en Bourse pour lever les capitaux nécessaires à leurs investissements",
-      "url": "https://www.lemonde.fr/economie/article/2026/04/14/openai-et-anthropic-en-quete-de-rentabilite-envisagent-d-entrer-en-bourse-pour-lever-les-capitaux-necessaires-a-leurs-investissements_6679933_3234.html",
-      "used_at": "2026-04-15T11:11:59.525342+00:00"
-    },
-    {
-      "title": "Man charged with attempted murder over attack on home of OpenAI's Sam Altman",
-      "url": "https://www.bbc.com/news/articles/cq597n1pg6lo",
-      "used_at": "2026-04-15T11:11:59.525344+00:00"
-    },
-    {
-      "title": "Quantum computing: A tech race Europe could win?",
-      "url": "https://www.bbc.com/news/articles/c20q4nv89yzo",
-      "used_at": "2026-04-15T11:11:59.525346+00:00"
-    },
-    {
-      "title": "Rolls-Royce launches new two-seater electric car",
-      "url": "https://www.bbc.com/news/articles/c1eqqlnzq7yo",
-      "used_at": "2026-04-15T11:11:59.525349+00:00"
     }
   ]
 }
