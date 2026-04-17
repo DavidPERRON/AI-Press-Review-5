@@ -17,14 +17,12 @@ REQUIRED_SECTION_KEYS = [
 # 2026-04-15 FR audio).
 CLOSING_SENTENCES_BY_LOCALE = {
     'en': (
-        "This podcast has a daily production cost. If you'd like to support me, "
-        "my latest book, The Last Heaven, is available on Amazon and at "
-        "ashcroftedition.com — link on the podcast page. Thank you."
+        "This podcast has a daily production cost. "
+        "If you enjoy it, support it — the link is on the podcast page. Thank you."
     ),
     'fr': (
-        "Ce podcast a un coût de production quotidien. Pour me soutenir, mon "
-        "dernier livre, The Last Heaven, est disponible sur Amazon et sur "
-        "ashcroftedition.com — le lien est sur la page du podcast. Merci."
+        "Ce podcast a un coût de production quotidien. "
+        "Pour le soutenir, le lien est sur la page du podcast. Merci."
     ),
 }
 # Backward-compat alias for code / tests that imported the EN-only constant.
