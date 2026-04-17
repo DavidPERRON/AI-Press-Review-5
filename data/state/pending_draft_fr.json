@@ -6,8 +6,8 @@
   "summary": "Le Royaume-Uni lance un fonds de 500 millions de livres pour son IA souveraine et dévoile ses 7 premières startups. Pendant ce temps, Stellantis s'allie à Microsoft pour intégrer l'IA dans ses véhicules, et la recherche progresse sur l'efficacité des modèles avec des techniques comme le Prefill-Only Pruning.",
   "audio_url": "https://pub-bc812f72712b450fbb9d7f3455e007a0.r2.dev/pressreview/episodes/2026-04-17-ia-souveraine-le-pari-du-royaume-uni-face-a-la-chine-17-avr.mp3",
   "audio_name": "2026-04-17-ia-souveraine-le-pari-du-royaume-uni-face-a-la-chine-17-avr.mp3",
-  "audio_bytes": 9572146,
-  "duration_seconds": 798,
+  "audio_bytes": 9512587,
+  "duration_seconds": 793,
   "source_fingerprints": [
     "83c49392ffb09052c782275b6b2d12c714f70f70bdf6a318bf1aaff34bf51833",
     "c72e0c0962870fe4802d9d156c56163b8c05826d3917c6d764dc4d730e8ceb6b",
@@ -179,5 +179,6 @@
   "source_count": 82,
   "script_words": 2272,
   "generated_at": "2026-04-17T06:19:59.995701+00:00",
-  "status": "pending"
+  "status": "pending",
+  "rerendered_at": "2026-04-17T06:55:18.255323+00:00"
 }
