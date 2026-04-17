@@ -321,5 +321,6 @@
   "source_count": 153,
   "script_words": 2396,
   "generated_at": "2026-04-17T05:22:44.564022+00:00",
-  "status": "pending"
+  "status": "rejected",
+  "rejected_at": "2026-04-17T05:29:44.496782+00:00"
 }
