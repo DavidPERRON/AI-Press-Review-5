@@ -1,0 +1,12 @@
+.env
+data/
+consume/
+organizer/.venv/
+organizer/config.yaml
+organizer/mac_organizer.db
+organizer/mac_organizer.db-*
+organizer/plan.jsonl
+**/__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/

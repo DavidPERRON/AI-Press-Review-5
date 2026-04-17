@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mac-organizer"
+version = "0.1.0"
+description = "Scan, dedupe, classify (DeepInfra LLM), and organize Mac files."
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31",
+    "PyYAML>=6.0",
+    "pdfminer.six>=20231228",
+    "python-docx>=1.1.0",
+    "Pillow>=10.0",
+]
+
+[project.scripts]
+mac-organizer = "mac_organizer.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["mac_organizer*"]

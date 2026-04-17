@@ -1,0 +1,75 @@
+# =============================================================================
+# Mac Organizer — configuration
+# Copie ce fichier en `config.yaml` puis édite selon ta machine.
+# =============================================================================
+
+# --- Chemins à explorer (ajoute/retire selon ta situation) ---
+# Le scanner passe partout sauf dans les patterns de `exclude_dirs`.
+scan_roots:
+  - "~/Desktop"
+  - "~/Documents"
+  - "~/Downloads"
+  - "~/Pictures"
+  - "~/Movies"
+  - "~/Music"
+  # iCloud Drive (une fois "Télécharger une copie" activé)
+  - "~/Library/Mobile Documents/com~apple~CloudDocs"
+  # OneDrive / Google Drive montés via CloudStorage
+  - "~/Library/CloudStorage"
+  # Partages VM (Parallels / VMware / UTM)
+  # - "~/Parallels"
+  # - "~/Documents/Virtual Machines.localized"
+  # Disques externes — adapte le nom
+  # - "/Volumes/OldBackup"
+
+# --- Destination finale (le SSD 2 To) ---
+target_root: "/Volumes/SSD2TB"
+
+# --- Base SQLite (inventaire + plan) ---
+db_path: "./mac_organizer.db"
+
+# --- Exclusions supplémentaires (en plus des défauts système) ---
+# Les défauts incluent déjà: .Trash, node_modules, Library/Caches, etc.
+exclude_dirs:
+  - ".Trash"
+  - ".git"
+  - "node_modules"
+  - "Library/Caches"
+  - "Library/Containers"
+  - "Library/Application Support"
+  - ".Spotlight-V100"
+  - ".fseventsd"
+  - "System"
+  - "Applications"
+  # Exclure le disque cible lui-même pour éviter les boucles
+  - "SSD2TB"
+
+# --- Limites de scan ---
+max_file_size_mb: 5000        # Saute les fichiers > 5 Go (ISO, VM disks)
+follow_symlinks: false
+
+# --- DeepInfra (LLM de classification) ---
+# Crée ta clé sur https://deepinfra.com/dash/api_keys
+# Tu peux aussi exporter DEEPINFRA_API_KEY dans ton shell (priorité à l'env).
+deepinfra_api_key: ""
+
+# Modèle recommandé pour >95% fiabilité sur documents français :
+#   meta-llama/Llama-3.3-70B-Instruct  (défaut)
+# Alternatives solides :
+#   Qwen/Qwen2.5-72B-Instruct
+#   deepseek-ai/DeepSeek-V3
+model: "meta-llama/Llama-3.3-70B-Instruct"
+api_base: "https://api.deepinfra.com/v1/openai"
+
+temperature: 0.1              # Bas = déterministe
+max_tokens: 400
+max_text_chars: 8000          # Quantité de texte envoyée par document
+confidence_threshold: 0.85    # < 0.85 → routé dans 99_NonClasse
+retry_on_low_confidence: true
+max_retries: 2
+concurrent_classifications: 4 # Parallélisme (ajuste selon ta quota DeepInfra)
+
+# --- Organizer ---
+dry_run: true                 # true = simulation. `apply --force` override.
+create_missing_dirs: true
+hardlink_if_same_volume: false
