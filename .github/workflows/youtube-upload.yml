@@ -1,0 +1,75 @@
+name: YouTube Upload
+
+# Called automatically by approve-release.yml after each episode release,
+# or triggered manually to backfill a missed episode.
+#
+# Requires GitHub Secrets:
+#   YOUTUBE_CLIENT_ID, YOUTUBE_CLIENT_SECRET, YOUTUBE_REFRESH_TOKEN
+# Optional repo Variables:
+#   YOUTUBE_PLAYLIST_ID_EN, YOUTUBE_PLAYLIST_ID_FR
+#
+# If the secrets are absent the Python script exits 0 (soft skip), so this
+# workflow never fails on a repo that hasn't configured YouTube yet.
+
+on:
+  workflow_dispatch:
+    inputs:
+      locale:
+        description: 'Locale (en or fr)'
+        required: true
+        default: 'en'
+        type: choice
+        options:
+          - en
+          - fr
+      date:
+        description: 'Episode date to upload (YYYY-MM-DD — leave empty for latest)'
+        required: false
+        default: ''
+
+  # Called by approve-release.yml after a successful release
+  workflow_call:
+    inputs:
+      locale:
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30    # encoding + upload for a 20-min episode
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Upload to YouTube
+        env:
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          YOUTUBE_PLAYLIST_ID_EN: ${{ vars.YOUTUBE_PLAYLIST_ID_EN }}
+          YOUTUBE_PLAYLIST_ID_FR: ${{ vars.YOUTUBE_PLAYLIST_ID_FR }}
+        run: |
+          DATE_ARG=""
+          if [ -n "${{ inputs.date }}" ]; then
+            DATE_ARG="--date ${{ inputs.date }}"
+          fi
+          python scripts/youtube_upload.py --locale ${{ inputs.locale }} $DATE_ARG

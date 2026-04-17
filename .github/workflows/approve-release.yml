@@ -76,6 +76,17 @@ jobs:
           echo "::error::push failed after 3 rebase attempts"
           exit 1
 
+  # Upload the released episode to YouTube (static cover + audio → MP4).
+  # Soft-skips gracefully if YOUTUBE_CLIENT_ID / YOUTUBE_REFRESH_TOKEN are
+  # not set in GitHub Secrets — no failure, just a "skipping" log line.
+  youtube:
+    needs: approve
+    if: needs.approve.result == 'success'
+    uses: ./.github/workflows/youtube-upload.yml
+    with:
+      locale: ${{ inputs.locale }}
+    secrets: inherit
+
   # Rebuild the merged bilingual LinkedIn-oriented feed from both locales'
   # episode histories on main, after the approve job has (possibly) pushed
   # a newly-published episode. `if: always()` keeps this running even if
