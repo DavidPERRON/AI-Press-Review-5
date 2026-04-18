@@ -192,9 +192,12 @@ profiles:
     unused_score_bonus: 2.0
     reuse_min_score: 8.0
     min_source_count: 45
-    # 18-24 min @ ~180 WPM → 3240-4320 mots. Gate à 3300 pour tenir 18 min min.
-    # Target LLM calculé = 3800 (min + 500 bump défini dans generator.py).
-    min_script_words: 3300
+    # 18-24 min @ ~180 WPM → 3240-4320 mots. Gate abaissé à 2800 (~15.5 min floor)
+    # pour éviter les crashes de cascade LLM observés samedi 2026-04-18 :
+    # le gate à 3300 combiné aux sources verrouillées vendredi (weekly_news,
+    # weekly_use_cases) rendait la cible inatteignable et épuisait editor +
+    # fallback + emergency models. Target LLM reste 3300 (min+500 cf. generator.py).
+    min_script_words: 2800
     target_duration_min: 18
     target_duration_max: 24
     prompt_file: "prompt_weekly.txt"
